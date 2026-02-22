@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
     const { invoiceNumber, paymentMethod, items } = body;
 
     // Start transaction
-    const result = await prisma.$transaction(async (tx) => {
+    const result = await prisma.$transaction(async (tx: any) => {
       // Check if invoice number already exists
       const existingSale = await tx.sale.findUnique({
         where: { invoiceNumber },
@@ -89,8 +89,8 @@ export async function POST(request: NextRequest) {
         data: {
           invoiceNumber,
           paymentMethod,
-          totalAmount,
-          totalProfit,
+          totalAmount: String(totalAmount),
+          totalProfit: String(totalProfit),
           items: {
             create: items.map((item: { productId: string; quantity: number; sellingPrice: number }) => {
               const quantity = Number(item.quantity);
@@ -98,11 +98,11 @@ export async function POST(request: NextRequest) {
               
               return {
                 productId: item.productId,
-                quantity,
-                sellingPrice,
-                costPriceSnapshot: 0, // Will update after product lookup
-                profit: 0, // Will update after
-                subtotal: sellingPrice * quantity,
+                quantity: String(quantity),
+                sellingPrice: String(sellingPrice),
+                costPriceSnapshot: String(0), // Will update after product lookup
+                profit: String(0), // Will update after
+                subtotal: String(sellingPrice * quantity),
               };
             }),
           },
@@ -131,8 +131,8 @@ export async function POST(request: NextRequest) {
           await tx.saleItem.update({
             where: { id: item.id },
             data: {
-              costPriceSnapshot: costPrice,
-              profit: (Number(item.sellingPrice) - costPrice) * Number(item.quantity),
+              costPriceSnapshot: String(costPrice),
+              profit: String((Number(item.sellingPrice) - costPrice) * Number(item.quantity)),
             },
           });
 
@@ -140,7 +140,7 @@ export async function POST(request: NextRequest) {
           await tx.product.update({
             where: { id: item.productId },
             data: {
-              currentStock: newStock,
+              currentStock: String(newStock),
             },
           });
 
@@ -151,9 +151,9 @@ export async function POST(request: NextRequest) {
               referenceType: 'SALE',
               referenceId: sale.id,
               movementType: 'OUT',
-              quantity: item.quantity,
-              stockBefore: currentStock,
-              stockAfter: newStock,
+              quantity: String(item.quantity),
+              stockBefore: String(currentStock),
+              stockAfter: String(newStock),
             },
           });
         }

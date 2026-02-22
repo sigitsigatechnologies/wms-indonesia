@@ -66,7 +66,7 @@ export async function DELETE(
           await tx.product.update({
             where: { id: item.productId },
             data: {
-              currentStock: newStock,
+              currentStock: String(newStock),
             },
           });
 
@@ -77,9 +77,9 @@ export async function DELETE(
               referenceType: 'PURCHASE_DELETE',
               referenceId: purchase.id,
               movementType: 'OUT',
-              quantity: item.quantity,
-              stockBefore: currentStock,
-              stockAfter: newStock,
+              quantity: String(item.quantity),
+              stockBefore: String(currentStock),
+              stockAfter: String(newStock),
             },
           });
         }
