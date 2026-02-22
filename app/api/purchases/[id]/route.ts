@@ -40,7 +40,7 @@ export async function DELETE(
     const { id } = await params;
 
     // Start transaction
-    const result = await prisma.$transaction(async (tx) => {
+    const result = await prisma.$transaction(async (tx: any) => {
       // Check if purchase exists
       const purchase = await tx.purchase.findUnique({
         where: { id },
