@@ -1,0 +1,152 @@
+{
+  "client": "Thunder Client",
+  "collectionName": "WMS Indonesia API",
+  "dateExported": "2026-02-22",
+  "version": "1.0",
+  "folders": [
+    {
+      "name": "Products",
+      "requests": [
+        {
+          "name": "Get All Products",
+          "url": "{{baseUrl}}/api/products",
+          "method": "GET",
+          "headers": [],
+          "params": [],
+          "body": ""
+        },
+        {
+          "name": "Create Product",
+          "url": "{{baseUrl}}/api/products",
+          "method": "POST",
+          "headers": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "params": [],
+          "body": "{\n  \"barcode\": \"PRD001\",\n  \"name\": \"Product Name\",\n  \"unit\": \"pcs\",\n  \"sellingPrice\": 10000,\n  \"minStock\": 10\n}"
+        }
+      ]
+    },
+    {
+      "name": "Suppliers",
+      "requests": [
+        {
+          "name": "Get All Suppliers",
+          "url": "{{baseUrl}}/api/suppliers",
+          "method": "GET",
+          "headers": [],
+          "params": [],
+          "body": ""
+        },
+        {
+          "name": "Create Supplier",
+          "url": "{{baseUrl}}/api/suppliers",
+          "method": "POST",
+          "headers": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "params": [],
+          "body": "{\n  \"name\": \"Supplier Name\",\n  \"phone\": \"081234567890\",\n  \"address\": \"Address\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Purchases",
+      "requests": [
+        {
+          "name": "Get All Purchases",
+          "url": "{{baseUrl}}/api/purchases",
+          "method": "GET",
+          "headers": [],
+          "params": [],
+          "body": ""
+        },
+        {
+          "name": "Create Purchase",
+          "url": "{{baseUrl}}/api/purchases",
+          "method": "POST",
+          "headers": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "params": [],
+          "body": "{\n  \"invoiceNumber\": \"INV-001\",\n  \"supplierId\": \"SUPPLIER_ID_HERE\",\n  \"purchaseDate\": \"2026-02-22\",\n  \"items\": [\n    {\n      \"productId\": \"PRODUCT_ID_HERE\",\n      \"quantity\": 10,\n      \"costPrice\": 5000\n    }\n  ]\n}"
+        }
+      ]
+    },
+    {
+      "name": "Sales",
+      "requests": [
+        {
+          "name": "Get All Sales",
+          "url": "{{baseUrl}}/api/sales",
+          "method": "GET",
+          "headers": [],
+          "params": [],
+          "body": ""
+        },
+        {
+          "name": "Create Sale",
+          "url": "{{baseUrl}}/api/sales",
+          "method": "POST",
+          "headers": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "params": [],
+          "body": "{\n  \"invoiceNumber\": \"SI-001\",\n  \"paymentMethod\": \"CASH\",\n  \"items\": [\n    {\n      \"productId\": \"PRODUCT_ID_HERE\",\n      \"quantity\": 5,\n      \"sellingPrice\": 10000\n    }\n  ]\n}"
+        }
+      ]
+    },
+    {
+      "name": "Stock",
+      "requests": [
+        {
+          "name": "Get All Stock",
+          "url": "{{baseUrl}}/api/stock",
+          "method": "GET",
+          "headers": [],
+          "params": [],
+          "body": ""
+        },
+        {
+          "name": "Get Stock by Product",
+          "url": "{{baseUrl}}/api/stock/:productId",
+          "method": "GET",
+          "headers": [],
+          "params": [],
+          "body": ""
+        }
+      ]
+    }
+  ],
+  "settings": {
+    "baseUrl": "http://localhost:3000",
+    "headers": [],
+    "params": []
+  },
+  "environments": [
+    {
+      "name": "Development",
+      "variables": {
+        "baseUrl": "http://localhost:3000"
+      }
+    },
+    {
+      "name": "Production",
+      "variables": {
+        "baseUrl": "https://wms-indonesia.vercel.app"
+      }
+    }
+  ]
+}
