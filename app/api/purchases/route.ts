@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
           invoiceNumber,
           supplierId,
           purchaseDate: new Date(purchaseDate),
-          totalAmount: 0, // Will update after items
+          totalAmount: String(0), // Will update after items
           items: {
             create: items.map((item: { productId: string; quantity: number; costPrice: number }) => {
               const quantity = Number(item.quantity);
@@ -73,9 +73,9 @@ export async function POST(request: NextRequest) {
 
               return {
                 productId: item.productId,
-                quantity,
-                costPrice,
-                subtotal,
+                quantity: String(quantity),
+                costPrice: String(costPrice),
+                subtotal: String(subtotal),
               };
             }),
           },
@@ -118,13 +118,16 @@ export async function POST(request: NextRequest) {
           const currentTotalValue = currentStock * Number(product.averageCost);
           const newTotalValue = Number(item.quantity) * Number(item.costPrice);
           const newTotalStock = currentStock + Number(item.quantity);
-          const newAverageCost = newTotalStock > 0 ? (newTotalValue + currentTotalValue) / newTotalStock : 0;
+          let newAverageCost = 0;
+          if (newTotalStock > 0) {
+            newAverageCost = (newTotalValue + currentTotalValue) / newTotalStock;
+          }
 
           await tx.product.update({
             where: { id: item.productId },
             data: {
-              currentStock: newStock,
-              averageCost: newAverageCost,
+              currentStock: String(newStock),
+              averageCost: String(newAverageCost),
             },
           });
 
@@ -135,9 +138,9 @@ export async function POST(request: NextRequest) {
               referenceType: 'PURCHASE',
               referenceId: purchase.id,
               movementType: 'IN',
-              quantity: item.quantity,
-              stockBefore: currentStock,
-              stockAfter: newStock,
+              quantity: String(item.quantity),
+              stockBefore: String(currentStock),
+              stockAfter: String(newStock),
             },
           });
         }
