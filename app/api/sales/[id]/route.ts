@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { PrismaClient } from '@prisma/client';
 
 // GET /api/sales/[id] - Get a single sale by ID
 export async function GET(
@@ -38,9 +37,8 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params;
-    const prisma = new PrismaClient();
     // Start transaction
-    const result = await prisma.$transaction(async (tx) => {
+    const result = await prisma.$transaction(async (tx: any) => {
       // Check if sale exists
       const sale = await tx.sale.findUnique({
         where: { id },

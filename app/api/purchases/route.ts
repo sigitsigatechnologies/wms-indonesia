@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-// import { prisma } from '@/lib/prisma';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '@/lib/prisma';
 
 // Helper function to parse number to Decimal-like object
 const toDecimal = (value: number | string) => {
@@ -21,7 +20,6 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const supplierId = searchParams.get('supplierId');
-    const prisma = new PrismaClient();
     const purchases = await prisma.purchase.findMany({
       where: supplierId ? { supplierId } : undefined,
       orderBy: { createdAt: 'desc' },
@@ -46,9 +44,8 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { invoiceNumber, supplierId, purchaseDate, items } = body;
-    const prisma = new PrismaClient();
     // Start transaction
-    const result = await prisma.$transaction(async (tx) => {
+    const result = await prisma.$transaction(async (tx: any) => {
       // Check if invoice number already exists
       const existingPurchase = await tx.purchase.findUnique({
         where: { invoiceNumber },
