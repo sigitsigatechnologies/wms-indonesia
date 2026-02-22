@@ -1,65 +1,172 @@
-import Image from "next/image";
+'use client'
+
+import { useEffect, useState } from 'react'
+import Link from 'next/link'
+
+interface DashboardData {
+  totalProducts: number
+  totalSuppliers: number
+  totalPurchases: number
+  totalSales: number
+  totalRevenue: number
+  totalProfit: number
+  lowStockCount: number
+}
 
 export default function Home() {
+  const [data, setData] = useState<DashboardData | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const [productsRes, suppliersRes, purchasesRes, salesRes] = await Promise.all([
+          fetch('/api/products'),
+          fetch('/api/suppliers'),
+          fetch('/api/purchases'),
+          fetch('/api/sales'),
+        ])
+
+        const [products, suppliers, purchases, sales] = await Promise.all([
+          productsRes.json(),
+          suppliersRes.json(),
+          purchasesRes.json(),
+          salesRes.json(),
+        ])
+
+        const totalRevenue = sales.reduce((sum: number, s: any) => sum + Number(s.totalAmount || 0), 0)
+        const totalProfit = sales.reduce((sum: number, s: any) => sum + Number(s.totalProfit || 0), 0)
+        const lowStockCount = products.filter((p: any) => p.currentStock <= p.minStock).length
+
+        setData({
+          totalProducts: products.length,
+          totalSuppliers: suppliers.length,
+          totalPurchases: purchases.length,
+          totalSales: sales.length,
+          totalRevenue,
+          totalProfit,
+          lowStockCount,
+        })
+      } catch (error) {
+        console.error('Error fetching data:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchData()
+  }, [])
+
+  if (loading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '50vh' }}>
+        <p>Loading...</p>
+      </div>
+    )
+  }
+
+  const cardStyle: React.CSSProperties = {
+    padding: '1.5rem',
+    backgroundColor: 'white',
+    borderRadius: '12px',
+    boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
+    border: '1px solid #f1f5f9',
+  }
+
+  const gradientCardStyle: React.CSSProperties = {
+    padding: '1.5rem',
+    borderRadius: '12px',
+    color: 'white',
+  }
+
+  const buttonStyle: React.CSSProperties = {
+    color: 'white',
+    padding: '0.5rem 1rem',
+    borderRadius: '8px',
+    textDecoration: 'none',
+    border: 'none',
+    cursor: 'pointer',
+    fontSize: '0.875rem',
+    display: 'inline-flex',
+    alignItems: 'center',
+    fontWeight: '500',
+  }
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+      <h2 style={{ margin: '0 0 1.5rem 0', color: '#1e293b', fontSize: '1.5rem', fontWeight: '600' }}>Dashboard</h2>
+
+      {/* Stats Grid */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
+        <div style={cardStyle}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
+            <div style={{ padding: '0.5rem', borderRadius: '8px', backgroundColor: '#eff6ff' }}>
+              <span className="material-symbols-outlined" style={{ color: '#3b82f6', fontSize: '1.25rem' }}>inventory_2</span>
+            </div>
+            <p style={{ margin: 0, color: '#64748b', fontSize: '0.8rem', fontWeight: '500' }}>Total Products</p>
+          </div>
+          <p style={{ margin: 0, fontSize: '1.75rem', fontWeight: '700', color: '#1e293b' }}>{data?.totalProducts || 0}</p>
+        </div>
+        <div style={cardStyle}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
+            <div style={{ padding: '0.5rem', borderRadius: '8px', backgroundColor: '#fdf4ff' }}>
+              <span className="material-symbols-outlined" style={{ color: '#d946ef', fontSize: '1.25rem' }}>local_shipping</span>
+            </div>
+            <p style={{ margin: 0, color: '#64748b', fontSize: '0.8rem', fontWeight: '500' }}>Total Suppliers</p>
+          </div>
+          <p style={{ margin: 0, fontSize: '1.75rem', fontWeight: '700', color: '#1e293b' }}>{data?.totalSuppliers || 0}</p>
+        </div>
+        <div style={cardStyle}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
+            <div style={{ padding: '0.5rem', borderRadius: '8px', backgroundColor: '#fffbeb' }}>
+              <span className="material-symbols-outlined" style={{ color: '#f59e0b', fontSize: '1.25rem' }}>shopping_cart</span>
+            </div>
+            <p style={{ margin: 0, color: '#64748b', fontSize: '0.8rem', fontWeight: '500' }}>Total Purchases</p>
+          </div>
+          <p style={{ margin: 0, fontSize: '1.75rem', fontWeight: '700', color: '#1e293b' }}>{data?.totalPurchases || 0}</p>
+        </div>
+        <div style={cardStyle}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
+            <div style={{ padding: '0.5rem', borderRadius: '8px', backgroundColor: '#eff6ff' }}>
+              <span className="material-symbols-outlined" style={{ color: '#3b82f6', fontSize: '1.25rem' }}>payments</span>
+            </div>
+            <p style={{ margin: 0, color: '#64748b', fontSize: '0.8rem', fontWeight: '500' }}>Total Sales</p>
+          </div>
+          <p style={{ margin: 0, fontSize: '1.75rem', fontWeight: '700', color: '#1e293b' }}>{data?.totalSales || 0}</p>
+        </div>
+      </div>
+
+      {/* Revenue & Profit */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
+        <div style={{ ...gradientCardStyle, background: 'linear-gradient(135deg, #3b82f6 0%, #0ea5e9 100%)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+            <span className="material-symbols-outlined" style={{ fontSize: '1.25rem', opacity: 0.9 }}>account_balance</span>
+            <p style={{ margin: 0, opacity: 0.9, fontSize: '0.8rem', fontWeight: '500' }}>Total Revenue</p>
+          </div>
+          <p style={{ margin: 0, fontSize: '1.5rem', fontWeight: '700' }}>
+            Rp {data?.totalRevenue.toLocaleString('id-ID')}
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+        <div style={{ ...gradientCardStyle, background: 'linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+            <span className="material-symbols-outlined" style={{ fontSize: '1.25rem', opacity: 0.9 }}>trending_up</span>
+            <p style={{ margin: 0, opacity: 0.9, fontSize: '0.8rem', fontWeight: '500' }}>Total Profit</p>
+          </div>
+          <p style={{ margin: 0, fontSize: '1.5rem', fontWeight: '700' }}>
+            Rp {data?.totalProfit.toLocaleString('id-ID')}
+          </p>
         </div>
-      </main>
+      </div>
+
+      {/* Low Stock Alert */}
+      {data && data.lowStockCount > 0 && (
+        <div style={{ padding: '1rem', backgroundColor: '#fef3c7', borderRadius: '8px', marginBottom: '1.5rem', borderLeft: '4px solid #f59e0b', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <span className="material-symbols-outlined" style={{ color: '#92400e' }}>warning</span>
+          <p style={{ margin: 0, fontWeight: '600', color: '#92400e' }}>
+            Low Stock Alert: {data.lowStockCount} products are running low on stock!
+          </p>
+        </div>
+      )}
     </div>
-  );
+  )
 }

@@ -1,0 +1,241 @@
+{
+  "client": "Thunder Client",
+  "collectionName": "WMS Indonesia API",
+  "dateExported": "2026-02-22T01:43:00.000Z",
+  "version": "1.0",
+  "folders": [
+    {
+      "name": "Products",
+      "requests": [
+        {
+          "name": "Get All Products",
+          "url": "{{baseUrl}}/api/products",
+          "method": "GET",
+          "auth": { "type": "none" },
+          "params": [],
+          "headers": [],
+          "body": { "type": "none" }
+        },
+        {
+          "name": "Create Product",
+          "url": "{{baseUrl}}/api/products",
+          "method": "POST",
+          "auth": { "type": "none" },
+          "params": [],
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "body": {
+            "type": "json",
+            "raw": "{\n  \"barcode\": \"PRD001\",\n  \"name\": \"Product Name\",\n  \"unit\": \"pcs\",\n  \"sellingPrice\": 10000,\n  \"minStock\": 10\n}"
+          }
+        },
+        {
+          "name": "Get Product by ID",
+          "url": "{{baseUrl}}/api/products/:id",
+          "method": "GET",
+          "auth": { "type": "none" },
+          "params": [{ "key": "id", "value": "1", "type": "path" }],
+          "headers": [],
+          "body": { "type": "none" }
+        },
+        {
+          "name": "Update Product",
+          "url": "{{baseUrl}}/api/products/:id",
+          "method": "PUT",
+          "auth": { "type": "none" },
+          "params": [{ "key": "id", "value": "1", "type": "path" }],
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "body": {
+            "type": "json",
+            "raw": "{\n  \"name\": \"Updated Product Name\",\n  \"sellingPrice\": 15000,\n  \"minStock\": 20\n}"
+          }
+        },
+        {
+          "name": "Delete Product",
+          "url": "{{baseUrl}}/api/products/:id",
+          "method": "DELETE",
+          "auth": { "type": "none" },
+          "params": [{ "key": "id", "value": "1", "type": "path" }],
+          "headers": [],
+          "body": { "type": "none" }
+        }
+      ]
+    },
+    {
+      "name": "Suppliers",
+      "requests": [
+        {
+          "name": "Get All Suppliers",
+          "url": "{{baseUrl}}/api/suppliers",
+          "method": "GET",
+          "auth": { "type": "none" },
+          "params": [],
+          "headers": [],
+          "body": { "type": "none" }
+        },
+        {
+          "name": "Create Supplier",
+          "url": "{{baseUrl}}/api/suppliers",
+          "method": "POST",
+          "auth": { "type": "none" },
+          "params": [],
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "body": {
+            "type": "json",
+            "raw": "{\n  \"name\": \"Supplier Name\",\n  \"phone\": \"081234567890\",\n  \"address\": \"Jl. Example No. 123\"\n}"
+          }
+        },
+        {
+          "name": "Get Supplier by ID",
+          "url": "{{baseUrl}}/api/suppliers/:id",
+          "method": "GET",
+          "auth": { "type": "none" },
+          "params": [{ "key": "id", "value": "1", "type": "path" }],
+          "headers": [],
+          "body": { "type": "none" }
+        },
+        {
+          "name": "Update Supplier",
+          "url": "{{baseUrl}}/api/suppliers/:id",
+          "method": "PUT",
+          "auth": { "type": "none" },
+          "params": [{ "key": "id", "value": "1", "type": "path" }],
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "body": {
+            "type": "json",
+            "raw": "{\n  \"name\": \"Updated Supplier Name\",\n  \"phone\": \"089876543210\"\n}"
+          }
+        },
+        {
+          "name": "Delete Supplier",
+          "url": "{{baseUrl}}/api/suppliers/:id",
+          "method": "DELETE",
+          "auth": { "type": "none" },
+          "params": [{ "key": "id", "value": "1", "type": "path" }],
+          "headers": [],
+          "body": { "type": "none" }
+        }
+      ]
+    },
+    {
+      "name": "Purchases",
+      "requests": [
+        {
+          "name": "Get All Purchases",
+          "url": "{{baseUrl}}/api/purchases",
+          "method": "GET",
+          "auth": { "type": "none" },
+          "params": [{ "key": "supplierId", "value": "", "type": "query" }],
+          "headers": [],
+          "body": { "type": "none" }
+        },
+        {
+          "name": "Create Purchase",
+          "url": "{{baseUrl}}/api/purchases",
+          "method": "POST",
+          "auth": { "type": "none" },
+          "params": [],
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "body": {
+            "type": "json",
+            "raw": "{\n  \"invoiceNumber\": \"PO-20260222-001\",\n  \"supplierId\": \"1\",\n  \"purchaseDate\": \"2026-02-22\",\n  \"items\": [\n    {\n      \"productId\": \"1\",\n      \"quantity\": 100,\n      \"costPrice\": 5000\n    }\n  ]\n}"
+          }
+        },
+        {
+          "name": "Get Purchase by ID",
+          "url": "{{baseUrl}}/api/purchases/:id",
+          "method": "GET",
+          "auth": { "type": "none" },
+          "params": [{ "key": "id", "value": "1", "type": "path" }],
+          "headers": [],
+          "body": { "type": "none" }
+        },
+        {
+          "name": "Delete Purchase",
+          "url": "{{baseUrl}}/api/purchases/:id",
+          "method": "DELETE",
+          "auth": { "type": "none" },
+          "params": [{ "key": "id", "value": "1", "type": "path" }],
+          "headers": [],
+          "body": { "type": "none" }
+        }
+      ]
+    },
+    {
+      "name": "Sales",
+      "requests": [
+        {
+          "name": "Get All Sales",
+          "url": "{{baseUrl}}/api/sales",
+          "method": "GET",
+          "auth": { "type": "none" },
+          "params": [
+            { "key": "startDate", "value": "", "type": "query" },
+            { "key": "endDate", "value": "", "type": "query" }
+          ],
+          "headers": [],
+          "body": { "type": "none" }
+        },
+        {
+          "name": "Create Sale",
+          "url": "{{baseUrl}}/api/sales",
+          "method": "POST",
+          "auth": { "type": "none" },
+          "params": [],
+          "headers": [{ "key": "Content-Type", "value": "application/json" }],
+          "body": {
+            "type": "json",
+            "raw": "{\n  \"invoiceNumber\": \"SO-20260222-001\",\n  \"paymentMethod\": \"CASH\",\n  \"items\": [\n    {\n      \"productId\": \"1\",\n      \"quantity\": 5,\n      \"sellingPrice\": 10000\n    }\n  ]\n}"
+          }
+        },
+        {
+          "name": "Get Sale by ID",
+          "url": "{{baseUrl}}/api/sales/:id",
+          "method": "GET",
+          "auth": { "type": "none" },
+          "params": [{ "key": "id", "value": "1", "type": "path" }],
+          "headers": [],
+          "body": { "type": "none" }
+        }
+      ]
+    },
+    {
+      "name": "Stock",
+      "requests": [
+        {
+          "name": "Get Stock Movements",
+          "url": "{{baseUrl}}/api/stock",
+          "method": "GET",
+          "auth": { "type": "none" },
+          "params": [
+            { "key": "productId", "value": "", "type": "query" },
+            { "key": "referenceType", "value": "", "type": "query" },
+            { "key": "startDate", "value": "", "type": "query" },
+            { "key": "endDate", "value": "", "type": "query" }
+          ],
+          "headers": [],
+          "body": { "type": "none" }
+        },
+        {
+          "name": "Get Stock by Product ID",
+          "url": "{{baseUrl}}/api/stock/:productId",
+          "method": "GET",
+          "auth": { "type": "none" },
+          "params": [{ "key": "productId", "value": "1", "type": "path" }],
+          "headers": [],
+          "body": { "type": "none" }
+        }
+      ]
+    }
+  ],
+  "settings": {
+    "baseUrl": "http://localhost:3000",
+    "headers": [],
+    "auth": { "type": "none" }
+  },
+  "variables": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    }
+  ]
+}
