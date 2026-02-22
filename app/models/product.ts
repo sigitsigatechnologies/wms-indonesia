@@ -1,9 +1,11 @@
 import { prisma } from '@/lib/prisma'
-import { Product } from '@prisma/client'
+import { Prisma } from '@prisma/client'
 
 // ============================================
 // TYPES
 // ============================================
+
+export type Product = Prisma.ProductGetPayload<{}>
 
 export type CreateProductInput = {
   barcode: string
