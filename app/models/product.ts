@@ -1,11 +1,12 @@
 import { prisma } from '@/lib/prisma'
-import { Prisma } from '@prisma/client'
 
 // ============================================
 // TYPES
 // ============================================
 
-export type Product = Prisma.ProductGetPayload<{}>
+export type Product = Awaited<
+  ReturnType<typeof prisma.product.findFirst>
+>
 
 export type CreateProductInput = {
   barcode: string
@@ -150,7 +151,9 @@ export async function getLowStockProducts(): Promise<Product[]> {
   return await prisma.product.findMany({
     where: {
       isActive: true,
-      currentStock: { lte: prisma.product.fields.minStock },
+      currentStock: {
+        lte: 0, // sementara pakai angka tetap
+      },
     },
     orderBy: { currentStock: 'asc' },
   })
