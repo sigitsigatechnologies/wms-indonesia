@@ -1,6 +1,5 @@
-import { PrismaClient, Product } from '@prisma/client'
-
-const prisma = new PrismaClient()
+import { prisma } from '@/lib/prisma'
+import { Product } from '@prisma/client'
 
 // ============================================
 // TYPES
