@@ -20,37 +20,11 @@ export default function Home() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const [productsRes, suppliersRes, purchasesRes, salesRes] = await Promise.all([
-          fetch('/api/products'),
-          fetch('/api/suppliers'),
-          fetch('/api/purchases'),
-          fetch('/api/sales'),
-        ])
-
-        const [products, suppliers, purchases, sales] = await Promise.all([
-          productsRes.json(),
-          suppliersRes.json(),
-          purchasesRes.json(),
-          salesRes.json(),
-        ])
-
-        const totalRevenue = sales.reduce((sum: number, s: any) => sum + Number(s.totalAmount || 0), 0)
-        const totalProfit = sales.reduce((sum: number, s: any) => sum + Number(s.totalProfit || 0), 0)
-        const lowStockCount = products.filter((p: any) => {
-          const currentStock = Number(p.currentStock) || 0
-          const minStock = Number(p.minStock) || 0
-          return currentStock > 0 && currentStock <= minStock
-        }).length
-
-        setData({
-          totalProducts: products.length,
-          totalSuppliers: suppliers.length,
-          totalPurchases: purchases.length,
-          totalSales: sales.length,
-          totalRevenue,
-          totalProfit,
-          lowStockCount,
-        })
+        // Fetch from optimized dashboard API - single request instead of 4!
+        const res = await fetch('/api/dashboard')
+        const dashboardData = await res.json()
+        
+        setData(dashboardData)
       } catch (error) {
         console.error('Error fetching data:', error)
       } finally {
