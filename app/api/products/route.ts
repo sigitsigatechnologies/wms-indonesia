@@ -1,9 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
-// GET /api/products - Get all products
+// GET /api/products - Get all products or search by barcode
 export async function GET(request: NextRequest) {
   try {
+    const { searchParams } = new URL(request.url);
+    const barcode = searchParams.get('barcode');
+    
+    // If barcode is provided, search for that specific product
+    if (barcode) {
+      const product = await prisma.product.findUnique({
+        where: { barcode },
+      });
+      if (product) {
+        return NextResponse.json([product]);
+      }
+      return NextResponse.json([]);
+    }
+    
+    // Otherwise, return all products
     const products = await prisma.product.findMany({
       orderBy: { createdAt: 'desc' },
     });

@@ -30,8 +30,13 @@ export default function CheckPricePage() {
     setProduct(null)
     
     try {
-      const res = await fetch(`/api/products?barcode=${encodeURIComponent(barcode)}`)
+      // Log untuk debugging
+      console.log('Searching for barcode:', barcode)
+      
+      const res = await fetch(`/api/products?barcode=${encodeURIComponent(barcode.trim())}`)
       const data = await res.json()
+      
+      console.log('API Response:', data)
       
       if (data && data.length > 0) {
         setProduct(data[0])
@@ -39,6 +44,7 @@ export default function CheckPricePage() {
         setError('Product not found')
       }
     } catch (err) {
+      console.error('Search error:', err)
       setError('Error searching product')
     } finally {
       setLoading(false)
