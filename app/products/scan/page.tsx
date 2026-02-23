@@ -11,6 +11,7 @@ export default function ScanBarcodePage() {
   const [scanning, setScanning] = useState(false)
   const [cameras, setCameras] = useState<{id: string, label: string}[]>([])
   const [selectedCamera, setSelectedCamera] = useState<string>('')
+  const [isReady, setIsReady] = useState(false)
   const scannerId = 'barcode-scanner-container'
 
   const stopScanner = useCallback(async () => {
@@ -37,6 +38,7 @@ export default function ScanBarcodePage() {
           const backCamera = devices.find(d => d.label.toLowerCase().includes('back') || d.label.toLowerCase().includes('rear'))
           const frontCamera = devices.find(d => d.label.toLowerCase().includes('front') || d.label.toLowerCase().includes('user'))
           setSelectedCamera(backCamera?.id || frontCamera?.id || devices[0].id)
+          setIsReady(true)
         } else {
           setError('No cameras found on this device')
         }
@@ -50,9 +52,16 @@ export default function ScanBarcodePage() {
 
   // Start scanner when camera is selected
   useEffect(() => {
-    if (!selectedCamera || scanning) return
+    if (!selectedCamera || scanning || !isReady) return
+
+    let mounted = true
 
     const startScanner = async () => {
+      // Wait for DOM to be ready
+      await new Promise(resolve => setTimeout(resolve, 500))
+      
+      if (!mounted || !selectedCamera) return
+      
       try {
         scannerRef.current = new Html5Qrcode(scannerId)
         
@@ -60,6 +69,11 @@ export default function ScanBarcodePage() {
           fps: 10,
           qrbox: { width: 280, height: 150 },
           aspectRatio: 1.333,
+          videoConstraints: {
+            width: { min: 640, ideal: 1280, max: 1920 },
+            height: { min: 480, ideal: 720, max: 1080 },
+            facingMode: 'environment'
+          }
         }
 
         await scannerRef.current.start(
@@ -75,19 +89,24 @@ export default function ScanBarcodePage() {
           }
         )
         
-        setScanning(true)
+        if (mounted) {
+          setScanning(true)
+        }
       } catch (e: any) {
         console.error('Scanner error:', e)
-        setError(`Failed to start camera: ${e.message || 'Unknown error'}`)
+        if (mounted) {
+          setError(`Failed to start camera: ${e.message || 'Unknown error'}`)
+        }
       }
     }
 
     startScanner()
 
     return () => {
+      mounted = false
       stopScanner()
     }
-  }, [selectedCamera, router, stopScanner, scanning])
+  }, [selectedCamera, router, stopScanner, scanning, isReady])
 
   return (
     <div style={{

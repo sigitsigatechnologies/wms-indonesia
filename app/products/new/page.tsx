@@ -5,48 +5,83 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 
 // Barcode Scanner Component using html5-qrcode
-import { Html5QrcodeScanner } from 'html5-qrcode'
+import { Html5Qrcode } from 'html5-qrcode'
 
 function BarcodeScanner({ onScan, onClose }: { onScan: (barcode: string) => void; onClose: () => void }) {
-  const scannerRef = useRef<Html5QrcodeScanner | null>(null)
+  const scannerRef = useRef<Html5Qrcode | null>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [error, setError] = useState('')
 
   useEffect(() => {
+    let mounted = true
     const scannerId = 'inline-barcode-scanner'
-    
-    const config = { 
-      fps: 10,
-      qrbox: { width: 200, height: 100 },
-      aspectRatio: 1.0,
+
+    const startScanner = async () => {
+      if (!mounted) return
+      
+      try {
+        // Wait for DOM
+        await new Promise(resolve => setTimeout(resolve, 300))
+        
+        if (!mounted) return
+        
+        scannerRef.current = new Html5Qrcode(scannerId)
+        
+        const config = { 
+          fps: 10,
+          qrbox: { width: 250, height: 150 },
+          aspectRatio: 1.333,
+          videoConstraints: {
+            width: { min: 640, ideal: 1280 },
+            height: { min: 480, ideal: 720 },
+            facingMode: 'environment'
+          }
+        }
+
+        // Get available cameras first
+        const cameras = await Html5Qrcode.getCameras()
+        if (cameras && cameras.length > 0) {
+          const cameraId = cameras[0].id
+          
+          await scannerRef.current.start(
+            cameraId,
+            config,
+            (decodedText: string) => {
+              onScan(decodedText)
+            },
+            (errorMessage: string) => {
+              // Ignore scan errors
+            }
+          )
+        } else {
+          setError('No camera found')
+        }
+      } catch (e: any) {
+        if (mounted) {
+          console.error('Scanner error:', e)
+          setError(e.message || 'Failed to start scanner')
+        }
+      }
     }
 
-    scannerRef.current = new Html5QrcodeScanner(
-      scannerId,
-      config,
-      false
-    )
-
-    scannerRef.current.render(
-      (decodedText: string) => {
-        onScan(decodedText)
-      },
-      (errorMessage: string) => {
-        // Ignore scan errors
-      }
-    )
+    startScanner()
 
     return () => {
+      mounted = false
       if (scannerRef.current) {
         try {
+          scannerRef.current.stop()
           scannerRef.current.clear()
         } catch (e) {
           // Ignore
         }
+        scannerRef.current = null
       }
     }
   }, [onScan])
 
   return (
-    <div style={{
+    <div ref={containerRef} style={{
       padding: '1rem',
       backgroundColor: '#1e293b',
       borderRadius: '12px',
@@ -69,7 +104,20 @@ function BarcodeScanner({ onScan, onClose }: { onScan: (barcode: string) => void
           Cancel
         </button>
       </div>
-      <div id="inline-barcode-scanner" />
+      {error ? (
+        <p style={{ color: '#ef4444', margin: 0 }}>{error}</p>
+      ) : (
+        <div 
+          id="inline-barcode-scanner" 
+          style={{ 
+            width: '100%', 
+            minHeight: '250px',
+            backgroundColor: '#000',
+            borderRadius: '8px',
+            overflow: 'hidden'
+          }} 
+        />
+      )}
     </div>
   )
 }
