@@ -20,20 +20,28 @@ export default function CheckPricePage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [scanning, setScanning] = useState(false)
+  const [isScanning, setIsScanning] = useState(false)
   const scannerRef = useRef<Html5Qrcode | null>(null)
 
-  async function searchProduct() {
-    if (!barcode.trim()) return
+  // Auto-search when barcode is set from scanner
+  useEffect(() => {
+    if (isScanning && barcode.trim()) {
+      setIsScanning(false)
+      doSearch(barcode.trim())
+    }
+  }, [barcode, isScanning])
+
+  async function doSearch(searchTerm: string) {
+    if (!searchTerm.trim()) return
     
     setLoading(true)
     setError('')
     setProduct(null)
     
     try {
-      // Log untuk debugging
-      console.log('Searching for barcode:', barcode)
+      console.log('Searching for barcode:', searchTerm)
       
-      const res = await fetch(`/api/products?barcode=${encodeURIComponent(barcode.trim())}`)
+      const res = await fetch(`/api/products?barcode=${encodeURIComponent(searchTerm.trim())}`)
       const data = await res.json()
       
       console.log('API Response:', data)
@@ -51,9 +59,13 @@ export default function CheckPricePage() {
     }
   }
 
+  function handleManualSearch() {
+    doSearch(barcode)
+  }
+
   function handleKeyDown(e: React.KeyboardEvent) {
     if (e.key === 'Enter') {
-      searchProduct()
+      doSearch(barcode)
     }
   }
 
@@ -86,8 +98,8 @@ export default function CheckPricePage() {
           config,
           (decodedText: string) => {
             setBarcode(decodedText)
+            setIsScanning(true)
             stopScanner()
-            searchProduct()
           },
           (errorMessage: string) => {
             // Ignore scanning errors
@@ -215,7 +227,7 @@ export default function CheckPricePage() {
             }}
           />
           <button
-            onClick={searchProduct}
+            onClick={handleManualSearch}
             disabled={loading}
             style={{
               padding: '0.75rem 1.5rem',
