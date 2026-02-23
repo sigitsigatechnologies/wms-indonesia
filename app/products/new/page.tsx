@@ -70,7 +70,15 @@ function BarcodeScanner({ onScan, onClose }: { onScan: (barcode: string) => void
       mounted = false
       if (scannerRef.current) {
         try {
-          scannerRef.current.stop()
+          // Check if scanner is running before stopping
+          const isScanning = scannerRef.current.isScanning
+          if (isScanning) {
+            scannerRef.current.stop()
+          }
+        } catch (e) {
+          // Ignore - video might already be removed from document
+        }
+        try {
           scannerRef.current.clear()
         } catch (e) {
           // Ignore

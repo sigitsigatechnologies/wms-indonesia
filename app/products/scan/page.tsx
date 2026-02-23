@@ -17,10 +17,18 @@ export default function ScanBarcodePage() {
   const stopScanner = useCallback(async () => {
     if (scannerRef.current) {
       try {
-        await scannerRef.current.stop()
+        // Check if scanner is running before stopping
+        const isScanning = scannerRef.current.isScanning
+        if (isScanning) {
+          await scannerRef.current.stop()
+        }
+      } catch (e) {
+        // Ignore errors when clearing - video might already be removed
+      }
+      try {
         scannerRef.current.clear()
       } catch (e) {
-        // Ignore errors when clearing
+        // Ignore
       }
       scannerRef.current = null
     }
