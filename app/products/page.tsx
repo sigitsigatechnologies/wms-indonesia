@@ -118,13 +118,6 @@ export default function ProductsPage() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
         <h2 style={{ margin: 0, color: '#1e293b', fontSize: '1.5rem', fontWeight: '600' }}>Products</h2>
         <div style={{ display: 'flex', gap: '0.5rem' }}>
-          <Link 
-            href="/products/scan" 
-            style={{ ...buttonStyle, backgroundColor: '#10b981' }}
-          >
-            <span className="material-symbols-outlined" style={{ fontSize: '1.1rem', marginRight: '0.25rem', verticalAlign: 'middle' }}>qr_code_scanner</span>
-            Scan
-          </Link>
           <Link href="/products/new" style={buttonStyle}>
             <span className="material-symbols-outlined" style={{ fontSize: '1.1rem', marginRight: '0.25rem', verticalAlign: 'middle' }}>add</span>
             New Product
