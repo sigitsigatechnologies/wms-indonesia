@@ -17,6 +17,7 @@ const navItems: NavItem[] = [
   { label: 'Purchases', href: '/purchases', icon: 'shopping_cart' },
   { label: 'Sales', href: '/sales', icon: 'payments' },
   { label: 'Stock', href: '/stock', icon: 'assessment' },
+  { label: 'Check Price', href: '/products/check-price', icon: 'price_check' },
 ]
 
 export default function MobileNav() {
