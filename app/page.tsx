@@ -36,7 +36,11 @@ export default function Home() {
 
         const totalRevenue = sales.reduce((sum: number, s: any) => sum + Number(s.totalAmount || 0), 0)
         const totalProfit = sales.reduce((sum: number, s: any) => sum + Number(s.totalProfit || 0), 0)
-        const lowStockCount = products.filter((p: any) => p.currentStock <= p.minStock).length
+        const lowStockCount = products.filter((p: any) => {
+          const currentStock = Number(p.currentStock) || 0
+          const minStock = Number(p.minStock) || 0
+          return currentStock > 0 && currentStock <= minStock
+        }).length
 
         setData({
           totalProducts: products.length,

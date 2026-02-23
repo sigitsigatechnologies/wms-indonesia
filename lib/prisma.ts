@@ -13,12 +13,18 @@ function createPrismaClient() {
     throw new Error('DATABASE_URL environment variable is not set')
   }
   
-  const pool = new Pool({ connectionString })
+  const pool = new Pool({ 
+    connectionString,
+    connectionTimeoutMillis: 10000,
+    idleTimeoutMillis: 30000,
+    keepAlive: true,
+    max: 20,
+  })
   const adapter = new PrismaPg(pool)
   
   return new PrismaClient({
     adapter,
-    log: ['query'],
+    log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
   })
 }
 

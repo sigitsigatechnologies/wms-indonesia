@@ -9,7 +9,8 @@ interface Product {
   barcode: string
   name: string
   unit: string
-  currentStock: string
+  currentStock: number
+  averageCost: number
 }
 
 interface Supplier {
@@ -64,6 +65,15 @@ export default function NewPurchasePage() {
   function updateItem(index: number, field: string, value: any) {
     const newItems = [...items]
     newItems[index] = { ...newItems[index], [field]: value }
+    
+    // Auto-fill costPrice when product is selected
+    if (field === 'productId' && value) {
+      const selectedProduct = products.find(p => p.id === value)
+      if (selectedProduct) {
+        newItems[index].costPrice = selectedProduct.averageCost || 0
+      }
+    }
+    
     setItems(newItems)
   }
 

@@ -1,13 +1,86 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState, useRef, useEffect, Suspense } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 
-export default function NewProductPage() {
+// Barcode Scanner Component using html5-qrcode
+import { Html5QrcodeScanner } from 'html5-qrcode'
+
+function BarcodeScanner({ onScan, onClose }: { onScan: (barcode: string) => void; onClose: () => void }) {
+  const scannerRef = useRef<Html5QrcodeScanner | null>(null)
+
+  useEffect(() => {
+    const scannerId = 'inline-barcode-scanner'
+    
+    const config = { 
+      fps: 10,
+      qrbox: { width: 200, height: 100 },
+      aspectRatio: 1.0,
+    }
+
+    scannerRef.current = new Html5QrcodeScanner(
+      scannerId,
+      config,
+      false
+    )
+
+    scannerRef.current.render(
+      (decodedText: string) => {
+        onScan(decodedText)
+      },
+      (errorMessage: string) => {
+        // Ignore scan errors
+      }
+    )
+
+    return () => {
+      if (scannerRef.current) {
+        try {
+          scannerRef.current.clear()
+        } catch (e) {
+          // Ignore
+        }
+      }
+    }
+  }, [onScan])
+
+  return (
+    <div style={{
+      padding: '1rem',
+      backgroundColor: '#1e293b',
+      borderRadius: '12px',
+      marginBottom: '1rem',
+    }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+        <p style={{ margin: 0, color: 'white', fontSize: '0.875rem' }}>Scan Barcode</p>
+        <button
+          onClick={onClose}
+          style={{
+            padding: '0.25rem 0.5rem',
+            backgroundColor: '#ef4444',
+            color: 'white',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer',
+            fontSize: '0.75rem',
+          }}
+        >
+          Cancel
+        </button>
+      </div>
+      <div id="inline-barcode-scanner" />
+    </div>
+  )
+}
+
+// Inner component that uses useSearchParams
+function NewProductForm() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [showScanner, setShowScanner] = useState(false)
 
   const [formData, setFormData] = useState({
     barcode: '',
@@ -18,6 +91,19 @@ export default function NewProductPage() {
     currentStock: '0',
     minStock: '0',
   })
+
+  // Handle barcode from URL parameter (from scan page)
+  useEffect(() => {
+    const barcodeParam = searchParams.get('barcode')
+    if (barcodeParam) {
+      setFormData(prev => ({ ...prev, barcode: barcodeParam }))
+    }
+  }, [searchParams])
+
+  function handleBarcodeScan(barcode: string) {
+    setFormData({ ...formData, barcode })
+    setShowScanner(false)
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -77,30 +163,52 @@ export default function NewProductPage() {
   }
 
   return (
-    <div style={{ maxWidth: '600px', margin: '0 auto' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-        <h2 style={{ margin: 0, color: '#1e293b', fontSize: '1.5rem', fontWeight: '600' }}>New Product</h2>
-        <Link href="/products" style={{ color: '#64748b', textDecoration: 'none', fontSize: '0.9rem' }}>
-          ← Back to Products
-        </Link>
-      </div>
-
+    <>
       {error && (
         <div style={{ padding: '0.75rem 1rem', backgroundColor: '#fef2f2', borderRadius: '8px', marginBottom: '1.5rem', color: '#dc2626', fontSize: '0.875rem' }}>
           {error}
         </div>
       )}
 
+      {/* Barcode Scanner Modal */}
+      {showScanner && (
+        <BarcodeScanner 
+          onScan={handleBarcodeScan} 
+          onClose={() => setShowScanner(false)} 
+        />
+      )}
+
       <form onSubmit={handleSubmit} style={cardStyle}>
         <div style={{ marginBottom: '1rem' }}>
           <label style={labelStyle}>Barcode</label>
-          <input
-            type="text"
-            required
-            value={formData.barcode}
-            onChange={(e) => setFormData({ ...formData, barcode: e.target.value })}
-            style={inputStyle}
-          />
+          <div style={{ display: 'flex', gap: '0.5rem' }}>
+            <input
+              type="text"
+              required
+              value={formData.barcode}
+              onChange={(e) => setFormData({ ...formData, barcode: e.target.value })}
+              style={{ ...inputStyle, flex: 1 }}
+              placeholder="Scan or enter barcode"
+            />
+            <button
+              type="button"
+              onClick={() => setShowScanner(true)}
+              style={{
+                padding: '0.625rem 1rem',
+                backgroundColor: '#10b981',
+                color: 'white',
+                border: 'none',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.25rem',
+                fontSize: '0.875rem',
+              }}
+            >
+              📷 Scan
+            </button>
+          </div>
         </div>
 
         <div style={{ marginBottom: '1rem' }}>
@@ -207,6 +315,38 @@ export default function NewProductPage() {
           </Link>
         </div>
       </form>
+    </>
+  )
+}
+
+// Loading fallback
+function FormLoading() {
+  return (
+    <div style={{ 
+      display: 'flex', 
+      justifyContent: 'center', 
+      alignItems: 'center', 
+      padding: '4rem' 
+    }}>
+      <p style={{ color: '#64748b' }}>Loading...</p>
+    </div>
+  )
+}
+
+// Main page component with Suspense boundary
+export default function NewProductPage() {
+  return (
+    <div style={{ maxWidth: '600px', margin: '0 auto' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+        <h2 style={{ margin: 0, color: '#1e293b', fontSize: '1.5rem', fontWeight: '600' }}>New Product</h2>
+        <Link href="/products" style={{ color: '#64748b', textDecoration: 'none', fontSize: '0.9rem' }}>
+          ← Back to Products
+        </Link>
+      </div>
+
+      <Suspense fallback={<FormLoading />}>
+        <NewProductForm />
+      </Suspense>
     </div>
   )
 }

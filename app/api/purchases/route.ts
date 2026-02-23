@@ -15,6 +15,27 @@ const add = (a: number, b: number) => {
   return a + b;
 };
 
+// Helper function to execute with retry for Neon/Serverless
+async function withRetry<T>(fn: () => Promise<T>, maxRetries = 3): Promise<T> {
+  let lastError: Error | null = null;
+  
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      return await fn();
+    } catch (error: any) {
+      lastError = error;
+      // Only retry on transaction errors
+      if (error.code !== 'P2028' || i === maxRetries - 1) {
+        throw error;
+      }
+      // Wait before retry (exponential backoff)
+      await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1)));
+    }
+  }
+  
+  throw lastError;
+}
+
 // GET /api/purchases - Get all purchases
 export async function GET(request: NextRequest) {
   try {
@@ -44,109 +65,112 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { invoiceNumber, supplierId, purchaseDate, items } = body;
-    // Start transaction
-    const result = await prisma.$transaction(async (tx: any) => {
-      // Check if invoice number already exists
-      const existingPurchase = await tx.purchase.findUnique({
-        where: { invoiceNumber },
-      });
-
-      if (existingPurchase) {
-        throw new Error('Invoice number already exists');
-      }
-
-      let totalAmount = 0;
-
-      // Create purchase with items
-      const purchase = await tx.purchase.create({
-        data: {
-          invoiceNumber,
-          supplierId,
-          purchaseDate: new Date(purchaseDate),
-          totalAmount: String(0), // Will update after items
-          items: {
-            create: items.map((item: { productId: string; quantity: number; costPrice: number }) => {
-              const quantity = Number(item.quantity);
-              const costPrice = Number(item.costPrice);
-              const subtotal = quantity * costPrice;
-              totalAmount = add(totalAmount, subtotal);
-
-              return {
-                productId: item.productId,
-                quantity: String(quantity),
-                costPrice: String(costPrice),
-                subtotal: String(subtotal),
-              };
-            }),
-          },
-        },
-        include: {
-          supplier: true,
-          items: {
-            include: {
-              product: true,
-            },
-          },
-        },
-      });
-
-      // Update total amount
-      const updatedPurchase = await tx.purchase.update({
-        where: { id: purchase.id },
-        data: { totalAmount },
-        include: {
-          supplier: true,
-          items: {
-            include: {
-              product: true,
-            },
-          },
-        },
-      });
-
-      // Update product stock and average cost
-      for (const item of items) {
-        const product = await tx.product.findUnique({
-          where: { id: item.productId },
+    
+    // Start transaction with retry
+    const result = await withRetry(async () => {
+      return await prisma.$transaction(async (tx: any) => {
+        // Check if invoice number already exists
+        const existingPurchase = await tx.purchase.findUnique({
+          where: { invoiceNumber },
         });
 
-        if (product) {
-          const currentStock = Number(product.currentStock);
-          const newStock = currentStock + Number(item.quantity);
-          
-          // Calculate new average cost
-          const currentTotalValue = currentStock * Number(product.averageCost);
-          const newTotalValue = Number(item.quantity) * Number(item.costPrice);
-          const newTotalStock = currentStock + Number(item.quantity);
-          let newAverageCost = 0;
-          if (newTotalStock > 0) {
-            newAverageCost = (newTotalValue + currentTotalValue) / newTotalStock;
-          }
-
-          await tx.product.update({
-            where: { id: item.productId },
-            data: {
-              currentStock: String(newStock),
-              averageCost: String(newAverageCost),
-            },
-          });
-
-          // Create stock movement
-          await tx.stockMovement.create({
-            data: {
-              productId: item.productId,
-              referenceType: 'PURCHASE',
-              referenceId: purchase.id,
-              movementType: 'IN',
-              quantity: String(item.quantity),
-              stockBefore: String(currentStock),
-              stockAfter: String(newStock),
-            },
-          });
+        if (existingPurchase) {
+          throw new Error('Invoice number already exists');
         }
-      }
 
-      return updatedPurchase;
+        let totalAmount = 0;
+
+        // Create purchase with items
+        const purchase = await tx.purchase.create({
+          data: {
+            invoiceNumber,
+            supplierId,
+            purchaseDate: new Date(purchaseDate),
+            totalAmount: String(0), // Will update after items
+            items: {
+              create: items.map((item: { productId: string; quantity: number; costPrice: number }) => {
+                const quantity = Number(item.quantity);
+                const costPrice = Number(item.costPrice);
+                const subtotal = quantity * costPrice;
+                totalAmount = add(totalAmount, subtotal);
+
+                return {
+                  productId: item.productId,
+                  quantity: String(quantity),
+                  costPrice: String(costPrice),
+                  subtotal: String(subtotal),
+                };
+              }),
+            },
+          },
+          include: {
+            supplier: true,
+            items: {
+              include: {
+                product: true,
+              },
+            },
+          },
+        });
+
+        // Update total amount
+        const updatedPurchase = await tx.purchase.update({
+          where: { id: purchase.id },
+          data: { totalAmount },
+          include: {
+            supplier: true,
+            items: {
+              include: {
+                product: true,
+              },
+            },
+          },
+        });
+
+        // Update product stock and average cost
+        for (const item of items) {
+          const product = await tx.product.findUnique({
+            where: { id: item.productId },
+          });
+
+          if (product) {
+            const currentStock = Number(product.currentStock);
+            const newStock = currentStock + Number(item.quantity);
+            
+            // Calculate new average cost
+            const currentTotalValue = currentStock * Number(product.averageCost);
+            const newTotalValue = Number(item.quantity) * Number(item.costPrice);
+            const newTotalStock = currentStock + Number(item.quantity);
+            let newAverageCost = 0;
+            if (newTotalStock > 0) {
+              newAverageCost = (newTotalValue + currentTotalValue) / newTotalStock;
+            }
+
+            await tx.product.update({
+              where: { id: item.productId },
+              data: {
+                currentStock: String(newStock),
+                averageCost: String(newAverageCost),
+              },
+            });
+
+            // Create stock movement
+            await tx.stockMovement.create({
+              data: {
+                productId: item.productId,
+                referenceType: 'PURCHASE',
+                referenceId: purchase.id,
+                movementType: 'IN',
+                quantity: String(item.quantity),
+                stockBefore: String(currentStock),
+                stockAfter: String(newStock),
+              },
+            });
+          }
+        }
+
+        return updatedPurchase;
+      });
     });
 
     return NextResponse.json(result, { status: 201 });
