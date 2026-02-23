@@ -29,7 +29,7 @@ export default function RootLayout({
         className={`${notoSans.variable} antialiased`}
         style={{ margin: 0, padding: 0 }}
       >
-        <div style={{ display: 'flex', minHeight: '100vh' }}>
+        <div style={{ display: 'flex', minHeight: '100vh', width: '100%' }}>
           {/* Desktop Sidebar */}
           <div className="desktop-sidebar">
             <Sidebar />
