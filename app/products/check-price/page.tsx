@@ -57,38 +57,49 @@ export default function CheckPricePage() {
     setError('')
     
     try {
+      // Request camera permission first
+      await navigator.mediaDevices.getUserMedia({ video: true })
+      
       const scannerId = 'price-scanner'
       scannerRef.current = new Html5Qrcode(scannerId)
       
       const config = { 
         fps: 10,
-        qrbox: { width: 250, height: 150 },
-        aspectRatio: 1.333,
-        videoConstraints: {
-          width: { min: 640, ideal: 1280 },
-          height: { min: 480, ideal: 720 },
-          facingMode: 'environment'
-        }
+        qrbox: { width: 300, height: 200 },
+        aspectRatio: 1.5,
       }
 
       const cameras = await Html5Qrcode.getCameras()
       if (cameras && cameras.length > 0) {
+        // Try to get back camera first
+        const backCamera = cameras.find(c => c.label.toLowerCase().includes('back') || c.label.toLowerCase().includes('rear') || c.label.toLowerCase().includes('environment'))
+        const cameraId = backCamera ? backCamera.id : cameras[0].id
+        
         await scannerRef.current.start(
-          cameras[0].id,
+          cameraId,
           config,
           (decodedText: string) => {
             setBarcode(decodedText)
             stopScanner()
             searchProduct()
           },
-          () => {}
+          (errorMessage: string) => {
+            // Ignore scanning errors
+          }
         )
       } else {
-        setError('No camera found')
+        setError('No camera found on this device')
         setScanning(false)
       }
     } catch (e: any) {
-      setError(e.message || 'Scanner error')
+      console.error('Scanner error:', e)
+      if (e.message && e.message.includes('Permission denied')) {
+        setError('Camera permission denied. Please allow camera access.')
+      } else if (e.message && e.message.includes('NotFoundError')) {
+        setError('No camera found on this device')
+      } else {
+        setError('Unable to start camera: ' + (e.message || 'Unknown error'))
+      }
       setScanning(false)
     }
   }
