@@ -25,11 +25,6 @@ function createPrismaClient() {
   return new PrismaClient({
     adapter,
     log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
-    // Increase transaction timeout to 30 seconds for slower operations
-    interactiveTransactions: {
-      maxWait: 30000, // 30 seconds
-      timeout: 30000, // 30 seconds
-    },
   })
 }
 
