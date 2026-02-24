@@ -33,13 +33,11 @@ export default function CheckPricePage() {
       oscillator.connect(gainNode)
       gainNode.connect(audioContext.destination)
       
-      oscillator.frequency.value = 1200 // Hz
+      oscillator.frequency.value = 1800
       oscillator.type = 'sine'
+      gainNode.gain.value = 0.3
       
-      gainNode.gain.setValueAtTime(0.3, audioContext.currentTime)
-      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1)
-      
-      oscillator.start(audioContext.currentTime)
+      oscillator.start()
       oscillator.stop(audioContext.currentTime + 0.1)
     } catch (e) {
       console.log('Audio not supported')
