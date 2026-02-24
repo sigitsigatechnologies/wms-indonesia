@@ -8,11 +8,10 @@ interface ShimmerProps {
 export default function Shimmer({ style }: ShimmerProps) {
   return (
     <div
+      className="shimmer"
       style={{
         ...style,
-        background: 'linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%)',
-        backgroundSize: '200% 100%',
-        animation: 'shimmer 1.5s infinite',
+        backgroundColor: '#f1f5f9',
         borderRadius: '4px',
       }}
     />
@@ -62,13 +61,6 @@ export function DashboardShimmer() {
         <Shimmer style={{ width: '200px', height: '24px', marginBottom: '1rem' }} />
         <Shimmer style={{ width: '100%', height: '300px' }} />
       </div>
-
-      <style jsx global>{`
-        @keyframes shimmer {
-          0% { background-position: -200% 0; }
-          100% { background-position: 200% 0; }
-        }
-      `}</style>
     </div>
   )
 }
@@ -97,12 +89,6 @@ export function TableShimmer({ rows = 5 }: { rows?: number }) {
           </td>
         </tr>
       ))}
-      <style jsx global>{`
-        @keyframes shimmer {
-          0% { background-position: -200% 0; }
-          100% { background-position: 200% 0; }
-        }
-      `}</style>
     </>
   )
 }
