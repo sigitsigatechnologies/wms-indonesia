@@ -1,11 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
-// GET /api/products - Get all products or search by barcode
+// GET /api/products - Get all products or search by barcode with pagination
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const barcode = searchParams.get('barcode');
+    const search = searchParams.get('search');
+    const page = parseInt(searchParams.get('page') || '1');
+    const limit = parseInt(searchParams.get('limit') || '10');
     
     // If barcode is provided, search for that specific product
     if (barcode) {
@@ -18,11 +21,38 @@ export async function GET(request: NextRequest) {
       return NextResponse.json([]);
     }
     
-    // Otherwise, return all products
+    // Build where clause for search
+    let whereClause = {};
+    if (search) {
+      whereClause = {
+        OR: [
+          { barcode: { contains: search, mode: 'insensitive' } },
+          { name: { contains: search, mode: 'insensitive' } },
+        ],
+      };
+    }
+    
+    // Get total count for pagination
+    const totalItems = await prisma.product.count({ where: whereClause });
+    const totalPages = Math.ceil(totalItems / limit);
+    
+    // Get paginated products
     const products = await prisma.product.findMany({
+      where: whereClause,
       orderBy: { createdAt: 'desc' },
+      skip: (page - 1) * limit,
+      take: limit,
     });
-    return NextResponse.json(products);
+    
+    return NextResponse.json({
+      data: products,
+      pagination: {
+        page,
+        limit,
+        totalItems,
+        totalPages,
+      },
+    });
   } catch (error) {
     console.error('Error fetching products:', error);
     return NextResponse.json({ error: 'Failed to fetch products' }, { status: 500 });

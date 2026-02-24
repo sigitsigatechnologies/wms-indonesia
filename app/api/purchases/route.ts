@@ -36,14 +36,27 @@ async function withRetry<T>(fn: () => Promise<T>, maxRetries = 3): Promise<T> {
   throw lastError;
 }
 
-// GET /api/purchases - Get all purchases
+// GET /api/purchases - Get all purchases with pagination
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const supplierId = searchParams.get('supplierId');
+    const page = parseInt(searchParams.get('page') || '1');
+    const limit = parseInt(searchParams.get('limit') || '10');
+    
+    // Build where clause
+    const whereClause = supplierId ? { supplierId } : {};
+    
+    // Get total count for pagination
+    const totalItems = await prisma.purchase.count({ where: whereClause });
+    const totalPages = Math.ceil(totalItems / limit);
+    
+    // Get paginated purchases
     const purchases = await prisma.purchase.findMany({
-      where: supplierId ? { supplierId } : undefined,
+      where: whereClause,
       orderBy: { createdAt: 'desc' },
+      skip: (page - 1) * limit,
+      take: limit,
       include: {
         supplier: true,
         items: {
@@ -53,7 +66,16 @@ export async function GET(request: NextRequest) {
         },
       },
     });
-    return NextResponse.json(purchases);
+    
+    return NextResponse.json({
+      data: purchases,
+      pagination: {
+        page,
+        limit,
+        totalItems,
+        totalPages,
+      },
+    });
   } catch (error) {
     console.error('Error fetching purchases:', error);
     return NextResponse.json({ error: 'Failed to fetch purchases' }, { status: 500 });

@@ -1,7 +1,10 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
+import Pagination from '@/components/Pagination'
+import { TableShimmer } from '@/components/Shimmer'
 
 interface Supplier {
   id: string
@@ -11,23 +14,55 @@ interface Supplier {
   createdAt: string
 }
 
-export default function SuppliersPage() {
+interface PaginationInfo {
+  page: number
+  limit: number
+  totalItems: number
+  totalPages: number
+}
+
+function SuppliersContent() {
   const [suppliers, setSuppliers] = useState<Supplier[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
+  const [pagination, setPagination] = useState<PaginationInfo>({
+    page: 1,
+    limit: 10,
+    totalItems: 0,
+    totalPages: 0,
+  })
+  const searchParams = useSearchParams()
 
   useEffect(() => {
-    fetchSuppliers()
-  }, [search])
+    const page = searchParams.get('page') || '1'
+    const limit = searchParams.get('limit') || '10'
+    fetchSuppliers(parseInt(page), parseInt(limit))
+  }, [search, searchParams])
 
-  async function fetchSuppliers() {
+  async function fetchSuppliers(page: number, limit: number) {
     try {
-      const url = search 
-        ? `/api/suppliers?search=${encodeURIComponent(search)}`
-        : '/api/suppliers'
-      const res = await fetch(url)
-      const data = await res.json()
-      setSuppliers(data)
+      setLoading(true)
+      const params = new URLSearchParams()
+      if (search) params.set('search', search)
+      params.set('page', page.toString())
+      params.set('limit', limit.toString())
+      
+      const res = await fetch(`/api/suppliers?${params.toString()}`)
+      const result = await res.json()
+      
+      if (result.data) {
+        setSuppliers(result.data)
+        setPagination(result.pagination)
+      } else {
+        // Handle legacy response (array)
+        setSuppliers(result)
+        setPagination({
+          page: 1,
+          limit: 10,
+          totalItems: result.length,
+          totalPages: Math.ceil(result.length / 10),
+        })
+      }
     } catch (error) {
       console.error('Error fetching suppliers:', error)
     } finally {
@@ -40,7 +75,7 @@ export default function SuppliersPage() {
     
     try {
       await fetch(`/api/suppliers/${id}`, { method: 'DELETE' })
-      fetchSuppliers()
+      fetchSuppliers(pagination.page, pagination.limit)
     } catch (error) {
       console.error('Error deleting supplier:', error)
     }
@@ -119,25 +154,40 @@ export default function SuppliersPage() {
             </tr>
           </thead>
           <tbody>
-            {suppliers.map((supplier) => (
-              <tr key={supplier.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
-                <td style={{...tdStyle, fontWeight: 500}}>{supplier.name}</td>
-                <td style={tdStyle}>{supplier.phone}</td>
-                <td style={tdStyle}>{supplier.address}</td>
-                <td style={tdStyle}>{new Date(supplier.createdAt).toLocaleDateString('id-ID')}</td>
-                <td style={{...tdStyle, textAlign: 'right'}}>
-                  <Link href={`/suppliers/${supplier.id}`} style={{ color: '#3b82f6', textDecoration: 'none', marginRight: '0.75rem' }}>
-                    <span className="material-symbols-outlined" style={{ fontSize: '1.1rem' }}>edit</span>
-                  </Link>
-                  <button onClick={() => deleteSupplier(supplier.id)} style={{ color: '#ef4444', backgroundColor: 'transparent', border: 'none', cursor: 'pointer' }}>
-                    <span className="material-symbols-outlined" style={{ fontSize: '1.1rem' }}>delete</span>
-                  </button>
-                </td>
+            {loading ? (
+              <TableShimmer rows={5} />
+            ) : suppliers.length === 0 ? (
+              <tr>
+                <td colSpan={5} style={{...tdStyle, textAlign: 'center', color: '#94a3b8'}}>No suppliers found</td>
               </tr>
-            ))}
+            ) : (
+              suppliers.map((supplier) => (
+                <tr key={supplier.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
+                  <td style={{...tdStyle, fontWeight: 500}}>{supplier.name}</td>
+                  <td style={tdStyle}>{supplier.phone}</td>
+                  <td style={tdStyle}>{supplier.address}</td>
+                  <td style={tdStyle}>{new Date(supplier.createdAt).toLocaleDateString('id-ID')}</td>
+                  <td style={{...tdStyle, textAlign: 'right'}}>
+                    <Link href={`/suppliers/${supplier.id}`} style={{ color: '#3b82f6', textDecoration: 'none', marginRight: '0.75rem' }}>
+                      <span className="material-symbols-outlined" style={{ fontSize: '1.1rem' }}>edit</span>
+                    </Link>
+                    <button onClick={() => deleteSupplier(supplier.id)} style={{ color: '#ef4444', backgroundColor: 'transparent', border: 'none', cursor: 'pointer' }}>
+                      <span className="material-symbols-outlined" style={{ fontSize: '1.1rem' }}>delete</span>
+                    </button>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>
+
+      <Pagination
+        currentPage={pagination.page}
+        totalPages={pagination.totalPages}
+        totalItems={pagination.totalItems}
+        itemsPerPage={pagination.limit}
+      />
 
       {suppliers.length === 0 && !loading && (
         <div style={{ textAlign: 'center', padding: '3rem', color: '#94a3b8' }}>
@@ -146,5 +196,13 @@ export default function SuppliersPage() {
         </div>
       )}
     </div>
+  )
+}
+
+export default function SuppliersPage() {
+  return (
+    <Suspense fallback={<div style={{ textAlign: 'center', padding: '3rem' }}>Loading...</div>}>
+      <SuppliersContent />
+    </Suspense>
   )
 }

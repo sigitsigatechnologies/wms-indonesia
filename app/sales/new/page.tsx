@@ -73,9 +73,11 @@ export default function NewSalePage() {
 
   async function fetchProducts() {
     try {
-      const res = await fetch('/api/products')
-      const data = await res.json()
-      setProducts(data.filter((p: Product) => p.currentStock > 0))
+      const res = await fetch('/api/products?limit=1000')
+      const result = await res.json()
+      // Handle paginated response
+      const data = result.data || result
+      setProducts(data.filter((p: Product) => Number(p.currentStock) > 0))
     } catch (err) {
       console.error('Error fetching products:', err)
     }

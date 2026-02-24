@@ -20,8 +20,8 @@ export default function CheckPricePage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [scanning, setScanning] = useState(false)
-  const [isScanning, setIsScanning] = useState(false)
   const scannerRef = useRef<Html5Qrcode | null>(null)
+  const lastScannedRef = useRef<string>('')
 
   // Play beep sound when barcode is scanned
   const playBeep = () => {
@@ -44,13 +44,13 @@ export default function CheckPricePage() {
     }
   }
 
-  // Auto-search when barcode is set from scanner
+  // Auto-search when barcode changes
   useEffect(() => {
-    if (isScanning && barcode.trim()) {
-      setIsScanning(false)
+    if (barcode.trim() && barcode !== lastScannedRef.current) {
+      lastScannedRef.current = barcode
       doSearch(barcode.trim())
     }
-  }, [barcode, isScanning])
+  }, [barcode])
 
   async function doSearch(searchTerm: string) {
     if (!searchTerm.trim()) return
@@ -60,15 +60,14 @@ export default function CheckPricePage() {
     setProduct(null)
     
     try {
-      console.log('Searching for barcode:', searchTerm)
-      
       const res = await fetch(`/api/products?barcode=${encodeURIComponent(searchTerm.trim())}`)
       const data = await res.json()
       
-      console.log('API Response:', data)
+      // Handle both array response (barcode search) and paginated response
+      const products = Array.isArray(data) ? data : (data.data || [])
       
-      if (data && data.length > 0) {
-        setProduct(data[0])
+      if (products && products.length > 0) {
+        setProduct(products[0])
       } else {
         setError('Product not found')
       }
@@ -81,11 +80,13 @@ export default function CheckPricePage() {
   }
 
   function handleManualSearch() {
+    lastScannedRef.current = barcode
     doSearch(barcode)
   }
 
   function handleKeyDown(e: React.KeyboardEvent) {
     if (e.key === 'Enter') {
+      lastScannedRef.current = barcode
       doSearch(barcode)
     }
   }
@@ -94,6 +95,7 @@ export default function CheckPricePage() {
   const startScanner = async () => {
     setScanning(true)
     setError('')
+    setProduct(null)
     
     try {
       // Request camera permission first
@@ -117,21 +119,23 @@ export default function CheckPricePage() {
         await scannerRef.current.start(
           cameraId,
           config,
-          (decodedText: string) => {
-            // Stop scanner and wait for it to complete before processing
+          async (decodedText: string) => {
+            playBeep()
+            
+            // Stop scanner immediately
             if (scannerRef.current) {
-              scannerRef.current.stop().then(() => {
-                scannerRef.current = null
-                playBeep()
-                setBarcode(decodedText)
-                setScanning(false)
-              }).catch(() => {
-                scannerRef.current = null
-                playBeep()
-                setBarcode(decodedText)
-                setScanning(false)
-              })
+              try {
+                await scannerRef.current.stop()
+                scannerRef.current.clear()
+              } catch (e) {
+                // Ignore errors when stopping
+              }
+              scannerRef.current = null
             }
+            
+            setScanning(false)
+            // Set barcode - useEffect will trigger search automatically
+            setBarcode(decodedText)
           },
           (errorMessage: string) => {
             // Ignore scanning errors
@@ -260,15 +264,14 @@ export default function CheckPricePage() {
           />
           <button
             onClick={handleManualSearch}
-            disabled={loading}
+            disabled={loading || !barcode.trim()}
             style={{
               padding: '0.75rem 1.5rem',
-              backgroundColor: '#3b82f6',
+              backgroundColor: loading || !barcode.trim() ? '#cbd5e1' : '#3b82f6',
               color: 'white',
               border: 'none',
               borderRadius: '8px',
-              cursor: loading ? 'not-allowed' : 'pointer',
-              opacity: loading ? 0.5 : 1,
+              cursor: loading || !barcode.trim() ? 'not-allowed' : 'pointer',
               fontSize: '0.9rem',
               fontWeight: '500',
             }}
@@ -277,6 +280,13 @@ export default function CheckPricePage() {
           </button>
         </div>
       </div>
+
+      {/* Loading */}
+      {loading && (
+        <div style={{ marginTop: '1rem', padding: '1rem', backgroundColor: '#f1f5f9', borderRadius: '8px', textAlign: 'center', color: '#64748b' }}>
+          Searching...
+        </div>
+      )}
 
       {/* Error */}
       {error && (

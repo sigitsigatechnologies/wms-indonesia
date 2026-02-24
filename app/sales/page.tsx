@@ -1,7 +1,10 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
+import Pagination from '@/components/Pagination'
+import { TableShimmer } from '@/components/Shimmer'
 
 interface SaleItem {
   id: string
@@ -22,19 +25,53 @@ interface Sale {
   createdAt: string
 }
 
-export default function SalesPage() {
+interface PaginationInfo {
+  page: number
+  limit: number
+  totalItems: number
+  totalPages: number
+}
+
+function SalesContent() {
   const [sales, setSales] = useState<Sale[]>([])
   const [loading, setLoading] = useState(true)
+  const [pagination, setPagination] = useState<PaginationInfo>({
+    page: 1,
+    limit: 10,
+    totalItems: 0,
+    totalPages: 0,
+  })
+  const searchParams = useSearchParams()
 
   useEffect(() => {
-    fetchSales()
-  }, [])
+    const page = searchParams.get('page') || '1'
+    const limit = searchParams.get('limit') || '10'
+    fetchSales(parseInt(page), parseInt(limit))
+  }, [searchParams])
 
-  async function fetchSales() {
+  async function fetchSales(page: number, limit: number) {
     try {
-      const res = await fetch('/api/sales')
-      const data = await res.json()
-      setSales(data)
+      setLoading(true)
+      const params = new URLSearchParams()
+      params.set('page', page.toString())
+      params.set('limit', limit.toString())
+      
+      const res = await fetch(`/api/sales?${params.toString()}`)
+      const result = await res.json()
+      
+      if (result.data) {
+        setSales(result.data)
+        setPagination(result.pagination)
+      } else {
+        // Handle legacy response (array)
+        setSales(result)
+        setPagination({
+          page: 1,
+          limit: 10,
+          totalItems: result.length,
+          totalPages: Math.ceil(result.length / 10),
+        })
+      }
     } catch (error) {
       console.error('Error fetching sales:', error)
     } finally {
@@ -116,23 +153,38 @@ export default function SalesPage() {
             </tr>
           </thead>
           <tbody>
-            {sales.map((sale) => (
-              <tr key={sale.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
-                <td style={{...tdStyle, fontWeight: 500}}>{sale.invoiceNumber}</td>
-                <td style={tdStyle}>Rp {Number(sale.totalAmount).toLocaleString('id-ID')}</td>
-                <td style={{...tdStyle, color: '#10b981', fontWeight: 500}}>Rp {Number(sale.totalProfit).toLocaleString('id-ID')}</td>
-                <td style={tdStyle}>
-                  <span style={{ padding: '0.25rem 0.75rem', borderRadius: '6px', fontSize: '0.8rem', fontWeight: '500', backgroundColor: '#eff6ff', color: '#1d4ed8' }}>
-                    {sale.paymentMethod}
-                  </span>
-                </td>
-                <td style={tdStyle}>{sale.items?.length || 0} items</td>
-                <td style={tdStyle}>{new Date(sale.createdAt).toLocaleDateString('id-ID')}</td>
+            {loading ? (
+              <TableShimmer rows={5} />
+            ) : sales.length === 0 ? (
+              <tr>
+                <td colSpan={6} style={{...tdStyle, textAlign: 'center', color: '#94a3b8'}}>No sales found</td>
               </tr>
-            ))}
+            ) : (
+              sales.map((sale) => (
+                <tr key={sale.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
+                  <td style={{...tdStyle, fontWeight: 500}}>{sale.invoiceNumber}</td>
+                  <td style={tdStyle}>Rp {Number(sale.totalAmount).toLocaleString('id-ID')}</td>
+                  <td style={{...tdStyle, color: '#10b981', fontWeight: 500}}>Rp {Number(sale.totalProfit).toLocaleString('id-ID')}</td>
+                  <td style={tdStyle}>
+                    <span style={{ padding: '0.25rem 0.75rem', borderRadius: '6px', fontSize: '0.8rem', fontWeight: '500', backgroundColor: '#eff6ff', color: '#1d4ed8' }}>
+                      {sale.paymentMethod}
+                    </span>
+                  </td>
+                  <td style={tdStyle}>{sale.items?.length || 0} items</td>
+                  <td style={tdStyle}>{new Date(sale.createdAt).toLocaleDateString('id-ID')}</td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>
+
+      <Pagination
+        currentPage={pagination.page}
+        totalPages={pagination.totalPages}
+        totalItems={pagination.totalItems}
+        itemsPerPage={pagination.limit}
+      />
 
       {sales.length === 0 && !loading && (
         <div style={{ textAlign: 'center', padding: '3rem', color: '#94a3b8' }}>
@@ -141,5 +193,13 @@ export default function SalesPage() {
         </div>
       )}
     </div>
+  )
+}
+
+export default function SalesPage() {
+  return (
+    <Suspense fallback={<div style={{ textAlign: 'center', padding: '3rem' }}>Loading...</div>}>
+      <SalesContent />
+    </Suspense>
   )
 }

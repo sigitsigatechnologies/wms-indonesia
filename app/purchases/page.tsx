@@ -1,7 +1,10 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
+import Pagination from '@/components/Pagination'
+import { TableShimmer } from '@/components/Shimmer'
 
 interface PurchaseItem {
   id: string
@@ -21,19 +24,53 @@ interface Purchase {
   createdAt: string
 }
 
-export default function PurchasesPage() {
+interface PaginationInfo {
+  page: number
+  limit: number
+  totalItems: number
+  totalPages: number
+}
+
+function PurchasesContent() {
   const [purchases, setPurchases] = useState<Purchase[]>([])
   const [loading, setLoading] = useState(true)
+  const [pagination, setPagination] = useState<PaginationInfo>({
+    page: 1,
+    limit: 10,
+    totalItems: 0,
+    totalPages: 0,
+  })
+  const searchParams = useSearchParams()
 
   useEffect(() => {
-    fetchPurchases()
-  }, [])
+    const page = searchParams.get('page') || '1'
+    const limit = searchParams.get('limit') || '10'
+    fetchPurchases(parseInt(page), parseInt(limit))
+  }, [searchParams])
 
-  async function fetchPurchases() {
+  async function fetchPurchases(page: number, limit: number) {
     try {
-      const res = await fetch('/api/purchases')
-      const data = await res.json()
-      setPurchases(data)
+      setLoading(true)
+      const params = new URLSearchParams()
+      params.set('page', page.toString())
+      params.set('limit', limit.toString())
+      
+      const res = await fetch(`/api/purchases?${params.toString()}`)
+      const result = await res.json()
+      
+      if (result.data) {
+        setPurchases(result.data)
+        setPagination(result.pagination)
+      } else {
+        // Handle legacy response (array)
+        setPurchases(result)
+        setPagination({
+          page: 1,
+          limit: 10,
+          totalItems: result.length,
+          totalPages: Math.ceil(result.length / 10),
+        })
+      }
     } catch (error) {
       console.error('Error fetching purchases:', error)
     } finally {
@@ -46,7 +83,7 @@ export default function PurchasesPage() {
     
     try {
       await fetch(`/api/purchases/${id}`, { method: 'DELETE' })
-      fetchPurchases()
+      fetchPurchases(pagination.page, pagination.limit)
     } catch (error) {
       console.error('Error deleting purchase:', error)
     }
@@ -106,26 +143,41 @@ export default function PurchasesPage() {
             </tr>
           </thead>
           <tbody>
-            {purchases.map((purchase) => (
-              <tr key={purchase.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
-                <td style={{...tdStyle, fontWeight: 500}}>{purchase.invoiceNumber}</td>
-                <td style={tdStyle}>{new Date(purchase.purchaseDate).toLocaleDateString('id-ID')}</td>
-                <td style={tdStyle}>Rp {Number(purchase.totalAmount).toLocaleString('id-ID')}</td>
-                <td style={tdStyle}>
-                  <span style={{ padding: '0.25rem 0.75rem', borderRadius: '6px', fontSize: '0.8rem', fontWeight: '500', backgroundColor: '#eff6ff', color: '#1d4ed8' }}>
-                    {purchase.items?.length || 0} items
-                  </span>
-                </td>
-                <td style={{...tdStyle, textAlign: 'right'}}>
-                  <button onClick={() => deletePurchase(purchase.id)} style={{ color: '#ef4444', backgroundColor: 'transparent', border: 'none', cursor: 'pointer' }}>
-                    <span className="material-symbols-outlined" style={{ fontSize: '1.1rem' }}>delete</span>
-                  </button>
-                </td>
+            {loading ? (
+              <TableShimmer rows={5} />
+            ) : purchases.length === 0 ? (
+              <tr>
+                <td colSpan={5} style={{...tdStyle, textAlign: 'center', color: '#94a3b8'}}>No purchases found</td>
               </tr>
-            ))}
+            ) : (
+              purchases.map((purchase) => (
+                <tr key={purchase.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
+                  <td style={{...tdStyle, fontWeight: 500}}>{purchase.invoiceNumber}</td>
+                  <td style={tdStyle}>{new Date(purchase.purchaseDate).toLocaleDateString('id-ID')}</td>
+                  <td style={tdStyle}>Rp {Number(purchase.totalAmount).toLocaleString('id-ID')}</td>
+                  <td style={tdStyle}>
+                    <span style={{ padding: '0.25rem 0.75rem', borderRadius: '6px', fontSize: '0.8rem', fontWeight: '500', backgroundColor: '#eff6ff', color: '#1d4ed8' }}>
+                      {purchase.items?.length || 0} items
+                    </span>
+                  </td>
+                  <td style={{...tdStyle, textAlign: 'right'}}>
+                    <button onClick={() => deletePurchase(purchase.id)} style={{ color: '#ef4444', backgroundColor: 'transparent', border: 'none', cursor: 'pointer' }}>
+                      <span className="material-symbols-outlined" style={{ fontSize: '1.1rem' }}>delete</span>
+                    </button>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>
+
+      <Pagination
+        currentPage={pagination.page}
+        totalPages={pagination.totalPages}
+        totalItems={pagination.totalItems}
+        itemsPerPage={pagination.limit}
+      />
 
       {purchases.length === 0 && !loading && (
         <div style={{ textAlign: 'center', padding: '3rem', color: '#94a3b8' }}>
@@ -134,5 +186,13 @@ export default function PurchasesPage() {
         </div>
       )}
     </div>
+  )
+}
+
+export default function PurchasesPage() {
+  return (
+    <Suspense fallback={<div style={{ textAlign: 'center', padding: '3rem' }}>Loading...</div>}>
+      <PurchasesContent />
+    </Suspense>
   )
 }

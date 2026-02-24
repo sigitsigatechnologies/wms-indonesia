@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts'
+import { DashboardShimmer } from '@/components/Shimmer'
 
 interface ChartData {
   date: string
@@ -45,11 +46,7 @@ export default function Home() {
   }, [])
 
   if (loading) {
-    return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '50vh' }}>
-        <p>Loading...</p>
-      </div>
-    )
+    return <DashboardShimmer />
   }
 
   const cardStyle: React.CSSProperties = {

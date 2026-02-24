@@ -40,13 +40,16 @@ export default function NewPurchasePage() {
   async function fetchData() {
     try {
       const [productsRes, suppliersRes] = await Promise.all([
-        fetch('/api/products'),
-        fetch('/api/suppliers'),
+        fetch('/api/products?limit=1000'),
+        fetch('/api/suppliers?limit=1000'),
       ])
-      const [productsData, suppliersData] = await Promise.all([
+      const [productsResult, suppliersResult] = await Promise.all([
         productsRes.json(),
         suppliersRes.json(),
       ])
+      // Handle paginated response
+      const productsData = productsResult.data || productsResult
+      const suppliersData = suppliersResult.data || suppliersResult
       setProducts(productsData)
       setSuppliers(suppliersData)
     } catch (err) {

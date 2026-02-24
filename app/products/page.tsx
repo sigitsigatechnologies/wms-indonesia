@@ -1,7 +1,10 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
+import Pagination from '@/components/Pagination'
+import { TableShimmer } from '@/components/Shimmer'
 
 interface Product {
   id: string
@@ -15,23 +18,55 @@ interface Product {
   isActive: boolean
 }
 
-export default function ProductsPage() {
+interface PaginationInfo {
+  page: number
+  limit: number
+  totalItems: number
+  totalPages: number
+}
+
+function ProductsContent() {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
+  const [pagination, setPagination] = useState<PaginationInfo>({
+    page: 1,
+    limit: 10,
+    totalItems: 0,
+    totalPages: 0,
+  })
+  const searchParams = useSearchParams()
 
   useEffect(() => {
-    fetchProducts()
-  }, [search])
+    const page = searchParams.get('page') || '1'
+    const limit = searchParams.get('limit') || '10'
+    fetchProducts(parseInt(page), parseInt(limit))
+  }, [search, searchParams])
 
-  async function fetchProducts() {
+  async function fetchProducts(page: number, limit: number) {
     try {
-      const url = search 
-        ? `/api/products?search=${encodeURIComponent(search)}`
-        : '/api/products'
-      const res = await fetch(url)
-      const data = await res.json()
-      setProducts(data)
+      setLoading(true)
+      const params = new URLSearchParams()
+      if (search) params.set('search', search)
+      params.set('page', page.toString())
+      params.set('limit', limit.toString())
+      
+      const res = await fetch(`/api/products?${params.toString()}`)
+      const result = await res.json()
+      
+      if (result.data) {
+        setProducts(result.data)
+        setPagination(result.pagination)
+      } else {
+        // Handle legacy response (array)
+        setProducts(result)
+        setPagination({
+          page: 1,
+          limit: 10,
+          totalItems: result.length,
+          totalPages: Math.ceil(result.length / 10),
+        })
+      }
     } catch (error) {
       console.error('Error fetching products:', error)
     } finally {
@@ -44,7 +79,7 @@ export default function ProductsPage() {
     
     try {
       await fetch(`/api/products/${id}`, { method: 'DELETE' })
-      fetchProducts()
+      fetchProducts(pagination.page, pagination.limit)
     } catch (error) {
       console.error('Error deleting product:', error)
     }
@@ -148,44 +183,59 @@ export default function ProductsPage() {
             </tr>
           </thead>
           <tbody>
-            {products.map((product) => (
-              <tr key={product.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
-                <td style={{...tdStyle, fontFamily: 'monospace', color: '#64748b'}}>{product.barcode}</td>
-                <td style={{...tdStyle, fontWeight: 500}}>{product.name}</td>
-                <td style={tdStyle}>Rp {Number(product.sellingPrice).toLocaleString('id-ID')}</td>
-                <td style={tdStyle}>Rp {Number(product.averageCost).toLocaleString('id-ID')}</td>
-                <td style={tdStyle}>
-                  <span style={{
-                    ...badgeStyle,
-                    backgroundColor: Number(product.currentStock) <= Number(product.minStock) ? '#fef3c7' : '#eff6ff',
-                    color: Number(product.currentStock) <= Number(product.minStock) ? '#b45309' : '#1d4ed8'
-                  }}>
-                    {product.currentStock} {product.unit}
-                  </span>
-                </td>
-                <td style={tdStyle}>{product.minStock}</td>
-                <td style={tdStyle}>
-                  <span style={{
-                    ...badgeStyle,
-                    backgroundColor: product.isActive ? '#dcfce7' : '#f1f5f9',
-                    color: product.isActive ? '#16a34a' : '#64748b'
-                  }}>
-                    {product.isActive ? 'Active' : 'Inactive'}
-                  </span>
-                </td>
-                <td style={{...tdStyle, textAlign: 'right'}}>
-                  <Link href={`/products/${product.id}`} style={{ color: '#3b82f6', textDecoration: 'none', marginRight: '0.75rem' }}>
-                    <span className="material-symbols-outlined" style={{ fontSize: '1.1rem' }}>edit</span>
-                  </Link>
-                  <button onClick={() => deleteProduct(product.id)} style={{ color: '#ef4444', backgroundColor: 'transparent', border: 'none', cursor: 'pointer' }}>
-                    <span className="material-symbols-outlined" style={{ fontSize: '1.1rem' }}>delete</span>
-                  </button>
-                </td>
+            {loading ? (
+              <TableShimmer rows={5} />
+            ) : products.length === 0 ? (
+              <tr>
+                <td colSpan={8} style={{...tdStyle, textAlign: 'center', color: '#94a3b8'}}>No products found</td>
               </tr>
-            ))}
+            ) : (
+              products.map((product) => (
+                <tr key={product.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
+                  <td style={{...tdStyle, fontFamily: 'monospace', color: '#64748b'}}>{product.barcode}</td>
+                  <td style={{...tdStyle, fontWeight: 500}}>{product.name}</td>
+                  <td style={tdStyle}>Rp {Number(product.sellingPrice).toLocaleString('id-ID')}</td>
+                  <td style={tdStyle}>Rp {Number(product.averageCost).toLocaleString('id-ID')}</td>
+                  <td style={tdStyle}>
+                    <span style={{
+                      ...badgeStyle,
+                      backgroundColor: Number(product.currentStock) <= Number(product.minStock) ? '#fef3c7' : '#eff6ff',
+                      color: Number(product.currentStock) <= Number(product.minStock) ? '#b45309' : '#1d4ed8'
+                    }}>
+                      {product.currentStock} {product.unit}
+                    </span>
+                  </td>
+                  <td style={tdStyle}>{product.minStock}</td>
+                  <td style={tdStyle}>
+                    <span style={{
+                      ...badgeStyle,
+                      backgroundColor: product.isActive ? '#dcfce7' : '#f1f5f9',
+                      color: product.isActive ? '#16a34a' : '#64748b'
+                    }}>
+                      {product.isActive ? 'Active' : 'Inactive'}
+                    </span>
+                  </td>
+                  <td style={{...tdStyle, textAlign: 'right'}}>
+                    <Link href={`/products/${product.id}`} style={{ color: '#3b82f6', textDecoration: 'none', marginRight: '0.75rem' }}>
+                      <span className="material-symbols-outlined" style={{ fontSize: '1.1rem' }}>edit</span>
+                    </Link>
+                    <button onClick={() => deleteProduct(product.id)} style={{ color: '#ef4444', backgroundColor: 'transparent', border: 'none', cursor: 'pointer' }}>
+                      <span className="material-symbols-outlined" style={{ fontSize: '1.1rem' }}>delete</span>
+                    </button>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>
+
+      <Pagination
+        currentPage={pagination.page}
+        totalPages={pagination.totalPages}
+        totalItems={pagination.totalItems}
+        itemsPerPage={pagination.limit}
+      />
 
       {products.length === 0 && !loading && (
         <div style={{ textAlign: 'center', padding: '3rem', color: '#94a3b8' }}>
@@ -194,5 +244,13 @@ export default function ProductsPage() {
         </div>
       )}
     </div>
+  )
+}
+
+export default function ProductsPage() {
+  return (
+    <Suspense fallback={<div style={{ textAlign: 'center', padding: '3rem' }}>Loading...</div>}>
+      <ProductsContent />
+    </Suspense>
   )
 }

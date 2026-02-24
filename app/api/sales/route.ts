@@ -1,12 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
-// GET /api/sales - Get all sales
+// GET /api/sales - Get all sales with pagination
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const startDate = searchParams.get('startDate');
     const endDate = searchParams.get('endDate');
+    const page = parseInt(searchParams.get('page') || '1');
+    const limit = parseInt(searchParams.get('limit') || '10');
 
     const whereClause: { createdAt?: { gte?: Date; lte?: Date } } = {};
     
@@ -20,9 +22,15 @@ export async function GET(request: NextRequest) {
       }
     }
 
+    // Get total count for pagination
+    const totalItems = await prisma.sale.count({ where: whereClause });
+    const totalPages = Math.ceil(totalItems / limit);
+
     const sales = await prisma.sale.findMany({
       where: whereClause,
       orderBy: { createdAt: 'desc' },
+      skip: (page - 1) * limit,
+      take: limit,
       include: {
         items: {
           include: {
@@ -31,7 +39,16 @@ export async function GET(request: NextRequest) {
         },
       },
     });
-    return NextResponse.json(sales);
+    
+    return NextResponse.json({
+      data: sales,
+      pagination: {
+        page,
+        limit,
+        totalItems,
+        totalPages,
+      },
+    });
   } catch (error) {
     console.error('Error fetching sales:', error);
     return NextResponse.json({ error: 'Failed to fetch sales' }, { status: 500 });
@@ -66,7 +83,15 @@ export async function POST(request: NextRequest) {
     const { invoiceNumber, paymentMethod, items } = body;
 
     // First, validate and prepare data outside transaction
-    const processedItems = [];
+    const processedItems: {
+      productId: string;
+      quantity: number;
+      sellingPrice: number;
+      costPrice: number;
+      subtotal: number;
+      profit: number;
+      currentStock: number;
+    }[] = [];
     let totalAmount = 0;
     let totalProfit = 0;
 

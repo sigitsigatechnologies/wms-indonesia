@@ -25,6 +25,11 @@ function createPrismaClient() {
   return new PrismaClient({
     adapter,
     log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
+    // Increase transaction timeout for Neon Serverless
+    transactionOptions: {
+      maxWait: 15000, // 15 seconds max wait for transaction
+      timeout: 30000, // 30 seconds transaction timeout
+    },
   })
 }
 
