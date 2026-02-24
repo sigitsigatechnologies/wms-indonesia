@@ -39,6 +39,27 @@ export default function NewSalePage() {
   const [invoiceNumber, setInvoiceNumber] = useState('')
   const scannerRef = useRef<Html5Qrcode | null>(null)
 
+  // Play beep sound on successful scan
+  const playBeep = () => {
+    try {
+      const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)()
+      const oscillator = audioContext.createOscillator()
+      const gainNode = audioContext.createGain()
+      
+      oscillator.connect(gainNode)
+      gainNode.connect(audioContext.destination)
+      
+      oscillator.frequency.value = 1800
+      oscillator.type = 'sine'
+      gainNode.gain.value = 0.3
+      
+      oscillator.start()
+      oscillator.stop(audioContext.currentTime + 0.1)
+    } catch (e) {
+      console.log('Audio not supported')
+    }
+  }
+
   useEffect(() => {
     fetchProducts()
     generateInvoiceNumber()
@@ -135,6 +156,7 @@ export default function NewSalePage() {
           (decodedText: string) => {
             const product = products.find(p => p.barcode === decodedText.trim())
             if (product) {
+              playBeep() // Play beep sound on successful scan
               addToCart(product)
             } else {
               setError('Product not found')
