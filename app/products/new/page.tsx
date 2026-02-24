@@ -47,14 +47,16 @@ function BarcodeScanner({ onScan, onClose }: { onScan: (barcode: string) => void
             cameraId,
             config,
             (decodedText: string) => {
-              // Stop scanner immediately on successful scan
+              // Stop scanner immediately on successful scan - wait for it to complete
               if (scannerRef.current) {
-                try {
-                  scannerRef.current.stop()
-                } catch (e) {}
-                scannerRef.current = null
+                scannerRef.current.stop().then(() => {
+                  scannerRef.current = null
+                  onScan(decodedText)
+                }).catch((e) => {
+                  scannerRef.current = null
+                  onScan(decodedText)
+                })
               }
-              onScan(decodedText)
             },
             (errorMessage: string) => {
               // Ignore scan errors

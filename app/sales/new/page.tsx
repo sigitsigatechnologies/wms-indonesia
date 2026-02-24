@@ -154,22 +154,30 @@ export default function NewSalePage() {
           cameraId,
           config,
           (decodedText: string) => {
-            // Stop scanner immediately - faster response
+            // Stop scanner and wait for it to complete before processing
             if (scannerRef.current) {
               scannerRef.current.stop().then(() => {
                 scannerRef.current = null
+                const product = products.find(p => p.barcode === decodedText.trim())
+                if (product) {
+                  playBeep()
+                  addToCart(product)
+                } else {
+                  setError('Product not found')
+                }
+                setScanning(false)
               }).catch(() => {
                 scannerRef.current = null
+                const product = products.find(p => p.barcode === decodedText.trim())
+                if (product) {
+                  playBeep()
+                  addToCart(product)
+                } else {
+                  setError('Product not found')
+                }
+                setScanning(false)
               })
             }
-            const product = products.find(p => p.barcode === decodedText.trim())
-            if (product) {
-              playBeep() // Play beep sound on successful scan
-              addToCart(product)
-            } else {
-              setError('Product not found')
-            }
-            setScanning(false)
           },
           () => {}
         )

@@ -118,17 +118,20 @@ export default function CheckPricePage() {
           cameraId,
           config,
           (decodedText: string) => {
-            // Stop scanner immediately - faster response
+            // Stop scanner and wait for it to complete before processing
             if (scannerRef.current) {
               scannerRef.current.stop().then(() => {
                 scannerRef.current = null
+                playBeep()
+                setBarcode(decodedText)
+                setScanning(false)
               }).catch(() => {
                 scannerRef.current = null
+                playBeep()
+                setBarcode(decodedText)
+                setScanning(false)
               })
             }
-            playBeep() // Play beep sound
-            setBarcode(decodedText)
-            setScanning(false)
           },
           (errorMessage: string) => {
             // Ignore scanning errors
