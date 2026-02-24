@@ -154,6 +154,14 @@ export default function NewSalePage() {
           cameraId,
           config,
           (decodedText: string) => {
+            // Stop scanner immediately - faster response
+            if (scannerRef.current) {
+              scannerRef.current.stop().then(() => {
+                scannerRef.current = null
+              }).catch(() => {
+                scannerRef.current = null
+              })
+            }
             const product = products.find(p => p.barcode === decodedText.trim())
             if (product) {
               playBeep() // Play beep sound on successful scan
@@ -161,7 +169,7 @@ export default function NewSalePage() {
             } else {
               setError('Product not found')
             }
-            stopScanner()
+            setScanning(false)
           },
           () => {}
         )
