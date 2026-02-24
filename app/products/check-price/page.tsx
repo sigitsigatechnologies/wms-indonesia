@@ -23,6 +23,29 @@ export default function CheckPricePage() {
   const [isScanning, setIsScanning] = useState(false)
   const scannerRef = useRef<Html5Qrcode | null>(null)
 
+  // Play beep sound when barcode is scanned
+  const playBeep = () => {
+    try {
+      const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)()
+      const oscillator = audioContext.createOscillator()
+      const gainNode = audioContext.createGain()
+      
+      oscillator.connect(gainNode)
+      gainNode.connect(audioContext.destination)
+      
+      oscillator.frequency.value = 1200 // Hz
+      oscillator.type = 'sine'
+      
+      gainNode.gain.setValueAtTime(0.3, audioContext.currentTime)
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1)
+      
+      oscillator.start(audioContext.currentTime)
+      oscillator.stop(audioContext.currentTime + 0.1)
+    } catch (e) {
+      console.log('Audio not supported')
+    }
+  }
+
   // Auto-search when barcode is set from scanner
   useEffect(() => {
     if (isScanning && barcode.trim()) {
@@ -97,6 +120,7 @@ export default function CheckPricePage() {
           cameraId,
           config,
           (decodedText: string) => {
+            playBeep() // Play beep sound
             setBarcode(decodedText)
             setIsScanning(true)
             stopScanner()
