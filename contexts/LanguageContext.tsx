@@ -80,7 +80,6 @@ const dictionaries: Record<Language, Translations> = {
     supplierNameLabel: 'Supplier Name',
     phoneLabel: 'Phone',
     addressLabel: 'Address',
-    checkPrice: 'Check Price',
     scanBarcode: '📷 Scan Barcode',
     scanning: 'Scanning...',
     enterBarcodeManually: 'Enter Barcode Manually',
@@ -109,7 +108,6 @@ const dictionaries: Record<Language, Translations> = {
 
     // Stock page
     stockManagement: 'Stock Management',
-    currentStock: 'Current Stock',
     movements: 'Movements',
     type: 'Type',
     reference: 'Reference',
@@ -209,7 +207,6 @@ const dictionaries: Record<Language, Translations> = {
 
     // Stock page
     stockManagement: 'Manajemen Stok',
-    currentStock: 'Stok Saat Ini',
     movements: 'Pergerakan Stok',
     type: 'Tipe',
     reference: 'Referensi',
