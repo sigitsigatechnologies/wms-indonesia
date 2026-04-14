@@ -22,13 +22,21 @@ export async function GET(request: NextRequest) {
       }
     }
 
+    const sortBy = searchParams.get('sortBy') || 'createdAt';
+    const sortOrder = searchParams.get('sortOrder') || 'desc';
+    
+    // Validate sortBy field
+    const validSortFields = ['invoiceNumber', 'totalAmount', 'totalProfit', 'paymentMethod', 'createdAt'];
+    const finalSortBy = validSortFields.includes(sortBy) ? sortBy : 'createdAt';
+    const finalSortOrder = sortOrder === 'asc' ? 'asc' : 'desc';
+
     // Get total count for pagination
     const totalItems = await prisma.sale.count({ where: whereClause });
     const totalPages = Math.ceil(totalItems / limit);
 
     const sales = await prisma.sale.findMany({
       where: whereClause,
-      orderBy: { createdAt: 'desc' },
+      orderBy: { [finalSortBy]: finalSortOrder },
       skip: (page - 1) * limit,
       take: limit,
       include: {

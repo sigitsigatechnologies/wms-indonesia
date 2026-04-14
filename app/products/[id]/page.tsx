@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import Link from 'next/link'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 interface Product {
   id: string
@@ -17,6 +18,7 @@ interface Product {
 
 export default function EditProductPage() {
   const router = useRouter()
+  const { t } = useLanguage()
   const params = useParams()
   const id = params.id as string
   
@@ -118,7 +120,7 @@ export default function EditProductPage() {
   if (fetching) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '50vh' }}>
-        <p style={{ color: '#64748b' }}>Loading...</p>
+        <p style={{ color: '#64748b' }}>{t('loading')}</p>
       </div>
     )
   }
@@ -126,9 +128,9 @@ export default function EditProductPage() {
   return (
     <div style={{ maxWidth: '600px', margin: '0 auto' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-        <h2 style={{ margin: 0, color: '#1e293b', fontSize: '1.5rem', fontWeight: '600' }}>Edit Product</h2>
+        <h2 style={{ margin: 0, color: '#1e293b', fontSize: '1.5rem', fontWeight: '600' }}>{t('editProduct')}</h2>
         <Link href="/products" style={{ color: '#64748b', textDecoration: 'none', fontSize: '0.9rem' }}>
-          ← Back to Products
+          {t('back')}
         </Link>
       </div>
 
@@ -140,7 +142,7 @@ export default function EditProductPage() {
 
       <form onSubmit={handleSubmit} style={cardStyle}>
         <div style={{ marginBottom: '1rem' }}>
-          <label style={labelStyle}>Barcode</label>
+          <label style={labelStyle}>{t('barcode')}</label>
           <input
             type="text"
             required
@@ -151,7 +153,7 @@ export default function EditProductPage() {
         </div>
 
         <div style={{ marginBottom: '1rem' }}>
-          <label style={labelStyle}>Product Name</label>
+          <label style={labelStyle}>{t('productName')}</label>
           <input
             type="text"
             required
@@ -162,7 +164,7 @@ export default function EditProductPage() {
         </div>
 
         <div style={{ marginBottom: '1rem' }}>
-          <label style={labelStyle}>Unit</label>
+          <label style={labelStyle}>{t('unit')}</label>
           <input
             type="text"
             value={formData.unit}
@@ -173,7 +175,7 @@ export default function EditProductPage() {
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
           <div>
-            <label style={labelStyle}>Selling Price</label>
+            <label style={labelStyle}>{t('sellingPrice')}</label>
             <input
               type="number"
               required
@@ -184,7 +186,7 @@ export default function EditProductPage() {
           </div>
 
           <div>
-            <label style={labelStyle}>Average Cost</label>
+            <label style={labelStyle}>{t('averageCost')}</label>
             <input
               type="number"
               value={formData.averageCost}
@@ -196,7 +198,7 @@ export default function EditProductPage() {
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
           <div>
-            <label style={labelStyle}>Current Stock</label>
+            <label style={labelStyle}>{t('currentStock')}</label>
             <input
               type="number"
               value={formData.currentStock}
@@ -206,7 +208,7 @@ export default function EditProductPage() {
           </div>
 
           <div>
-            <label style={labelStyle}>Min Stock</label>
+            <label style={labelStyle}>{t('minStock')}</label>
             <input
               type="number"
               value={formData.minStock}
@@ -233,7 +235,7 @@ export default function EditProductPage() {
               opacity: loading ? 0.5 : 1,
             }}
           >
-            {loading ? 'Updating...' : 'Update Product'}
+            {loading ? t('saving') : t('save')}
           </button>
           <Link
             href="/products"
@@ -249,7 +251,7 @@ export default function EditProductPage() {
               fontWeight: '500',
             }}
           >
-            Cancel
+            {t('cancel')}
           </Link>
         </div>
       </form>

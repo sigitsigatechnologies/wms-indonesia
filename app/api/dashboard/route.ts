@@ -20,17 +20,30 @@ export async function GET() {
       },
     });
 
-    // Get count of low stock products (where currentStock <= minStock and currentStock > 0)
-    const lowStockCount = await prisma.product.count({
+    // Get count of low stock products (where currentStock <= minStock)
+    // We select only necessary fields to keep the query efficient
+    const allProducts = await prisma.product.findMany({
       where: {
-        currentStock: {
-          gt: 0,
-        },
-        minStock: {
-          not: 0,
-        },
+        isActive: true, // Only count active products
+      },
+      select: {
+        id: true,
+        name: true,
+        barcode: true,
+        currentStock: true,
+        minStock: true,
       },
     });
+
+    const lowStockProductsFull = allProducts.filter(product => {
+      const stock = Number(product.currentStock);
+      const min = Number(product.minStock);
+      return stock <= min;
+    });
+    
+    const lowStockCount = lowStockProductsFull.length;
+    // We only return the first 15 so the dashboard payload isn't massive
+    const lowStockProducts = lowStockProductsFull.slice(0, 15);
 
     // Get last 7 days sales data for chart
     const sevenDaysAgo = new Date();
@@ -64,6 +77,7 @@ export async function GET() {
       totalRevenue: salesAgg._sum.totalAmount || 0,
       totalProfit: salesAgg._sum.totalProfit || 0,
       lowStockCount: lowStockCount,
+      lowStockProducts,
       chartData,
     });
   } catch (error) {

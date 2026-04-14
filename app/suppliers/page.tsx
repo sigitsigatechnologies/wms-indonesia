@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import Pagination from '@/components/Pagination'
 import { TableShimmer } from '@/components/Shimmer'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 interface Supplier {
   id: string
@@ -32,6 +33,7 @@ function SuppliersContent() {
     totalPages: 0,
   })
   const searchParams = useSearchParams()
+  const { t } = useLanguage()
 
   useEffect(() => {
     const page = searchParams.get('page') || '1'
@@ -71,7 +73,7 @@ function SuppliersContent() {
   }
 
   async function deleteSupplier(id: string) {
-    if (!confirm('Are you sure you want to delete this supplier?')) return
+    if (!confirm(t('deleteConfirm'))) return
     
     try {
       await fetch(`/api/suppliers/${id}`, { method: 'DELETE' })
@@ -126,17 +128,34 @@ function SuppliersContent() {
 
   return (
     <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
-        <h2 style={{ margin: 0, color: '#1e293b', fontSize: '1.5rem', fontWeight: '600' }}>Suppliers</h2>
-        <Link href="/suppliers/new" style={buttonStyle}>
-          <span className="material-symbols-outlined" style={{ fontSize: '1.1rem', marginRight: '0.25rem', verticalAlign: 'middle' }}>add</span>
-          New Supplier
-        </Link>
+      <div className="row" style={{ marginBottom: '2rem', alignItems: 'center' }}>
+        <div className="col-6">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <div style={{ 
+              backgroundColor: 'rgba(236, 72, 153, 0.1)', 
+              color: '#ec4899', 
+              padding: '0.5rem', 
+              borderRadius: '10px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}>
+              <span className="material-symbols-outlined" style={{ fontSize: '1.75rem' }}>local_shipping</span>
+            </div>
+            <h2 style={{ margin: 0, color: '#1e293b', fontSize: '1.75rem', fontWeight: '700', letterSpacing: '-0.02em' }}>{t('suppliers')}</h2>
+          </div>
+        </div>
+        <div className="col-6" style={{ textAlign: 'right' }}>
+          <Link href="/suppliers/new" style={buttonStyle}>
+            <span className="material-symbols-outlined" style={{ fontSize: '1.25rem', marginRight: '0.4rem' }}>add_circle</span>
+            {t('newSupplier')}
+          </Link>
+        </div>
       </div>
 
       <input
         type="text"
-        placeholder="Search suppliers..."
+        placeholder={t('search')}
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         style={searchInputStyle}
@@ -146,11 +165,11 @@ function SuppliersContent() {
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
             <tr style={{ backgroundColor: '#f8fafc' }}>
-              <th style={thStyle}>NAME</th>
-              <th style={thStyle}>PHONE</th>
-              <th style={thStyle}>ADDRESS</th>
-              <th style={thStyle}>CREATED</th>
-              <th style={{...thStyle, textAlign: 'right'}}>ACTIONS</th>
+              <th style={thStyle}>{t('name').toUpperCase()}</th>
+              <th style={thStyle}>{t('phone').toUpperCase()}</th>
+              <th style={thStyle}>{t('address').toUpperCase()}</th>
+              <th style={thStyle}>{t('date').toUpperCase()}</th>
+              <th style={{...thStyle, textAlign: 'right'}}>{t('actions').toUpperCase()}</th>
             </tr>
           </thead>
           <tbody>
@@ -158,7 +177,7 @@ function SuppliersContent() {
               <TableShimmer rows={5} />
             ) : suppliers.length === 0 ? (
               <tr>
-                <td colSpan={5} style={{...tdStyle, textAlign: 'center', color: '#94a3b8'}}>No suppliers found</td>
+                <td colSpan={5} style={{...tdStyle, textAlign: 'center', color: '#94a3b8'}}>{t('noSuppliersFound')}</td>
               </tr>
             ) : (
               suppliers.map((supplier) => (
@@ -192,7 +211,7 @@ function SuppliersContent() {
       {suppliers.length === 0 && !loading && (
         <div style={{ textAlign: 'center', padding: '3rem', color: '#94a3b8' }}>
           <span className="material-symbols-outlined" style={{ fontSize: '3rem', display: 'block', marginBottom: '0.5rem' }}>local_shipping</span>
-          <p>No suppliers found</p>
+          <p>{t('noSuppliersFound')}</p>
         </div>
       )}
     </div>

@@ -35,8 +35,6 @@ export default function Pagination({
   const startItem = (currentPage - 1) * itemsPerPage + 1
   const endItem = Math.min(currentPage * itemsPerPage, totalItems)
 
-  if (totalPages <= 1) return null
-
   const getPageNumbers = () => {
     const pages: (number | string)[] = []
     const maxVisible = 5
@@ -108,78 +106,80 @@ export default function Pagination({
         </div>
         
         <span style={{ color: '#64748b', fontSize: '0.875rem' }}>
-          Showing {startItem} to {endItem} of {totalItems} entries
+          Showing {totalItems > 0 ? startItem : 0} to {endItem} of {totalItems} entries
         </span>
       </div>
 
       {/* Pagination buttons */}
-      <div style={{ display: 'flex', justifyContent: 'center', gap: '0.25rem', flexWrap: 'wrap' }}>
-        {/* Previous button */}
-        <button
-          onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage === 1}
-          style={{
-            padding: '0.5rem 0.75rem',
-            border: '1px solid #e2e8f0',
-            borderRadius: '6px',
-            backgroundColor: currentPage === 1 ? '#f1f5f9' : 'white',
-            color: currentPage === 1 ? '#94a3b8' : '#1e293b',
-            cursor: currentPage === 1 ? 'not-allowed' : 'pointer',
-            fontSize: '0.875rem',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.25rem',
-          }}
-        >
-          <span className="material-symbols-outlined" style={{ fontSize: '1rem' }}>chevron_left</span>
-          Prev
-        </button>
+      {totalPages > 1 && (
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '0.25rem', flexWrap: 'wrap' }}>
+          {/* Previous button */}
+          <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+            style={{
+              padding: '0.5rem 0.75rem',
+              border: '1px solid #e2e8f0',
+              borderRadius: '6px',
+              backgroundColor: currentPage === 1 ? '#f1f5f9' : 'white',
+              color: currentPage === 1 ? '#94a3b8' : '#1e293b',
+              cursor: currentPage === 1 ? 'not-allowed' : 'pointer',
+              fontSize: '0.875rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.25rem',
+            }}
+          >
+            <span className="material-symbols-outlined" style={{ fontSize: '1rem' }}>chevron_left</span>
+            Prev
+          </button>
 
-        {/* Page numbers */}
-        {pageNumbers.map((page, index) => (
-          typeof page === 'number' ? (
-            <button
-              key={index}
-              onClick={() => handlePageChange(page)}
-              style={{
-                padding: '0.5rem 0.75rem',
-                border: '1px solid #e2e8f0',
-                borderRadius: '6px',
-                backgroundColor: page === currentPage ? '#3b82f6' : 'white',
-                color: page === currentPage ? 'white' : '#1e293b',
-                cursor: 'pointer',
-                fontSize: '0.875rem',
-                fontWeight: page === currentPage ? '600' : '400',
-              }}
-            >
-              {page}
-            </button>
-          ) : (
-            <span key={index} style={{ padding: '0.5rem', color: '#94a3b8' }}>...</span>
-          )
-        ))}
+          {/* Page numbers */}
+          {pageNumbers.map((page, index) => (
+            typeof page === 'number' ? (
+              <button
+                key={index}
+                onClick={() => handlePageChange(page)}
+                style={{
+                  padding: '0.5rem 0.75rem',
+                  border: '1px solid #e2e8f0',
+                  borderRadius: '6px',
+                  backgroundColor: page === currentPage ? '#3b82f6' : 'white',
+                  color: page === currentPage ? 'white' : '#1e293b',
+                  cursor: 'pointer',
+                  fontSize: '0.875rem',
+                  fontWeight: page === currentPage ? '600' : '400',
+                }}
+              >
+                {page}
+              </button>
+            ) : (
+              <span key={index} style={{ padding: '0.5rem', color: '#94a3b8' }}>...</span>
+            )
+          ))}
 
-        {/* Next button */}
-        <button
-          onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage === totalPages}
-          style={{
-            padding: '0.5rem 0.75rem',
-            border: '1px solid #e2e8f0',
-            borderRadius: '6px',
-            backgroundColor: currentPage === totalPages ? '#f1f5f9' : 'white',
-            color: currentPage === totalPages ? '#94a3b8' : '#1e293b',
-            cursor: currentPage === totalPages ? 'not-allowed' : 'pointer',
-            fontSize: '0.875rem',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.25rem',
-          }}
-        >
-          Next
-          <span className="material-symbols-outlined" style={{ fontSize: '1rem' }}>chevron_right</span>
-        </button>
-      </div>
+          {/* Next button */}
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            style={{
+              padding: '0.5rem 0.75rem',
+              border: '1px solid #e2e8f0',
+              borderRadius: '6px',
+              backgroundColor: currentPage === totalPages ? '#f1f5f9' : 'white',
+              color: currentPage === totalPages ? '#94a3b8' : '#1e293b',
+              cursor: currentPage === totalPages ? 'not-allowed' : 'pointer',
+              fontSize: '0.875rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.25rem',
+            }}
+          >
+            Next
+            <span className="material-symbols-outlined" style={{ fontSize: '1rem' }}>chevron_right</span>
+          </button>
+        </div>
+      )}
     </div>
   )
 }

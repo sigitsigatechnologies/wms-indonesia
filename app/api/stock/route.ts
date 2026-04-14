@@ -12,14 +12,21 @@ export async function GET(request: NextRequest) {
     const endDate = searchParams.get('endDate');
     const page = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '10');
+    const sortBy = searchParams.get('sortBy') || 'createdAt';
+    const sortOrder = searchParams.get('sortOrder') || 'desc';
+    const finalSortOrder = sortOrder === 'asc' ? 'asc' : 'desc';
 
     if (type === 'products') {
       // Get products with stock info
       const totalItems = await prisma.product.count();
       const totalPages = Math.ceil(totalItems / limit);
 
+      // Validate sortBy for products
+      const validProductSortFields = ['barcode', 'name', 'sellingPrice', 'currentStock', 'createdAt'];
+      const finalProductSortBy = validProductSortFields.includes(sortBy) ? sortBy : 'createdAt';
+
       const products = await prisma.product.findMany({
-        orderBy: { createdAt: 'desc' },
+        orderBy: { [finalProductSortBy]: finalSortOrder },
         skip: (page - 1) * limit,
         take: limit,
       });
@@ -64,9 +71,13 @@ export async function GET(request: NextRequest) {
     const totalItems = await prisma.stockMovement.count({ where: whereClause });
     const totalPages = Math.ceil(totalItems / limit);
 
+    // Validate sortBy for movements
+    const validMovementSortFields = ['createdAt', 'movementType', 'referenceType', 'quantity'];
+    const finalMovementSortBy = validMovementSortFields.includes(sortBy) ? sortBy : 'createdAt';
+
     const stockMovements = await prisma.stockMovement.findMany({
       where: whereClause,
-      orderBy: { createdAt: 'desc' },
+      orderBy: { [finalMovementSortBy]: finalSortOrder },
       skip: (page - 1) * limit,
       take: limit,
       include: {

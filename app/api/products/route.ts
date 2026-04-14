@@ -9,16 +9,31 @@ export async function GET(request: NextRequest) {
     const search = searchParams.get('search');
     const page = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '10');
-    
     // If barcode is provided, search for that specific product
     if (barcode) {
       const product = await prisma.product.findUnique({
         where: { barcode },
       });
       if (product) {
-        return NextResponse.json([product]);
+        return NextResponse.json({
+          data: [product],
+          pagination: {
+            page: 1,
+            limit: 1,
+            totalItems: 1,
+            totalPages: 1,
+          },
+        });
       }
-      return NextResponse.json([]);
+      return NextResponse.json({
+        data: [],
+        pagination: {
+          page: 1,
+          limit: 1,
+          totalItems: 0,
+          totalPages: 0,
+        },
+      });
     }
     
     // Build where clause for search
@@ -31,7 +46,14 @@ export async function GET(request: NextRequest) {
         ],
       };
     }
+
+    const sortBy = searchParams.get('sortBy') || 'createdAt';
+    const sortOrder = searchParams.get('sortOrder') || 'desc';
     
+    // Validate sortBy field to prevent invalid queries
+    const validSortFields = ['barcode', 'name', 'sellingPrice', 'currentStock', 'createdAt'];
+    const finalSortBy = validSortFields.includes(sortBy) ? sortBy : 'createdAt';
+    const finalSortOrder = sortOrder === 'asc' ? 'asc' : 'desc';
     // Get total count for pagination
     const totalItems = await prisma.product.count({ where: whereClause });
     const totalPages = Math.ceil(totalItems / limit);
@@ -39,7 +61,7 @@ export async function GET(request: NextRequest) {
     // Get paginated products
     const products = await prisma.product.findMany({
       where: whereClause,
-      orderBy: { createdAt: 'desc' },
+      orderBy: { [finalSortBy]: finalSortOrder },
       skip: (page - 1) * limit,
       take: limit,
     });
@@ -63,7 +85,14 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { barcode, name, unit, sellingPrice, minStock } = body;
+    let { barcode, name, unit, sellingPrice, minStock } = body;
+
+    // Generate barcode if not provided or empty
+    if (!barcode || barcode.trim() === '') {
+      const timestamp = Date.now().toString();
+      const randomSuffix = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+      barcode = `PRD${timestamp}${randomSuffix}`;
+    }
 
     // Check if barcode already exists
     const existingProduct = await prisma.product.findUnique({

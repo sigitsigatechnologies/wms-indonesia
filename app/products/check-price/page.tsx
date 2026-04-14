@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import { Html5Qrcode } from 'html5-qrcode'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 interface Product {
   id: string
@@ -22,6 +23,7 @@ export default function CheckPricePage() {
   const [scanning, setScanning] = useState(false)
   const scannerRef = useRef<Html5Qrcode | null>(null)
   const lastScannedRef = useRef<string>('')
+  const { t } = useLanguage()
 
   // Play beep sound when barcode is scanned
   const playBeep = () => {
@@ -69,7 +71,7 @@ export default function CheckPricePage() {
       if (products && products.length > 0) {
         setProduct(products[0])
       } else {
-        setError('Product not found')
+        setError(t('productNotFound'))
       }
     } catch (err) {
       console.error('Search error:', err)
@@ -178,9 +180,9 @@ export default function CheckPricePage() {
   return (
     <div style={{ maxWidth: '500px', margin: '0 auto', padding: '1rem' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-        <h2 style={{ margin: 0, color: '#1e293b', fontSize: '1.5rem', fontWeight: '600' }}>Check Price</h2>
+        <h2 style={{ margin: 0, color: '#1e293b', fontSize: '1.5rem', fontWeight: '600' }}>{t('checkPrice')}</h2>
         <Link href="/" style={{ color: '#64748b', textDecoration: 'none', fontSize: '0.9rem' }}>
-          ← Back
+          {t('back')}
         </Link>
       </div>
 
@@ -193,7 +195,7 @@ export default function CheckPricePage() {
           marginBottom: '1rem',
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-            <p style={{ margin: 0, color: 'white', fontSize: '0.875rem' }}>Scanning...</p>
+            <p style={{ margin: 0, color: 'white', fontSize: '0.875rem' }}>{t('scanning')}</p>
             <button
               onClick={stopScanner}
               style={{
@@ -206,7 +208,7 @@ export default function CheckPricePage() {
                 fontSize: '0.75rem',
               }}
             >
-              Cancel
+              {t('cancel')}
             </button>
           </div>
           <div id="price-scanner" style={{ borderRadius: '8px', overflow: 'hidden' }} />
@@ -231,7 +233,7 @@ export default function CheckPricePage() {
             gap: '0.5rem',
           }}
         >
-          📷 Scan Barcode
+          {t('scanBarcode')}
         </button>
       )}
 
@@ -244,7 +246,7 @@ export default function CheckPricePage() {
         border: '1px solid #f1f5f9',
       }}>
         <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#475569', marginBottom: '0.5rem' }}>
-          Enter Barcode Manually
+          {t('enterBarcodeManually')}
         </label>
         <div style={{ display: 'flex', gap: '0.5rem' }}>
           <input
@@ -252,7 +254,7 @@ export default function CheckPricePage() {
             value={barcode}
             onChange={(e) => setBarcode(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Type barcode..."
+            placeholder={t('typeBarcode')}
             style={{
               flex: 1,
               padding: '0.75rem',
@@ -276,7 +278,7 @@ export default function CheckPricePage() {
               fontWeight: '500',
             }}
           >
-            {loading ? '...' : 'Search'}
+            {loading ? '...' : t('searchBtn')}
           </button>
         </div>
       </div>
@@ -284,7 +286,7 @@ export default function CheckPricePage() {
       {/* Loading */}
       {loading && (
         <div style={{ marginTop: '1rem', padding: '1rem', backgroundColor: '#f1f5f9', borderRadius: '8px', textAlign: 'center', color: '#64748b' }}>
-          Searching...
+          {t('searching')}
         </div>
       )}
 
@@ -305,13 +307,13 @@ export default function CheckPricePage() {
           boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
         }}>
           <div style={{ backgroundColor: '#3b82f6', padding: '1.5rem', textAlign: 'center' }}>
-            <p style={{ margin: 0, color: 'rgba(255,255,255,0.8)', fontSize: '0.875rem' }}>PRODUCT NAME</p>
+            <p style={{ margin: 0, color: 'rgba(255,255,255,0.8)', fontSize: '0.875rem' }}>{t('productName_label')}</p>
             <h3 style={{ margin: '0.5rem 0 0', color: 'white', fontSize: '1.5rem', fontWeight: '600' }}>{product.name}</h3>
           </div>
           
           <div style={{ padding: '1.5rem' }}>
             <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
-              <p style={{ margin: 0, color: '#64748b', fontSize: '0.875rem' }}>SELLING PRICE</p>
+              <p style={{ margin: 0, color: '#64748b', fontSize: '0.875rem' }}>{t('sellingPrice_label')}</p>
               <p style={{ margin: '0.5rem 0 0', color: '#1e293b', fontSize: '2.5rem', fontWeight: '700' }}>
                 Rp {Number(product.sellingPrice).toLocaleString('id-ID')}
               </p>
@@ -319,13 +321,13 @@ export default function CheckPricePage() {
             
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', borderTop: '1px solid #f1f5f9', paddingTop: '1rem' }}>
               <div>
-                <p style={{ margin: 0, color: '#64748b', fontSize: '0.75rem' }}>STOCK</p>
+                <p style={{ margin: 0, color: '#64748b', fontSize: '0.75rem' }}>{t('stockLevel').toUpperCase()}</p>
                 <p style={{ margin: '0.25rem 0 0', color: '#1e293b', fontSize: '1.1rem', fontWeight: '500' }}>
                   {product.currentStock} {product.unit}
                 </p>
               </div>
               <div>
-                <p style={{ margin: 0, color: '#64748b', fontSize: '0.75rem' }}>BARCODE</p>
+                <p style={{ margin: 0, color: '#64748b', fontSize: '0.75rem' }}>{t('barcode').toUpperCase()}</p>
                 <p style={{ margin: '0.25rem 0 0', color: '#1e293b', fontSize: '1rem', fontFamily: 'monospace' }}>
                   {product.barcode}
                 </p>

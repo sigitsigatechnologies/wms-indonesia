@@ -1,10 +1,11 @@
 'use client'
 
-import { useEffect, useState, Suspense } from 'react'
+import React, { useEffect, useState, Suspense } from 'react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import Pagination from '@/components/Pagination'
 import { TableShimmer } from '@/components/Shimmer'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 interface PurchaseItem {
   id: string
@@ -12,6 +13,10 @@ interface PurchaseItem {
   quantity: number
   costPrice: number
   subtotal: number
+  product?: {
+    name: string
+    barcode: string
+  }
 }
 
 interface Purchase {
@@ -34,19 +39,23 @@ interface PaginationInfo {
 function PurchasesContent() {
   const [purchases, setPurchases] = useState<Purchase[]>([])
   const [loading, setLoading] = useState(true)
+  const [sortBy, setSortBy] = useState('createdAt')
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
   const [pagination, setPagination] = useState<PaginationInfo>({
     page: 1,
     limit: 10,
     totalItems: 0,
     totalPages: 0,
   })
+  const [expandedPurchaseId, setExpandedPurchaseId] = useState<string | null>(null)
   const searchParams = useSearchParams()
+  const { t } = useLanguage()
 
   useEffect(() => {
     const page = searchParams.get('page') || '1'
     const limit = searchParams.get('limit') || '10'
     fetchPurchases(parseInt(page), parseInt(limit))
-  }, [searchParams])
+  }, [searchParams, sortBy, sortOrder])
 
   async function fetchPurchases(page: number, limit: number) {
     try {
@@ -54,6 +63,8 @@ function PurchasesContent() {
       const params = new URLSearchParams()
       params.set('page', page.toString())
       params.set('limit', limit.toString())
+      params.set('sortBy', sortBy)
+      params.set('sortOrder', sortOrder)
       
       const res = await fetch(`/api/purchases?${params.toString()}`)
       const result = await res.json()
@@ -78,8 +89,24 @@ function PurchasesContent() {
     }
   }
 
+  const handleSort = (field: string) => {
+    if (sortBy === field) {
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')
+    } else {
+      setSortBy(field)
+      setSortOrder('desc')
+    }
+  }
+
+  const getSortIcon = (field: string) => {
+    if (sortBy !== field) return <span className="material-symbols-outlined" style={{ fontSize: '1rem', opacity: 0.3 }}>unfold_more</span>
+    return sortOrder === 'asc' 
+      ? <span className="material-symbols-outlined" style={{ fontSize: '1rem' }}>expand_less</span>
+      : <span className="material-symbols-outlined" style={{ fontSize: '1rem' }}>expand_more</span>
+  }
+
   async function deletePurchase(id: string) {
-    if (!confirm('Are you sure you want to delete this purchase?')) return
+    if (!confirm(t('deleteConfirm'))) return
     
     try {
       await fetch(`/api/purchases/${id}`, { method: 'DELETE' })
@@ -89,18 +116,28 @@ function PurchasesContent() {
     }
   }
 
+  const toggleExpand = (id: string) => {
+    if (expandedPurchaseId === id) {
+      setExpandedPurchaseId(null)
+    } else {
+      setExpandedPurchaseId(id)
+    }
+  }
+
   const buttonStyle: React.CSSProperties = {
-    backgroundColor: '#3b82f6',
+    backgroundColor: '#8b5cf6', // Purple
     color: 'white',
-    padding: '0.5rem 1rem',
-    borderRadius: '8px',
+    padding: '0.6rem 1.2rem',
+    borderRadius: '10px',
     textDecoration: 'none',
     border: 'none',
     cursor: 'pointer',
     fontSize: '0.875rem',
     display: 'inline-flex',
     alignItems: 'center',
-    fontWeight: '500',
+    fontWeight: '600',
+    transition: 'all 0.2s ease',
+    boxShadow: '0 4px 6px -1px rgba(139, 92, 246, 0.2)',
   }
 
   const thStyle: React.CSSProperties = {
@@ -109,8 +146,11 @@ function PurchasesContent() {
     fontWeight: '600',
     borderBottom: '2px solid #f1f5f9',
     whiteSpace: 'nowrap' as const,
-    color: '#64748b',
+    color: '#475569',
     fontSize: '0.8rem',
+    cursor: 'pointer',
+    userSelect: 'none',
+    letterSpacing: '0.05em',
   }
 
   const tdStyle: React.CSSProperties = {
@@ -122,54 +162,127 @@ function PurchasesContent() {
   }
 
   return (
-    <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
-        <h2 style={{ margin: 0, color: '#1e293b', fontSize: '1.5rem', fontWeight: '600' }}>Purchases</h2>
-        <Link href="/purchases/new" style={buttonStyle}>
-          <span className="material-symbols-outlined" style={{ fontSize: '1.1rem', marginRight: '0.25rem', verticalAlign: 'middle' }}>add</span>
-          New Purchase
-        </Link>
+    <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 1rem' }}>
+      <div className="row" style={{ marginBottom: '2rem', alignItems: 'center' }}>
+        <div className="col-6">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <div style={{ 
+              backgroundColor: 'rgba(139, 92, 246, 0.1)', 
+              color: '#8b5cf6', 
+              padding: '0.5rem', 
+              borderRadius: '10px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}>
+              <span className="material-symbols-outlined" style={{ fontSize: '1.75rem' }}>shopping_cart</span>
+            </div>
+            <h2 style={{ margin: 0, color: '#1e293b', fontSize: '1.75rem', fontWeight: '700', letterSpacing: '-0.02em' }}>{t('purchases')}</h2>
+          </div>
+        </div>
+        <div className="col-6" style={{ textAlign: 'right' }}>
+          <Link href="/purchases/new" style={buttonStyle}>
+            <span className="material-symbols-outlined" style={{ fontSize: '1.25rem', marginRight: '0.4rem' }}>add_circle</span>
+            {t('newPurchase')}
+          </Link>
+        </div>
       </div>
 
-      <div style={{ backgroundColor: 'white', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.08)', border: '1px solid #f1f5f9' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-          <thead>
-            <tr style={{ backgroundColor: '#f8fafc' }}>
-              <th style={thStyle}>INVOICE</th>
-              <th style={thStyle}>DATE</th>
-              <th style={thStyle}>TOTAL</th>
-              <th style={thStyle}>ITEMS</th>
-              <th style={{...thStyle, textAlign: 'right'}}>ACTIONS</th>
-            </tr>
-          </thead>
-          <tbody>
-            {loading ? (
-              <TableShimmer rows={5} />
-            ) : purchases.length === 0 ? (
-              <tr>
-                <td colSpan={5} style={{...tdStyle, textAlign: 'center', color: '#94a3b8'}}>No purchases found</td>
+      <div style={{ backgroundColor: 'white', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03)', border: '1px solid #f1f5f9' }}>
+        <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+          <table className="responsive-table" style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <thead>
+              <tr style={{ backgroundColor: '#f8fafc' }}>
+                <th style={thStyle} onClick={() => handleSort('invoiceNumber')}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                    {t('invoice').toUpperCase()} {getSortIcon('invoiceNumber')}
+                  </div>
+                </th>
+                <th style={thStyle} onClick={() => handleSort('purchaseDate')}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                    {t('date').toUpperCase()} {getSortIcon('purchaseDate')}
+                  </div>
+                </th>
+                <th style={thStyle} onClick={() => handleSort('totalAmount')}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                    {t('total').toUpperCase()} {getSortIcon('totalAmount')}
+                  </div>
+                </th>
+                <th style={{...thStyle, cursor: 'default'}}>{t('items').toUpperCase()}</th>
+                <th style={{...thStyle, textAlign: 'right', cursor: 'default'}}>{t('actions').toUpperCase()}</th>
               </tr>
-            ) : (
-              purchases.map((purchase) => (
-                <tr key={purchase.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
-                  <td style={{...tdStyle, fontWeight: 500}}>{purchase.invoiceNumber}</td>
-                  <td style={tdStyle}>{new Date(purchase.purchaseDate).toLocaleDateString('id-ID')}</td>
-                  <td style={tdStyle}>Rp {Number(purchase.totalAmount).toLocaleString('id-ID')}</td>
-                  <td style={tdStyle}>
-                    <span style={{ padding: '0.25rem 0.75rem', borderRadius: '6px', fontSize: '0.8rem', fontWeight: '500', backgroundColor: '#eff6ff', color: '#1d4ed8' }}>
-                      {purchase.items?.length || 0} items
-                    </span>
-                  </td>
-                  <td style={{...tdStyle, textAlign: 'right'}}>
-                    <button onClick={() => deletePurchase(purchase.id)} style={{ color: '#ef4444', backgroundColor: 'transparent', border: 'none', cursor: 'pointer' }}>
-                      <span className="material-symbols-outlined" style={{ fontSize: '1.1rem' }}>delete</span>
-                    </button>
-                  </td>
+            </thead>
+            <tbody>
+              {loading ? (
+                <TableShimmer rows={5} />
+              ) : purchases.length === 0 ? (
+                <tr>
+                  <td colSpan={5} style={{...tdStyle, textAlign: 'center', color: '#94a3b8'}}>{t('noPurchasesFound')}</td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ) : (
+                purchases.map((purchase) => (
+                  <React.Fragment key={purchase.id}>
+                    <tr style={{ borderBottom: expandedPurchaseId === purchase.id ? 'none' : '1px solid #f1f5f9', backgroundColor: expandedPurchaseId === purchase.id ? '#f8fafc' : 'transparent', transition: 'background-color 0.2s' }}>
+                      <td data-label="Invoice" style={{...tdStyle, fontWeight: 500, cursor: 'pointer', color: '#3b82f6'}} onClick={() => toggleExpand(purchase.id)}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                          <span className="material-symbols-outlined" style={{ fontSize: '1.25rem', transition: 'transform 0.2s', transform: expandedPurchaseId === purchase.id ? 'rotate(90deg)' : 'rotate(0deg)' }}>chevron_right</span>
+                          {purchase.invoiceNumber}
+                        </div>
+                      </td>
+                      <td data-label="Date" style={tdStyle}>{new Date(purchase.purchaseDate).toLocaleDateString('id-ID')}</td>
+                      <td data-label="Total" style={{...tdStyle, fontWeight: 600}}>Rp {Number(purchase.totalAmount).toLocaleString('id-ID')}</td>
+                      <td data-label="Items" style={tdStyle}>
+                        <span style={{ padding: '0.25rem 0.75rem', borderRadius: '6px', fontSize: '0.8rem', fontWeight: '500', backgroundColor: '#eff6ff', color: '#1d4ed8' }}>
+                          {purchase.items?.length || 0} items
+                        </span>
+                      </td>
+                      <td data-label="Actions" style={{...tdStyle, textAlign: 'right'}}>
+                        <button onClick={() => deletePurchase(purchase.id)} style={{ color: '#ef4444', backgroundColor: 'transparent', border: 'none', cursor: 'pointer', padding: '0.5rem', borderRadius: '50%', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }} title="Delete Purchase">
+                          <span className="material-symbols-outlined" style={{ fontSize: '1.1rem' }}>delete</span>
+                        </button>
+                      </td>
+                    </tr>
+                    {expandedPurchaseId === purchase.id && (
+                      <tr style={{ backgroundColor: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
+                        <td colSpan={5} style={{ padding: '0 2rem 1.5rem 3rem' }}>
+                          <div style={{ backgroundColor: 'white', borderRadius: '8px', border: '1px solid #e2e8f0', overflow: 'hidden' }}>
+                            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
+                              <thead>
+                                <tr style={{ backgroundColor: '#f1f5f9', borderBottom: '1px solid #e2e8f0' }}>
+                                  <th style={{ padding: '0.75rem 1rem', textAlign: 'left', color: '#475569', fontWeight: 600 }}>{t('name')}</th>
+                                  <th style={{ padding: '0.75rem 1rem', textAlign: 'left', color: '#475569', fontWeight: 600 }}>{t('barcode')}</th>
+                                  <th style={{ padding: '0.75rem 1rem', textAlign: 'right', color: '#475569', fontWeight: 600 }}>{t('qty')}</th>
+                                  <th style={{ padding: '0.75rem 1rem', textAlign: 'right', color: '#475569', fontWeight: 600 }}>{t('cost')}</th>
+                                  <th style={{ padding: '0.75rem 1rem', textAlign: 'right', color: '#475569', fontWeight: 600 }}>{t('total')}</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {purchase.items?.map((item, idx) => (
+                                  <tr key={item.id || idx} style={{ borderBottom: idx === purchase.items.length - 1 ? 'none' : '1px solid #f1f5f9' }}>
+                                    <td style={{ padding: '0.75rem 1rem', color: '#1e293b' }}>{item.product?.name || 'Unknown Product'}</td>
+                                    <td style={{ padding: '0.75rem 1rem', color: '#64748b' }}>{item.product?.barcode || '-'}</td>
+                                    <td style={{ padding: '0.75rem 1rem', textAlign: 'right', color: '#1e293b', fontWeight: 500 }}>{Number(item.quantity).toLocaleString('id-ID')}</td>
+                                    <td style={{ padding: '0.75rem 1rem', textAlign: 'right', color: '#64748b' }}>Rp {Number(item.costPrice).toLocaleString('id-ID')}</td>
+                                    <td style={{ padding: '0.75rem 1rem', textAlign: 'right', color: '#1e293b', fontWeight: 500 }}>Rp {Number(item.subtotal).toLocaleString('id-ID')}</td>
+                                  </tr>
+                                ))}
+                                {(!purchase.items || purchase.items.length === 0) && (
+                                  <tr>
+                                    <td colSpan={5} style={{ padding: '1rem', textAlign: 'center', color: '#94a3b8' }}>No items found for this purchase</td>
+                                  </tr>
+                                )}
+                              </tbody>
+                            </table>
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                  </React.Fragment>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <Pagination

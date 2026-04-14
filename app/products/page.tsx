@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import Pagination from '@/components/Pagination'
 import { TableShimmer } from '@/components/Shimmer'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 interface Product {
   id: string
@@ -29,6 +30,8 @@ function ProductsContent() {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
+  const [sortBy, setSortBy] = useState('createdAt')
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
   const [pagination, setPagination] = useState<PaginationInfo>({
     page: 1,
     limit: 10,
@@ -36,12 +39,13 @@ function ProductsContent() {
     totalPages: 0,
   })
   const searchParams = useSearchParams()
+  const { t } = useLanguage()
 
   useEffect(() => {
     const page = searchParams.get('page') || '1'
     const limit = searchParams.get('limit') || '10'
     fetchProducts(parseInt(page), parseInt(limit))
-  }, [search, searchParams])
+  }, [search, searchParams, sortBy, sortOrder])
 
   async function fetchProducts(page: number, limit: number) {
     try {
@@ -50,6 +54,8 @@ function ProductsContent() {
       if (search) params.set('search', search)
       params.set('page', page.toString())
       params.set('limit', limit.toString())
+      params.set('sortBy', sortBy)
+      params.set('sortOrder', sortOrder)
       
       const res = await fetch(`/api/products?${params.toString()}`)
       const result = await res.json()
@@ -74,8 +80,24 @@ function ProductsContent() {
     }
   }
 
+  const handleSort = (field: string) => {
+    if (sortBy === field) {
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')
+    } else {
+      setSortBy(field)
+      setSortOrder('desc')
+    }
+  }
+
+  const getSortIcon = (field: string) => {
+    if (sortBy !== field) return <span className="material-symbols-outlined" style={{ fontSize: '1rem', opacity: 0.3 }}>unfold_more</span>
+    return sortOrder === 'asc' 
+      ? <span className="material-symbols-outlined" style={{ fontSize: '1rem' }}>expand_less</span>
+      : <span className="material-symbols-outlined" style={{ fontSize: '1rem' }}>expand_more</span>
+  }
+
   async function deleteProduct(id: string) {
-    if (!confirm('Are you sure you want to delete this product?')) return
+    if (!confirm(t('deleteConfirm'))) return
     
     try {
       await fetch(`/api/products/${id}`, { method: 'DELETE' })
@@ -94,28 +116,30 @@ function ProductsContent() {
   }
 
   const buttonStyle: React.CSSProperties = {
-    backgroundColor: '#3b82f6',
+    backgroundColor: '#6366f1', // Indigo
     color: 'white',
-    padding: '0.5rem 1rem',
-    borderRadius: '8px',
+    padding: '0.6rem 1.2rem',
+    borderRadius: '10px',
     textDecoration: 'none',
     border: 'none',
     cursor: 'pointer',
     fontSize: '0.875rem',
     display: 'inline-flex',
     alignItems: 'center',
-    fontWeight: '500',
+    fontWeight: '600',
+    transition: 'all 0.2s ease',
+    boxShadow: '0 4px 6px -1px rgba(99, 102, 241, 0.2)',
   }
 
   const searchInputStyle: React.CSSProperties = {
     width: '100%',
-    padding: '0.75rem 1rem',
+    padding: '0.75rem 1rem 0.75rem 2.8rem',
     border: '1px solid #e2e8f0',
-    borderRadius: '8px',
+    borderRadius: '12px',
     fontSize: '0.9rem',
     outline: 'none',
-    marginBottom: '1.5rem',
-    backgroundColor: '#f8fafc',
+    backgroundColor: 'white',
+    boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
   }
 
   const tableStyle: React.CSSProperties = {
@@ -129,8 +153,11 @@ function ProductsContent() {
     fontWeight: '600',
     borderBottom: '2px solid #f1f5f9',
     whiteSpace: 'nowrap' as const,
-    color: '#64748b',
+    color: '#475569',
     fontSize: '0.8rem',
+    cursor: 'pointer',
+    userSelect: 'none',
+    letterSpacing: '0.05em',
   }
 
   const tdStyle: React.CSSProperties = {
@@ -149,85 +176,132 @@ function ProductsContent() {
   }
 
   return (
-    <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
-        <h2 style={{ margin: 0, color: '#1e293b', fontSize: '1.5rem', fontWeight: '600' }}>Products</h2>
-        <div style={{ display: 'flex', gap: '0.5rem' }}>
+    <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 1rem' }}>
+      <div className="row" style={{ marginBottom: '2rem', alignItems: 'center' }}>
+        <div className="col-6">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <div style={{ 
+              backgroundColor: 'rgba(99, 102, 241, 0.1)', 
+              color: '#6366f1', 
+              padding: '0.5rem', 
+              borderRadius: '10px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}>
+              <span className="material-symbols-outlined" style={{ fontSize: '1.75rem' }}>inventory_2</span>
+            </div>
+            <h2 style={{ margin: 0, color: '#1e293b', fontSize: '1.75rem', fontWeight: '700', letterSpacing: '-0.02em' }}>{t('products')}</h2>
+          </div>
+        </div>
+        <div className="col-6" style={{ textAlign: 'right' }}>
           <Link href="/products/new" style={buttonStyle}>
-            <span className="material-symbols-outlined" style={{ fontSize: '1.1rem', marginRight: '0.25rem', verticalAlign: 'middle' }}>add</span>
-            New Product
+            <span className="material-symbols-outlined" style={{ fontSize: '1.25rem', marginRight: '0.4rem' }}>add_circle</span>
+            {t('newProduct')}
           </Link>
         </div>
       </div>
 
-      <input
-        type="text"
-        placeholder="Search products..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        style={searchInputStyle}
-      />
+      <div className="row" style={{ marginBottom: '2rem' }}>
+        <div className="col-12" style={{ position: 'relative' }}>
+          <span className="material-symbols-outlined" style={{ 
+            position: 'absolute', 
+            left: '1rem', 
+            top: '50%', 
+            transform: 'translateY(-50%)', 
+            color: '#94a3b8',
+            fontSize: '1.25rem'
+          }}>
+            search
+          </span>
+          <input
+            type="text"
+            placeholder={t('search')}
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            style={searchInputStyle}
+          />
+        </div>
+      </div>
 
-      <div style={{ backgroundColor: 'white', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.08)', border: '1px solid #f1f5f9' }}>
-        <table style={tableStyle}>
-          <thead>
-            <tr style={{ backgroundColor: '#f8fafc' }}>
-              <th style={thStyle}>BARCODE</th>
-              <th style={thStyle}>NAME</th>
-              <th style={thStyle}>PRICE</th>
-              <th style={thStyle}>COST</th>
-              <th style={thStyle}>STOCK</th>
-              <th style={thStyle}>MIN</th>
-              <th style={thStyle}>STATUS</th>
-              <th style={{...thStyle, textAlign: 'right'}}>ACTIONS</th>
-            </tr>
-          </thead>
-          <tbody>
-            {loading ? (
-              <TableShimmer rows={5} />
-            ) : products.length === 0 ? (
-              <tr>
-                <td colSpan={8} style={{...tdStyle, textAlign: 'center', color: '#94a3b8'}}>No products found</td>
+      <div style={{ backgroundColor: 'white', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03)', border: '1px solid #f1f5f9' }}>
+        <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+          <table className="responsive-table" style={tableStyle}>
+            <thead>
+              <tr style={{ backgroundColor: '#f8fafc' }}>
+                <th style={thStyle} onClick={() => handleSort('barcode')}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                    {t('barcode').toUpperCase()} {getSortIcon('barcode')}
+                  </div>
+                </th>
+                <th style={thStyle} onClick={() => handleSort('name')}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                    {t('name').toUpperCase()} {getSortIcon('name')}
+                  </div>
+                </th>
+                <th style={thStyle} onClick={() => handleSort('sellingPrice')}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                    {t('price').toUpperCase()} {getSortIcon('sellingPrice')}
+                  </div>
+                </th>
+                <th style={thStyle}>{t('cost').toUpperCase()}</th>
+                <th style={thStyle} onClick={() => handleSort('currentStock')}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                    {t('stockLevel').toUpperCase()} {getSortIcon('currentStock')}
+                  </div>
+                </th>
+                <th style={thStyle}>{t('minStock').toUpperCase()}</th>
+                <th style={thStyle}>{t('status').toUpperCase()}</th>
+                <th style={{...thStyle, textAlign: 'right', cursor: 'default'}}>{t('actions').toUpperCase()}</th>
               </tr>
-            ) : (
-              products.map((product) => (
-                <tr key={product.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
-                  <td style={{...tdStyle, fontFamily: 'monospace', color: '#64748b'}}>{product.barcode}</td>
-                  <td style={{...tdStyle, fontWeight: 500}}>{product.name}</td>
-                  <td style={tdStyle}>Rp {Number(product.sellingPrice).toLocaleString('id-ID')}</td>
-                  <td style={tdStyle}>Rp {Number(product.averageCost).toLocaleString('id-ID')}</td>
-                  <td style={tdStyle}>
-                    <span style={{
-                      ...badgeStyle,
-                      backgroundColor: Number(product.currentStock) <= Number(product.minStock) ? '#fef3c7' : '#eff6ff',
-                      color: Number(product.currentStock) <= Number(product.minStock) ? '#b45309' : '#1d4ed8'
-                    }}>
-                      {product.currentStock} {product.unit}
-                    </span>
-                  </td>
-                  <td style={tdStyle}>{product.minStock}</td>
-                  <td style={tdStyle}>
-                    <span style={{
-                      ...badgeStyle,
-                      backgroundColor: product.isActive ? '#dcfce7' : '#f1f5f9',
-                      color: product.isActive ? '#16a34a' : '#64748b'
-                    }}>
-                      {product.isActive ? 'Active' : 'Inactive'}
-                    </span>
-                  </td>
-                  <td style={{...tdStyle, textAlign: 'right'}}>
-                    <Link href={`/products/${product.id}`} style={{ color: '#3b82f6', textDecoration: 'none', marginRight: '0.75rem' }}>
-                      <span className="material-symbols-outlined" style={{ fontSize: '1.1rem' }}>edit</span>
-                    </Link>
-                    <button onClick={() => deleteProduct(product.id)} style={{ color: '#ef4444', backgroundColor: 'transparent', border: 'none', cursor: 'pointer' }}>
-                      <span className="material-symbols-outlined" style={{ fontSize: '1.1rem' }}>delete</span>
-                    </button>
-                  </td>
+            </thead>
+            <tbody>
+              {loading ? (
+                <TableShimmer rows={5} />
+              ) : products.length === 0 ? (
+                <tr>
+                  <td colSpan={8} style={{...tdStyle, textAlign: 'center', color: '#94a3b8'}}>{t('noProductsFound')}</td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ) : (
+                products.map((product) => (
+                  <tr key={product.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
+                    <td data-label="Barcode" style={{...tdStyle, fontFamily: 'monospace', color: '#64748b'}}>{product.barcode}</td>
+                    <td data-label="Name" style={{...tdStyle, fontWeight: 500}}>{product.name}</td>
+                    <td data-label="Price" style={tdStyle}>Rp {Number(product.sellingPrice).toLocaleString('id-ID')}</td>
+                    <td data-label="Cost" style={tdStyle}>Rp {Number(product.averageCost).toLocaleString('id-ID')}</td>
+                    <td data-label="Stock" style={tdStyle}>
+                      <span style={{
+                        ...badgeStyle,
+                        backgroundColor: Number(product.currentStock) <= Number(product.minStock) ? '#fef3c7' : '#eff6ff',
+                        color: Number(product.currentStock) <= Number(product.minStock) ? '#b45309' : '#1d4ed8'
+                      }}>
+                        {product.currentStock} {product.unit}
+                      </span>
+                    </td>
+                    <td data-label="Min Stock" style={tdStyle}>{product.minStock}</td>
+                    <td data-label="Status" style={tdStyle}>
+                      <span style={{
+                        ...badgeStyle,
+                        backgroundColor: product.isActive ? '#dcfce7' : '#f1f5f9',
+                        color: product.isActive ? '#16a34a' : '#64748b'
+                      }}>
+                        {product.isActive ? t('active') : t('inactive')}
+                      </span>
+                    </td>
+                    <td data-label="Actions" style={{...tdStyle, textAlign: 'right'}}>
+                      <Link href={`/products/${product.id}`} style={{ color: '#3b82f6', textDecoration: 'none', marginRight: '0.75rem' }}>
+                        <span className="material-symbols-outlined" style={{ fontSize: '1.1rem' }}>edit</span>
+                      </Link>
+                      <button onClick={() => deleteProduct(product.id)} style={{ color: '#ef4444', backgroundColor: 'transparent', border: 'none', cursor: 'pointer' }}>
+                        <span className="material-symbols-outlined" style={{ fontSize: '1.1rem' }}>delete</span>
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <Pagination
@@ -240,7 +314,7 @@ function ProductsContent() {
       {products.length === 0 && !loading && (
         <div style={{ textAlign: 'center', padding: '3rem', color: '#94a3b8' }}>
           <span className="material-symbols-outlined" style={{ fontSize: '3rem', display: 'block', marginBottom: '0.5rem' }}>inventory_2</span>
-          <p>No products found</p>
+        <p>{t('noProductsFound')}</p>
         </div>
       )}
     </div>

@@ -271,11 +271,10 @@ function NewProductForm() {
           <div style={{ display: 'flex', gap: '0.5rem' }}>
             <input
               type="text"
-              required
               value={formData.barcode}
               onChange={(e) => setFormData({ ...formData, barcode: e.target.value })}
               style={{ ...inputStyle, flex: 1 }}
-              placeholder="Scan or enter barcode"
+              placeholder="Scan, enter barcode, or leave blank to auto-generate"
             />
             <button
               type="button"

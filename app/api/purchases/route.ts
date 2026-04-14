@@ -47,6 +47,14 @@ export async function GET(request: NextRequest) {
     // Build where clause
     const whereClause = supplierId ? { supplierId } : {};
     
+    const sortBy = searchParams.get('sortBy') || 'createdAt';
+    const sortOrder = searchParams.get('sortOrder') || 'desc';
+    
+    // Validate sortBy field
+    const validSortFields = ['invoiceNumber', 'purchaseDate', 'totalAmount', 'createdAt'];
+    const finalSortBy = validSortFields.includes(sortBy) ? sortBy : 'createdAt';
+    const finalSortOrder = sortOrder === 'asc' ? 'asc' : 'desc';
+
     // Get total count for pagination
     const totalItems = await prisma.purchase.count({ where: whereClause });
     const totalPages = Math.ceil(totalItems / limit);
@@ -54,7 +62,7 @@ export async function GET(request: NextRequest) {
     // Get paginated purchases
     const purchases = await prisma.purchase.findMany({
       where: whereClause,
-      orderBy: { createdAt: 'desc' },
+      orderBy: { [finalSortBy]: finalSortOrder },
       skip: (page - 1) * limit,
       take: limit,
       include: {
@@ -86,8 +94,14 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { invoiceNumber, supplierId, purchaseDate, items } = body;
+    let { invoiceNumber, supplierId, purchaseDate, items } = body;
     
+    // Generate invoice number if not provided or empty
+    if (!invoiceNumber || invoiceNumber.trim() === '') {
+      const timestamp = Date.now().toString();
+      const randomSuffix = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+      invoiceNumber = `INV${timestamp}${randomSuffix}`;
+    }
     // Start transaction with retry
     const result = await withRetry(async () => {
       return await prisma.$transaction(async (tx: any) => {

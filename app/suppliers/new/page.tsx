@@ -3,9 +3,11 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 export default function NewSupplierPage() {
   const router = useRouter()
+  const { t } = useLanguage()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
@@ -69,9 +71,9 @@ export default function NewSupplierPage() {
   return (
     <div style={{ maxWidth: '600px', margin: '0 auto' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-        <h2 style={{ margin: 0, color: '#1e293b', fontSize: '1.5rem', fontWeight: '600' }}>New Supplier</h2>
+        <h2 style={{ margin: 0, color: '#1e293b', fontSize: '1.5rem', fontWeight: '600' }}>{t('addSupplier')}</h2>
         <Link href="/suppliers" style={{ color: '#64748b', textDecoration: 'none', fontSize: '0.9rem' }}>
-          ← Back to Suppliers
+          {t('back')}
         </Link>
       </div>
 
@@ -83,7 +85,7 @@ export default function NewSupplierPage() {
 
       <form onSubmit={handleSubmit} style={cardStyle}>
         <div style={{ marginBottom: '1rem' }}>
-          <label style={labelStyle}>Supplier Name</label>
+          <label style={labelStyle}>{t('supplierNameLabel')}</label>
           <input
             type="text"
             required
@@ -94,7 +96,7 @@ export default function NewSupplierPage() {
         </div>
 
         <div style={{ marginBottom: '1rem' }}>
-          <label style={labelStyle}>Phone</label>
+          <label style={labelStyle}>{t('phoneLabel')}</label>
           <input
             type="text"
             value={formData.phone}
@@ -104,7 +106,7 @@ export default function NewSupplierPage() {
         </div>
 
         <div style={{ marginBottom: '1.5rem' }}>
-          <label style={labelStyle}>Address</label>
+          <label style={labelStyle}>{t('addressLabel')}</label>
           <textarea
             value={formData.address}
             onChange={(e) => setFormData({ ...formData, address: e.target.value })}
@@ -129,7 +131,7 @@ export default function NewSupplierPage() {
               opacity: loading ? 0.5 : 1,
             }}
           >
-            {loading ? 'Creating...' : 'Create Supplier'}
+            {loading ? t('saving') : t('save')}
           </button>
           <Link
             href="/suppliers"
@@ -145,7 +147,7 @@ export default function NewSupplierPage() {
               fontWeight: '500',
             }}
           >
-            Cancel
+            {t('cancel')}
           </Link>
         </div>
       </form>

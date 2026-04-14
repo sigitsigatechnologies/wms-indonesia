@@ -3,6 +3,7 @@ import { Noto_Sans } from "next/font/google";
 import "./globals.css";
 import Sidebar from "@/components/Sidebar";
 import MobileNav from "@/components/MobileNav";
+import { LanguageProvider } from "@/contexts/LanguageContext";
 
 const notoSans = Noto_Sans({
   variable: "--font-noto-sans",
@@ -29,20 +30,22 @@ export default function RootLayout({
         className={`${notoSans.variable} antialiased`}
         style={{ margin: 0, padding: 0 }}
       >
-        <div style={{ display: 'flex', minHeight: '100vh', width: '100%' }}>
-          {/* Desktop Sidebar */}
-          <div className="desktop-sidebar">
-            <Sidebar />
+        <LanguageProvider>
+          <div style={{ display: 'flex', minHeight: '100vh', width: '100%' }}>
+            {/* Desktop Sidebar */}
+            <div className="desktop-sidebar">
+              <Sidebar />
+            </div>
+            
+            {/* Mobile Navigation */}
+            <MobileNav />
+            
+            {/* Main Content */}
+            <main className="main-content">
+              {children}
+            </main>
           </div>
-          
-          {/* Mobile Navigation */}
-          <MobileNav />
-          
-          {/* Main Content */}
-          <main className="main-content">
-            {children}
-          </main>
-        </div>
+        </LanguageProvider>
 
         <style>{`
           .desktop-sidebar {

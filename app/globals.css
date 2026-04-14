@@ -49,15 +49,23 @@
 :root {
   --radius: 0.625rem;
   --background: #f8fafc;
-  --foreground: #1e293b;
+  --foreground: #0f172a;
+  --primary: #3b82f6;
+  --secondary: #64748b;
+  
+  /* Module Themes */
+  --color-products: #6366f1; /* Indigo */
+  --color-purchases: #8b5cf6; /* Purple */
+  --color-sales: #10b981; /* Emerald */
+  --color-stock: #f59e0b; /* Amber */
+  --color-reports: #06b6d4; /* Cyan */
+  --color-suppliers: #ec4899; /* Pink */
+
   --card: #ffffff;
   --card-foreground: #1e293b;
   --popover: #ffffff;
   --popover-foreground: #1e293b;
-  --primary: #3b82f6;
   --primary-foreground: #ffffff;
-  --secondary: #f1f5f9;
-  --secondary-foreground: #475569;
   --muted: #f1f5f9;
   --muted-foreground: #64748b;
   --accent: #f1f5f9;
@@ -144,6 +152,77 @@
 @media (min-width: 769px) {
   .main-content {
     padding: 2rem;
+  }
+}
+
+/* Grid System */
+.row {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.col-12 { grid-column: span 12 / span 12; }
+.col-6 { grid-column: span 6 / span 6; }
+.col-4 { grid-column: span 4 / span 4; }
+.col-3 { grid-column: span 3 / span 3; }
+
+@media (max-width: 768px) {
+  .row {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 1rem;
+  }
+  .col-6, .col-4, .col-3 {
+    grid-column: span 1 / span 1;
+  }
+}
+
+/* Responsive Table (Card View on Mobile) */
+@media (max-width: 768px) {
+  .responsive-table {
+    display: block !important;
+    width: 100% !important;
+    border: 0 !important;
+  }
+  .responsive-table thead {
+    display: none !important;
+  }
+  .responsive-table tbody {
+    display: block !important;
+    width: 100% !important;
+  }
+  .responsive-table tr {
+    display: block !important;
+    width: 100% !important;
+    margin-bottom: 1rem !important;
+    background: white !important;
+    border: 1px solid #f1f5f9 !important;
+    border-radius: 12px !important;
+    padding: 0.5rem !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important;
+  }
+  .responsive-table td {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    border-bottom: 1px solid #f1f5f9 !important;
+    padding: 0.75rem 0.5rem !important;
+    text-align: right !important;
+    font-size: 0.875rem !important;
+    white-space: normal !important;
+  }
+  .responsive-table td:last-child {
+    border-bottom: 0 !important;
+  }
+  .responsive-table td::before {
+    content: attr(data-label) !important;
+    font-weight: 600 !important;
+    color: #64748b !important;
+    text-align: left !important;
+    margin-right: 1rem !important;
+    font-size: 0.75rem !important;
+    text-transform: uppercase !important;
   }
 }
 

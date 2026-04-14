@@ -1,10 +1,11 @@
 'use client'
 
-import { useEffect, useState, Suspense } from 'react'
+import React, { useEffect, useState, Suspense } from 'react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import Pagination from '@/components/Pagination'
 import { TableShimmer } from '@/components/Shimmer'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 interface SaleItem {
   id: string
@@ -13,6 +14,10 @@ interface SaleItem {
   sellingPrice: number
   profit: number
   subtotal: number
+  product?: {
+    name: string
+    barcode: string
+  }
 }
 
 interface Sale {
@@ -35,19 +40,23 @@ interface PaginationInfo {
 function SalesContent() {
   const [sales, setSales] = useState<Sale[]>([])
   const [loading, setLoading] = useState(true)
+  const [sortBy, setSortBy] = useState('createdAt')
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
   const [pagination, setPagination] = useState<PaginationInfo>({
     page: 1,
     limit: 10,
     totalItems: 0,
     totalPages: 0,
   })
+  const [expandedSaleId, setExpandedSaleId] = useState<string | null>(null)
   const searchParams = useSearchParams()
+  const { t } = useLanguage()
 
   useEffect(() => {
     const page = searchParams.get('page') || '1'
     const limit = searchParams.get('limit') || '10'
     fetchSales(parseInt(page), parseInt(limit))
-  }, [searchParams])
+  }, [searchParams, sortBy, sortOrder])
 
   async function fetchSales(page: number, limit: number) {
     try {
@@ -55,6 +64,8 @@ function SalesContent() {
       const params = new URLSearchParams()
       params.set('page', page.toString())
       params.set('limit', limit.toString())
+      params.set('sortBy', sortBy)
+      params.set('sortOrder', sortOrder)
       
       const res = await fetch(`/api/sales?${params.toString()}`)
       const result = await res.json()
@@ -79,21 +90,47 @@ function SalesContent() {
     }
   }
 
+  const handleSort = (field: string) => {
+    if (sortBy === field) {
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')
+    } else {
+      setSortBy(field)
+      setSortOrder('desc')
+    }
+  }
+
+  const getSortIcon = (field: string) => {
+    if (sortBy !== field) return <span className="material-symbols-outlined" style={{ fontSize: '1rem', opacity: 0.3 }}>unfold_more</span>
+    return sortOrder === 'asc' 
+      ? <span className="material-symbols-outlined" style={{ fontSize: '1rem' }}>expand_less</span>
+      : <span className="material-symbols-outlined" style={{ fontSize: '1rem' }}>expand_more</span>
+  }
+
+  const toggleExpand = (id: string) => {
+    if (expandedSaleId === id) {
+      setExpandedSaleId(null)
+    } else {
+      setExpandedSaleId(id)
+    }
+  }
+
   const totalRevenue = sales.reduce((sum, s) => sum + Number(s.totalAmount || 0), 0)
   const totalProfit = sales.reduce((sum, s) => sum + Number(s.totalProfit || 0), 0)
 
   const buttonStyle: React.CSSProperties = {
-    backgroundColor: '#3b82f6',
+    backgroundColor: '#10b981', // Emerald
     color: 'white',
-    padding: '0.5rem 1rem',
-    borderRadius: '8px',
+    padding: '0.6rem 1.2rem',
+    borderRadius: '10px',
     textDecoration: 'none',
     border: 'none',
     cursor: 'pointer',
     fontSize: '0.875rem',
     display: 'inline-flex',
     alignItems: 'center',
-    fontWeight: '500',
+    fontWeight: '600',
+    transition: 'all 0.2s ease',
+    boxShadow: '0 4px 6px -1px rgba(16, 185, 129, 0.2)',
   }
 
   const thStyle: React.CSSProperties = {
@@ -102,8 +139,11 @@ function SalesContent() {
     fontWeight: '600',
     borderBottom: '2px solid #f1f5f9',
     whiteSpace: 'nowrap' as const,
-    color: '#64748b',
+    color: '#475569',
     fontSize: '0.8rem',
+    cursor: 'pointer',
+    userSelect: 'none',
+    letterSpacing: '0.05em',
   }
 
   const tdStyle: React.CSSProperties = {
@@ -115,68 +155,179 @@ function SalesContent() {
   }
 
   return (
-    <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
-        <h2 style={{ margin: 0, color: '#1e293b', fontSize: '1.5rem', fontWeight: '600' }}>Sales</h2>
-        <Link href="/sales/new" style={buttonStyle}>
-          <span className="material-symbols-outlined" style={{ fontSize: '1.1rem', marginRight: '0.25rem', verticalAlign: 'middle' }}>add</span>
-          New Sale
-        </Link>
+    <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 1rem' }}>
+      <div className="row" style={{ marginBottom: '2rem', alignItems: 'center' }}>
+        <div className="col-6">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <div style={{ 
+              backgroundColor: 'rgba(16, 185, 129, 0.1)', 
+              color: '#10b981', 
+              padding: '0.5rem', 
+              borderRadius: '10px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}>
+              <span className="material-symbols-outlined" style={{ fontSize: '1.75rem' }}>payments</span>
+            </div>
+            <h2 style={{ margin: 0, color: '#1e293b', fontSize: '1.75rem', fontWeight: '700', letterSpacing: '-0.02em' }}>{t('sales')}</h2>
+          </div>
+        </div>
+        <div className="col-6" style={{ textAlign: 'right' }}>
+          <Link href="/sales/new" style={buttonStyle}>
+            <span className="material-symbols-outlined" style={{ fontSize: '1.25rem', marginRight: '0.4rem' }}>add_circle</span>
+            {t('newSale')}
+          </Link>
+        </div>
       </div>
 
       {/* Summary Cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
-        <div style={{ padding: '1.5rem', background: 'linear-gradient(135deg, #3b82f6 0%, #0ea5e9 100%)', borderRadius: '12px', color: 'white' }}>
-          <p style={{ margin: '0 0 0.5rem 0', opacity: 0.9, fontSize: '0.8rem', fontWeight: '500' }}>Total Revenue</p>
-          <p style={{ margin: 0, fontSize: '1.5rem', fontWeight: '700' }}>
-            Rp {totalRevenue.toLocaleString('id-ID')}
-          </p>
+      <div className="row" style={{ marginBottom: '2rem' }}>
+        <div className="col-6">
+          <div style={{ 
+            padding: '1.5rem', 
+            background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)', 
+            borderRadius: '16px', 
+            color: 'white', 
+            height: '100%',
+            boxShadow: '0 10px 15px -3px rgba(16, 185, 129, 0.2)',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+              <span className="material-symbols-outlined" style={{ fontSize: '1.25rem', opacity: 0.8 }}>trending_up</span>
+              <p style={{ margin: 0, opacity: 0.9, fontSize: '0.75rem', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{t('totalRevenue')}</p>
+            </div>
+            <p style={{ margin: 0, fontSize: '1.75rem', fontWeight: '800' }}>
+              Rp {totalRevenue.toLocaleString('id-ID')}
+            </p>
+          </div>
         </div>
-        <div style={{ padding: '1.5rem', background: 'linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%)', borderRadius: '12px', color: 'white' }}>
-          <p style={{ margin: '0 0 0.5rem 0', opacity: 0.9, fontSize: '0.8rem', fontWeight: '500' }}>Total Profit</p>
-          <p style={{ margin: 0, fontSize: '1.5rem', fontWeight: '700' }}>
-            Rp {totalProfit.toLocaleString('id-ID')}
-          </p>
+        <div className="col-6">
+          <div style={{ 
+            padding: '1.5rem', 
+            background: 'linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)', 
+            borderRadius: '16px', 
+            color: 'white', 
+            height: '100%',
+            boxShadow: '0 10px 15px -3px rgba(99, 102, 241, 0.2)',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+              <span className="material-symbols-outlined" style={{ fontSize: '1.25rem', opacity: 0.8 }}>savings</span>
+              <p style={{ margin: 0, opacity: 0.9, fontSize: '0.75rem', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{t('totalProfit')}</p>
+            </div>
+            <p style={{ margin: 0, fontSize: '1.75rem', fontWeight: '800' }}>
+              Rp {totalProfit.toLocaleString('id-ID')}
+            </p>
+          </div>
         </div>
       </div>
 
-      <div style={{ backgroundColor: 'white', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.08)', border: '1px solid #f1f5f9' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-          <thead>
-            <tr style={{ backgroundColor: '#f8fafc' }}>
-              <th style={thStyle}>INVOICE</th>
-              <th style={thStyle}>TOTAL</th>
-              <th style={thStyle}>PROFIT</th>
-              <th style={thStyle}>PAYMENT</th>
-              <th style={thStyle}>ITEMS</th>
-              <th style={thStyle}>DATE</th>
-            </tr>
-          </thead>
-          <tbody>
-            {loading ? (
-              <TableShimmer rows={5} />
-            ) : sales.length === 0 ? (
-              <tr>
-                <td colSpan={6} style={{...tdStyle, textAlign: 'center', color: '#94a3b8'}}>No sales found</td>
+      <div style={{ backgroundColor: 'white', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03)', border: '1px solid #f1f5f9' }}>
+        <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+          <table className="responsive-table" style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <thead>
+              <tr style={{ backgroundColor: '#f8fafc' }}>
+                <th style={thStyle} onClick={() => handleSort('invoiceNumber')}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                    {t('invoice').toUpperCase()} {getSortIcon('invoiceNumber')}
+                  </div>
+                </th>
+                <th style={thStyle} onClick={() => handleSort('totalAmount')}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                    {t('total').toUpperCase()} {getSortIcon('totalAmount')}
+                  </div>
+                </th>
+                <th style={thStyle} onClick={() => handleSort('totalProfit')}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                    {t('profit').toUpperCase()} {getSortIcon('totalProfit')}
+                  </div>
+                </th>
+                <th style={thStyle} onClick={() => handleSort('paymentMethod')}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                    {t('payment').toUpperCase()} {getSortIcon('paymentMethod')}
+                  </div>
+                </th>
+                <th style={{...thStyle, cursor: 'default'}}>{t('items').toUpperCase()}</th>
+                <th style={thStyle} onClick={() => handleSort('createdAt')}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                    {t('date').toUpperCase()} {getSortIcon('createdAt')}
+                  </div>
+                </th>
               </tr>
-            ) : (
-              sales.map((sale) => (
-                <tr key={sale.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
-                  <td style={{...tdStyle, fontWeight: 500}}>{sale.invoiceNumber}</td>
-                  <td style={tdStyle}>Rp {Number(sale.totalAmount).toLocaleString('id-ID')}</td>
-                  <td style={{...tdStyle, color: '#10b981', fontWeight: 500}}>Rp {Number(sale.totalProfit).toLocaleString('id-ID')}</td>
-                  <td style={tdStyle}>
-                    <span style={{ padding: '0.25rem 0.75rem', borderRadius: '6px', fontSize: '0.8rem', fontWeight: '500', backgroundColor: '#eff6ff', color: '#1d4ed8' }}>
-                      {sale.paymentMethod}
-                    </span>
-                  </td>
-                  <td style={tdStyle}>{sale.items?.length || 0} items</td>
-                  <td style={tdStyle}>{new Date(sale.createdAt).toLocaleDateString('id-ID')}</td>
+            </thead>
+            <tbody>
+              {loading ? (
+                <TableShimmer rows={5} />
+              ) : sales.length === 0 ? (
+                <tr>
+                  <td colSpan={6} style={{...tdStyle, textAlign: 'center', color: '#94a3b8'}}>{t('noSalesFound')}</td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ) : (
+                sales.map((sale) => (
+                  <React.Fragment key={sale.id}>
+                    <tr style={{ borderBottom: '1px solid #f1f5f9', backgroundColor: expandedSaleId === sale.id ? '#f8fafc' : 'transparent', transition: 'background-color 0.2s' }}>
+                      <td data-label="Invoice" style={{...tdStyle, fontWeight: 500, cursor: 'pointer', color: '#10b981'}} onClick={() => toggleExpand(sale.id)}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                          <span className="material-symbols-outlined" style={{ fontSize: '1.25rem', transition: 'transform 0.2s', transform: expandedSaleId === sale.id ? 'rotate(90deg)' : 'rotate(0deg)' }}>chevron_right</span>
+                          {sale.invoiceNumber}
+                        </div>
+                      </td>
+                      <td data-label="Total" style={tdStyle}>Rp {Number(sale.totalAmount).toLocaleString('id-ID')}</td>
+                      <td data-label="Profit" style={{...tdStyle, color: '#10b981', fontWeight: 500}}>Rp {Number(sale.totalProfit).toLocaleString('id-ID')}</td>
+                      <td data-label="Payment" style={tdStyle}>
+                        <span style={{ padding: '0.25rem 0.75rem', borderRadius: '6px', fontSize: '0.8rem', fontWeight: '500', backgroundColor: '#eff6ff', color: '#1d4ed8' }}>
+                          {sale.paymentMethod}
+                        </span>
+                      </td>
+                      <td data-label="Items" style={tdStyle}>{sale.items?.length || 0} items</td>
+                      <td data-label="Date" style={tdStyle}>{new Date(sale.createdAt).toLocaleDateString('id-ID')}</td>
+                    </tr>
+                    {expandedSaleId === sale.id && (
+                      <tr style={{ backgroundColor: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
+                        <td colSpan={6} style={{ padding: '0 2rem 1.5rem 3rem' }}>
+                          <div style={{ backgroundColor: 'white', borderRadius: '8px', border: '1px solid #e2e8f0', overflow: 'hidden' }}>
+                            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
+                              <thead>
+                                <tr style={{ backgroundColor: '#f1f5f9', borderBottom: '1px solid #e2e8f0' }}>
+                                  <th style={{ padding: '0.75rem 1rem', textAlign: 'left', color: '#475569', fontWeight: 600 }}>{t('name')}</th>
+                                  <th style={{ padding: '0.75rem 1rem', textAlign: 'left', color: '#475569', fontWeight: 600 }}>{t('barcode')}</th>
+                                  <th style={{ padding: '0.75rem 1rem', textAlign: 'right', color: '#475569', fontWeight: 600 }}>{t('qty')}</th>
+                                  <th style={{ padding: '0.75rem 1rem', textAlign: 'right', color: '#475569', fontWeight: 600 }}>{t('price')}</th>
+                                  <th style={{ padding: '0.75rem 1rem', textAlign: 'right', color: '#475569', fontWeight: 600 }}>{t('total')}</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {sale.items?.map((item, idx) => (
+                                  <tr key={item.id || idx} style={{ borderBottom: idx === sale.items.length - 1 ? 'none' : '1px solid #f1f5f9' }}>
+                                    <td style={{ padding: '0.75rem 1rem', color: '#1e293b' }}>{item.product?.name || 'Unknown Product'}</td>
+                                    <td style={{ padding: '0.75rem 1rem', color: '#64748b' }}>{item.product?.barcode || '-'}</td>
+                                    <td style={{ padding: '0.75rem 1rem', textAlign: 'right', color: '#1e293b', fontWeight: 500 }}>{Number(item.quantity).toLocaleString('id-ID')}</td>
+                                    <td style={{ padding: '0.75rem 1rem', textAlign: 'right', color: '#64748b' }}>Rp {Number(item.sellingPrice).toLocaleString('id-ID')}</td>
+                                    <td style={{ padding: '0.75rem 1rem', textAlign: 'right', color: '#1e293b', fontWeight: 500 }}>Rp {Number(item.subtotal).toLocaleString('id-ID')}</td>
+                                  </tr>
+                                ))}
+                                {(!sale.items || sale.items.length === 0) && (
+                                  <tr>
+                                    <td colSpan={5} style={{ padding: '1rem', textAlign: 'center', color: '#94a3b8' }}>No items found for this sale</td>
+                                  </tr>
+                                )}
+                              </tbody>
+                            </table>
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                  </React.Fragment>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <Pagination

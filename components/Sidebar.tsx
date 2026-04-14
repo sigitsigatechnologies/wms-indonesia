@@ -2,25 +2,30 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 interface NavItem {
+  key: string
   label: string
   href: string
   icon: string
+  color: string
 }
 
 const navItems: NavItem[] = [
-  { label: 'Dashboard', href: '/', icon: 'dashboard' },
-  { label: 'Products', href: '/products', icon: 'inventory_2' },
-  { label: 'Suppliers', href: '/suppliers', icon: 'local_shipping' },
-  { label: 'Purchases', href: '/purchases', icon: 'shopping_cart' },
-  { label: 'Sales', href: '/sales', icon: 'payments' },
-  { label: 'Stock', href: '/stock', icon: 'assessment' },
-  { label: 'Check Price', href: '/products/check-price', icon: 'price_check' },
+  { key: 'dashboard', label: 'Dashboard', href: '/', icon: 'dashboard', color: '#3b82f6' },
+  { key: 'products', label: 'Products', href: '/products', icon: 'inventory_2', color: '#6366f1' },
+  { key: 'suppliers', label: 'Suppliers', href: '/suppliers', icon: 'local_shipping', color: '#ec4899' },
+  { key: 'purchases', label: 'Purchases', href: '/purchases', icon: 'shopping_cart', color: '#8b5cf6' },
+  { key: 'sales', label: 'Sales', href: '/sales', icon: 'payments', color: '#10b981' },
+  { key: 'stock', label: 'Stock', href: '/stock', icon: 'assessment', color: '#f59e0b' },
+  { key: 'checkPrice', label: 'Check Price', href: '/products/check-price', icon: 'price_check', color: '#6366f1' },
+  { key: 'reports', label: 'Reports', href: '/reports', icon: 'analytics', color: '#06b6d4' },
 ]
 
 export default function Sidebar() {
   const pathname = usePathname()
+  const { language, setLanguage, t } = useLanguage()
 
   return (
     <aside style={sidebarStyle}>
@@ -43,21 +48,44 @@ export default function Sidebar() {
               href={item.href}
               style={{
                 ...navLinkStyle,
-                backgroundColor: isActive ? '#3b82f6' : 'transparent',
+                backgroundColor: isActive ? item.color : 'transparent',
                 color: isActive ? 'white' : '#64748b',
               }}
             >
               <span className="material-symbols-outlined" style={{ ...iconStyle, color: isActive ? 'white' : '#94a3b8' }}>
                 {item.icon}
               </span>
-              {item.label}
+              {t(item.key) || item.label}
             </Link>
           )
         })}
       </nav>
 
       <div style={footerStyle}>
-        <p style={footerTextStyle}>v1.0.0</p>
+        <div style={{ display: 'flex', borderRadius: '8px', overflow: 'hidden', border: '1px solid #e2e8f0', marginBottom: '1rem', width: '100%' }}>
+          <button
+            onClick={() => setLanguage('en')}
+            style={{
+              flex: 1, padding: '0.4rem', border: 'none', cursor: 'pointer', fontSize: '0.75rem', fontWeight: 600,
+              backgroundColor: language === 'en' ? '#f1f5f9' : 'transparent',
+              color: language === 'en' ? '#3b82f6' : '#64748b'
+            }}
+          >
+            EN
+          </button>
+          <div style={{ width: '1px', backgroundColor: '#e2e8f0' }} />
+          <button
+            onClick={() => setLanguage('id')}
+            style={{
+              flex: 1, padding: '0.4rem', border: 'none', cursor: 'pointer', fontSize: '0.75rem', fontWeight: 600,
+              backgroundColor: language === 'id' ? '#f1f5f9' : 'transparent',
+              color: language === 'id' ? '#3b82f6' : '#64748b'
+            }}
+          >
+            ID
+          </button>
+        </div>
+        <p style={{ ...footerTextStyle, marginBottom: '0' }}>v1.0.0</p>
       </div>
     </aside>
   )

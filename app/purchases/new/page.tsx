@@ -158,11 +158,10 @@ export default function NewPurchasePage() {
               <label style={labelStyle}>Invoice Number</label>
               <input
                 type="text"
-                required
                 value={formData.invoiceNumber}
                 onChange={(e) => setFormData({ ...formData, invoiceNumber: e.target.value })}
                 style={inputStyle}
-                placeholder="INV-001"
+                placeholder="Leave blank to auto-generate"
               />
             </div>
             <div>

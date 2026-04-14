@@ -3,11 +3,13 @@
 import { useState, useEffect } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import Link from 'next/link'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 export default function EditSupplierPage() {
   const router = useRouter()
   const params = useParams()
   const id = params.id as string
+  const { t } = useLanguage()
   
   const [loading, setLoading] = useState(false)
   const [fetching, setFetching] = useState(true)
@@ -93,7 +95,7 @@ export default function EditSupplierPage() {
   if (fetching) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '50vh' }}>
-        <p style={{ color: '#64748b' }}>Loading...</p>
+        <p style={{ color: '#64748b' }}>{t('loading')}</p>
       </div>
     )
   }
@@ -101,9 +103,9 @@ export default function EditSupplierPage() {
   return (
     <div style={{ maxWidth: '600px', margin: '0 auto' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-        <h2 style={{ margin: 0, color: '#1e293b', fontSize: '1.5rem', fontWeight: '600' }}>Edit Supplier</h2>
+        <h2 style={{ margin: 0, color: '#1e293b', fontSize: '1.5rem', fontWeight: '600' }}>{t('editSupplier')}</h2>
         <Link href="/suppliers" style={{ color: '#64748b', textDecoration: 'none', fontSize: '0.9rem' }}>
-          ← Back to Suppliers
+          {t('back')}
         </Link>
       </div>
 
@@ -115,7 +117,7 @@ export default function EditSupplierPage() {
 
       <form onSubmit={handleSubmit} style={cardStyle}>
         <div style={{ marginBottom: '1rem' }}>
-          <label style={labelStyle}>Supplier Name</label>
+          <label style={labelStyle}>{t('supplierNameLabel')}</label>
           <input
             type="text"
             required
@@ -126,7 +128,7 @@ export default function EditSupplierPage() {
         </div>
 
         <div style={{ marginBottom: '1rem' }}>
-          <label style={labelStyle}>Phone</label>
+          <label style={labelStyle}>{t('phoneLabel')}</label>
           <input
             type="text"
             value={formData.phone}
@@ -136,7 +138,7 @@ export default function EditSupplierPage() {
         </div>
 
         <div style={{ marginBottom: '1.5rem' }}>
-          <label style={labelStyle}>Address</label>
+          <label style={labelStyle}>{t('addressLabel')}</label>
           <textarea
             value={formData.address}
             onChange={(e) => setFormData({ ...formData, address: e.target.value })}
@@ -161,7 +163,7 @@ export default function EditSupplierPage() {
               opacity: loading ? 0.5 : 1,
             }}
           >
-            {loading ? 'Updating...' : 'Update Supplier'}
+            {loading ? t('saving') : t('save')}
           </button>
           <Link
             href="/suppliers"
@@ -177,7 +179,7 @@ export default function EditSupplierPage() {
               fontWeight: '500',
             }}
           >
-            Cancel
+            {t('cancel')}
           </Link>
         </div>
       </form>
