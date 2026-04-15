@@ -86,7 +86,6 @@ export default function Home() {
     padding: '1.5rem',
     backgroundColor: 'white',
     borderRadius: '12px',
-    boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
     border: '1px solid #f1f5f9',
   }
 
@@ -115,7 +114,7 @@ export default function Home() {
 
       {/* Stats Grid */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
-        <div style={cardStyle}>
+        <div className="interactive-card general-card" style={cardStyle}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
             <div style={{ padding: '0.5rem', borderRadius: '8px', backgroundColor: '#eff6ff' }}>
               <span className="material-symbols-outlined" style={{ color: '#3b82f6', fontSize: '1.25rem' }}>inventory_2</span>
@@ -124,7 +123,7 @@ export default function Home() {
           </div>
           <p style={{ margin: 0, fontSize: '1.75rem', fontWeight: '700', color: '#1e293b' }}>{data?.totalProducts || 0}</p>
         </div>
-        <div style={cardStyle}>
+        <div className="interactive-card general-card" style={cardStyle}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
             <div style={{ padding: '0.5rem', borderRadius: '8px', backgroundColor: '#fdf4ff' }}>
               <span className="material-symbols-outlined" style={{ color: '#d946ef', fontSize: '1.25rem' }}>local_shipping</span>
@@ -133,7 +132,7 @@ export default function Home() {
           </div>
           <p style={{ margin: 0, fontSize: '1.75rem', fontWeight: '700', color: '#1e293b' }}>{data?.totalSuppliers || 0}</p>
         </div>
-        <div style={cardStyle}>
+        <div className="interactive-card general-card" style={cardStyle}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
             <div style={{ padding: '0.5rem', borderRadius: '8px', backgroundColor: '#fffbeb' }}>
               <span className="material-symbols-outlined" style={{ color: '#f59e0b', fontSize: '1.25rem' }}>shopping_cart</span>
@@ -142,10 +141,10 @@ export default function Home() {
           </div>
           <p style={{ margin: 0, fontSize: '1.75rem', fontWeight: '700', color: '#1e293b' }}>{data?.totalPurchases || 0}</p>
         </div>
-        <div style={cardStyle}>
+        <div className="interactive-card general-card" style={cardStyle}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
-            <div style={{ padding: '0.5rem', borderRadius: '8px', backgroundColor: '#eff6ff' }}>
-              <span className="material-symbols-outlined" style={{ color: '#3b82f6', fontSize: '1.25rem' }}>payments</span>
+            <div style={{ padding: '0.5rem', borderRadius: '8px', backgroundColor: '#d1fae5' }}>
+              <span className="material-symbols-outlined" style={{ color: '#10b981', fontSize: '1.25rem' }}>payments</span>
             </div>
             <p style={{ margin: 0, color: '#64748b', fontSize: '0.8rem', fontWeight: '500' }}>{t('totalSales')}</p>
           </div>
@@ -153,31 +152,73 @@ export default function Home() {
         </div>
       </div>
 
+      <style>{`
+        .interactive-card {
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .interactive-card.revenue-card:hover, .interactive-card.profit-card:hover {
+          transform: translateY(-8px) scale(1.02);
+          cursor: pointer;
+        }
+        .general-card {
+          box-shadow: 0 1px 3px rgba(0,0,0,0.08); /* default box-shadow */
+        }
+        .general-card:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .interactive-alert {
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .interactive-alert:hover {
+          transform: translateX(4px);
+          box-shadow: 0 4px 6px -1px rgba(245, 158, 11, 0.1), 0 2px 4px -1px rgba(245, 158, 11, 0.06);
+        }
+        .revenue-card {
+          background: linear-gradient(135deg, #1d4ed8 0%, #3b82f6 100%);
+          box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.5);
+        }
+        .revenue-card:hover {
+          box-shadow: 0 20px 25px -5px rgba(59, 130, 246, 0.4), 0 10px 10px -5px rgba(59, 130, 246, 0.2) !important;
+        }
+        .profit-card {
+          background: linear-gradient(135deg, #6d28d9 0%, #a855f7 100%);
+          box-shadow: 0 4px 6px -1px rgba(168, 85, 247, 0.5);
+        }
+        .profit-card:hover {
+          box-shadow: 0 20px 25px -5px rgba(168, 85, 247, 0.4), 0 10px 10px -5px rgba(168, 85, 247, 0.2) !important;
+        }
+      `}</style>
+      
       {/* Revenue & Profit */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
-        <div style={{ ...gradientCardStyle, background: 'linear-gradient(135deg, #3b82f6 0%, #0ea5e9 100%)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
-            <span className="material-symbols-outlined" style={{ fontSize: '1.25rem', opacity: 0.9 }}>account_balance</span>
-            <p style={{ margin: 0, opacity: 0.9, fontSize: '0.8rem', fontWeight: '500' }}>{t('totalRevenue')}</p>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.5rem', marginBottom: '2rem', marginTop: '1rem' }}>
+        <div className="interactive-card revenue-card" style={{ ...gradientCardStyle, border: 'none' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.75rem' }}>
+            <div style={{ backgroundColor: 'rgba(255,255,255,0.2)', padding: '0.5rem', borderRadius: '10px', display: 'flex' }}>
+              <span className="material-symbols-outlined" style={{ fontSize: '1.5rem', opacity: 1, color: 'white' }}>account_balance</span>
+            </div>
+            <p style={{ margin: 0, opacity: 0.95, fontSize: '0.9rem', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{t('totalRevenue')}</p>
           </div>
-          <p style={{ margin: 0, fontSize: '1.5rem', fontWeight: '700' }}>
-            Rp {data?.totalRevenue.toLocaleString('id-ID')}
+          <p style={{ margin: 0, fontSize: '2rem', fontWeight: '800', textShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+            {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(data?.totalRevenue || 0)}
           </p>
         </div>
-        <div style={{ ...gradientCardStyle, background: 'linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
-            <span className="material-symbols-outlined" style={{ fontSize: '1.25rem', opacity: 0.9 }}>trending_up</span>
-            <p style={{ margin: 0, opacity: 0.9, fontSize: '0.8rem', fontWeight: '500' }}>{t('totalProfit')}</p>
+        <div className="interactive-card profit-card" style={{ ...gradientCardStyle, border: 'none' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.75rem' }}>
+            <div style={{ backgroundColor: 'rgba(255,255,255,0.2)', padding: '0.5rem', borderRadius: '10px', display: 'flex' }}>
+              <span className="material-symbols-outlined" style={{ fontSize: '1.5rem', opacity: 1, color: 'white' }}>trending_up</span>
+            </div>
+            <p style={{ margin: 0, opacity: 0.95, fontSize: '0.9rem', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{t('totalProfit')}</p>
           </div>
-          <p style={{ margin: 0, fontSize: '1.5rem', fontWeight: '700' }}>
-            Rp {data?.totalProfit.toLocaleString('id-ID')}
+          <p style={{ margin: 0, fontSize: '2rem', fontWeight: '800', textShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+            {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(data?.totalProfit || 0)}
           </p>
         </div>
       </div>
 
       {/* Low Stock Alert */}
       {data && data.lowStockCount > 0 && (
-        <div style={{ padding: '1rem', backgroundColor: '#fef3c7', borderRadius: '8px', marginBottom: '1.5rem', borderLeft: '4px solid #f59e0b', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <div className="interactive-alert" style={{ padding: '1rem', backgroundColor: '#fef3c7', borderRadius: '8px', marginBottom: '1.5rem', borderLeft: '4px solid #f59e0b', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <span className="material-symbols-outlined" style={{ color: '#92400e' }}>warning</span>
           <p style={{ margin: 0, fontWeight: '600', color: '#92400e' }}>
             {t('lowStockAlert')} {data.lowStockCount} {t('productsLowStock')}
@@ -190,7 +231,7 @@ export default function Home() {
         
         {/* Sales Chart */}
         {data && data.chartData && data.chartData.length > 0 && (
-          <div style={{ ...cardStyle }}>
+          <div className="interactive-card general-card" style={{ ...cardStyle }}>
             <h3 style={{ margin: '0 0 1rem 0', color: '#1e293b', fontSize: '1.1rem', fontWeight: '600' }}>{t('salesTrend')}</h3>
             <div style={{ height: '300px', width: '100%' }}>
               <ResponsiveContainer width="100%" height="100%">
@@ -218,7 +259,7 @@ export default function Home() {
 
         {/* Low Stock Detailed List */}
         {data && data.lowStockProducts && data.lowStockProducts.length > 0 && (
-          <div style={{ ...cardStyle }}>
+          <div className="interactive-card general-card" style={{ ...cardStyle }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
               <h3 style={{ margin: 0, color: '#1e293b', fontSize: '1.1rem', fontWeight: '600' }}>{t('itemsAttention')}</h3>
               <Link href="/products" style={{ color: '#3b82f6', textDecoration: 'none', fontSize: '0.85rem', fontWeight: 500 }}>
