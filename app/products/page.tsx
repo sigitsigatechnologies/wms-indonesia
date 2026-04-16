@@ -109,10 +109,10 @@ function ProductsContent() {
 
   const cardStyle: React.CSSProperties = {
     padding: '1.5rem',
-    backgroundColor: '#F2F2F2',
+    backgroundColor: '#F7F9FC',
     borderRadius: '12px',
     boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
-    border: '1px solid #D6E3E2',
+    border: '1px solid #1A2B4C',
   }
 
   const buttonStyle: React.CSSProperties = {
@@ -134,11 +134,11 @@ function ProductsContent() {
   const searchInputStyle: React.CSSProperties = {
     width: '100%',
     padding: '0.75rem 1rem 0.75rem 2.8rem',
-    border: '1px solid #D6E3E2',
+    border: '1px solid #1A2B4C',
     borderRadius: '12px',
     fontSize: '0.9rem',
     outline: 'none',
-    backgroundColor: '#F2F2F2',
+    backgroundColor: '#F7F9FC',
     boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
   }
 
@@ -162,7 +162,7 @@ function ProductsContent() {
 
   const tdStyle: React.CSSProperties = {
     padding: '1rem',
-    borderBottom: '1px solid #D6E3E2',
+    borderBottom: '1px solid #1A2B4C',
     whiteSpace: 'nowrap' as const,
     color: '#1A2B4C',
     fontSize: '0.9rem',
@@ -224,7 +224,7 @@ function ProductsContent() {
         </div>
       </div>
 
-      <div style={{ backgroundColor: '#F2F2F2', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03)', border: '1px solid #D6E3E2' }}>
+      <div style={{ backgroundColor: '#F7F9FC', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03)', border: '1px solid #1A2B4C' }}>
         <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
           <table className="responsive-table" style={tableStyle}>
             <thead>
@@ -264,7 +264,7 @@ function ProductsContent() {
                 </tr>
               ) : (
                 products.map((product) => (
-                  <tr key={product.id} style={{ borderBottom: '1px solid #D6E3E2' }}>
+                  <tr key={product.id} style={{ borderBottom: '1px solid #1A2B4C' }}>
                     <td data-label="Barcode" style={{...tdStyle, fontFamily: 'monospace', color: '#475569'}}>{product.barcode}</td>
                     <td data-label="Name" style={{...tdStyle, fontWeight: 500}}>{product.name}</td>
                     <td data-label="Price" style={tdStyle}>Rp {Number(product.sellingPrice).toLocaleString('id-ID')}</td>
@@ -272,8 +272,9 @@ function ProductsContent() {
                     <td data-label="Stock" style={tdStyle}>
                       <span style={{
                         ...badgeStyle,
-                        backgroundColor: Number(product.currentStock) <= Number(product.minStock) ? '#fef3c7' : '#e2e8f0',
-                        color: Number(product.currentStock) <= Number(product.minStock) ? '#92400e' : '#1a2b4c'
+                        backgroundColor: Number(product.currentStock) <= Number(product.minStock) ? 'rgba(255, 77, 90, 0.1)' : 'rgba(26, 43, 76, 0.1)',
+                        color: Number(product.currentStock) <= Number(product.minStock) ? '#FF4D5A' : '#1A2B4C',
+                        fontWeight: '700',
                       }}>
                         {product.currentStock} {product.unit}
                       </span>
@@ -282,8 +283,9 @@ function ProductsContent() {
                     <td data-label="Status" style={tdStyle}>
                       <span style={{
                         ...badgeStyle,
-                        backgroundColor: product.isActive ? '#dcfce7' : '#f1f5f9',
-                        color: product.isActive ? '#15803d' : '#475569'
+                        backgroundColor: product.isActive ? 'rgba(26, 43, 76, 0.1)' : 'rgba(26, 43, 76, 0.05)',
+                        color: product.isActive ? '#1A2B4C' : 'rgba(26, 43, 76, 0.4)',
+                        fontWeight: '700',
                       }}>
                         {product.isActive ? t('active') : t('inactive')}
                       </span>

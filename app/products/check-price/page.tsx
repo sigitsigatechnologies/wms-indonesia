@@ -285,17 +285,20 @@ export default function CheckPricePage() {
 
       {/* Loading */}
       {loading && (
-        <div style={{ marginTop: '1rem', padding: '1rem', backgroundColor: '#D6E3E2', borderRadius: '8px', textAlign: 'center', color: 'rgba(26, 43, 76, 0.6)' }}>
+        <div style={{ marginTop: '1rem', padding: '1rem', backgroundColor: 'rgba(26, 43, 76, 0.1)', borderRadius: '8px', textAlign: 'center', color: '#1A2B4C', fontWeight: '600' }}>
           {t('searching')}
         </div>
       )}
 
       {/* Error */}
+      {error && (
         <div style={{ marginTop: '1rem', padding: '1rem', backgroundColor: 'rgba(255, 77, 90, 0.1)', border: '1px solid #FF4D5A', borderRadius: '8px', color: '#FF4D5A', textAlign: 'center' }}>
           {error}
         </div>
+      )}
 
       {/* Product Result */}
+      {product && (
         <div style={{
           marginTop: '1.5rem',
           backgroundColor: '#F7F9FC',
@@ -317,16 +320,16 @@ export default function CheckPricePage() {
               </p>
             </div>
             
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', borderTop: '1px solid #D6E3E2', paddingTop: '1rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', borderTop: '1px solid #1A2B4C', paddingTop: '1rem' }}>
               <div>
                 <p style={{ margin: 0, color: 'rgba(26, 43, 76, 0.6)', fontSize: '0.75rem' }}>{t('stockLevel').toUpperCase()}</p>
-                <p style={{ margin: '0.25rem 0 0', color: '#1A2B4C', fontSize: '1.1rem', fontWeight: '500' }}>
+                <p style={{ margin: '0.25rem 0 0', color: '#1A2B4C', fontSize: '1.1rem', fontWeight: '700' }}>
                   {product.currentStock} {product.unit}
                 </p>
               </div>
               <div>
                 <p style={{ margin: 0, color: 'rgba(26, 43, 76, 0.6)', fontSize: '0.75rem' }}>{t('barcode').toUpperCase()}</p>
-                <p style={{ margin: '0.25rem 0 0', color: '#1A2B4C', fontSize: '1rem', fontFamily: 'monospace' }}>
+                <p style={{ margin: '0.25rem 0 0', color: '#1A2B4C', fontSize: '1rem', fontFamily: 'monospace', fontWeight: '600' }}>
                   {product.barcode}
                 </p>
               </div>

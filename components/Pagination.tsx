@@ -73,10 +73,10 @@ export default function Pagination({
       gap: '1rem',
       marginTop: '1.5rem',
       padding: '1rem',
-      backgroundColor: '#F2F2F2',
+      backgroundColor: '#F7F9FC',
       borderRadius: '12px',
       boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
-      border: '1px solid #D6E3E2',
+      border: '1px solid #1A2B4C',
     }}>
       {/* Items per page selector */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
@@ -88,13 +88,14 @@ export default function Pagination({
             onChange={handleItemsPerPageChange}
             style={{
               padding: '0.375rem 0.75rem',
-              border: '1px solid #D6E3E2',
+              border: '1px solid #1A2B4C',
               borderRadius: '6px',
               fontSize: '0.875rem',
               color: '#1A2B4C',
-              backgroundColor: '#F2F2F2',
+              backgroundColor: '#FFFFFF',
               cursor: 'pointer',
               outline: 'none',
+              fontWeight: '600',
             }}
           >
             <option value="5">5</option>
@@ -120,12 +121,13 @@ export default function Pagination({
             disabled={currentPage === 1}
             style={{
               padding: '0.5rem 0.75rem',
-              border: '1px solid #D6E3E2',
+              border: '1px solid #1A2B4C',
               borderRadius: '6px',
-              backgroundColor: currentPage === 1 ? '#D6E3E2' : 'white',
-              color: currentPage === 1 ? 'rgba(26, 43, 76, 0.4)' : '#1A2B4C',
+              backgroundColor: currentPage === 1 ? 'rgba(26, 43, 76, 0.05)' : 'white',
+              color: currentPage === 1 ? 'rgba(26, 43, 76, 0.3)' : '#1A2B4C',
               cursor: currentPage === 1 ? 'not-allowed' : 'pointer',
               fontSize: '0.875rem',
+              fontWeight: '600',
               display: 'flex',
               alignItems: 'center',
               gap: '0.25rem',
@@ -143,13 +145,13 @@ export default function Pagination({
                 onClick={() => handlePageChange(page)}
                 style={{
                   padding: '0.5rem 0.75rem',
-                  border: '1px solid #D6E3E2',
+                  border: '1px solid #1A2B4C',
                   borderRadius: '6px',
-                  backgroundColor: page === currentPage ? '#1E4FCF' : 'white',
+                  backgroundColor: page === currentPage ? '#1A2B4C' : 'white',
                   color: page === currentPage ? 'white' : '#1A2B4C',
                   cursor: 'pointer',
                   fontSize: '0.875rem',
-                  fontWeight: page === currentPage ? '600' : '400',
+                  fontWeight: '700',
                 }}
               >
                 {page}
@@ -165,12 +167,13 @@ export default function Pagination({
             disabled={currentPage === totalPages}
             style={{
               padding: '0.5rem 0.75rem',
-              border: '1px solid #D6E3E2',
+              border: '1px solid #1A2B4C',
               borderRadius: '6px',
-              backgroundColor: currentPage === totalPages ? '#D6E3E2' : 'white',
-              color: currentPage === totalPages ? 'rgba(26, 43, 76, 0.4)' : '#1A2B4C',
+              backgroundColor: currentPage === totalPages ? 'rgba(26, 43, 76, 0.05)' : 'white',
+              color: currentPage === totalPages ? 'rgba(26, 43, 76, 0.3)' : '#1A2B4C',
               cursor: currentPage === totalPages ? 'not-allowed' : 'pointer',
               fontSize: '0.875rem',
+              fontWeight: '600',
               display: 'flex',
               alignItems: 'center',
               gap: '0.25rem',

@@ -155,7 +155,7 @@ function PurchasesContent() {
 
   const tdStyle: React.CSSProperties = {
     padding: '1rem',
-    borderBottom: '1px solid #D6E3E2',
+    borderBottom: '1px solid #1A2B4C',
     whiteSpace: 'nowrap' as const,
     color: '#1A2B4C',
     fontSize: '0.9rem',
@@ -188,7 +188,7 @@ function PurchasesContent() {
         </div>
       </div>
 
-      <div style={{ backgroundColor: '#F2F2F2', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03)', border: '1px solid #D6E3E2' }}>
+      <div style={{ backgroundColor: '#F7F9FC', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03)', border: '1px solid #1A2B4C' }}>
         <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
           <table className="responsive-table" style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
@@ -222,7 +222,7 @@ function PurchasesContent() {
               ) : (
                 purchases.map((purchase) => (
                   <React.Fragment key={purchase.id}>
-                    <tr style={{ borderBottom: expandedPurchaseId === purchase.id ? 'none' : '1px solid #D6E3E2', backgroundColor: expandedPurchaseId === purchase.id ? '#FFFFFF' : 'transparent', transition: 'background-color 0.2s' }}>
+                    <tr style={{ borderBottom: expandedPurchaseId === purchase.id ? 'none' : '1px solid #1A2B4C', backgroundColor: expandedPurchaseId === purchase.id ? '#FFFFFF' : 'transparent', transition: 'background-color 0.2s' }}>
                       <td data-label="Invoice" style={{...tdStyle, fontWeight: 700, cursor: 'pointer', color: '#1A2B4C'}} onClick={() => toggleExpand(purchase.id)}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                           <span className="material-symbols-outlined" style={{ fontSize: '1.25rem', transition: 'transform 0.2s', transform: expandedPurchaseId === purchase.id ? 'rotate(90deg)' : 'rotate(0deg)' }}>chevron_right</span>
@@ -243,7 +243,7 @@ function PurchasesContent() {
                       </td>
                     </tr>
                     {expandedPurchaseId === purchase.id && (
-                      <tr style={{ backgroundColor: '#FFFFFF', borderBottom: '1px solid #D6E3E2' }}>
+                      <tr style={{ backgroundColor: '#FFFFFF', borderBottom: '1px solid #1A2B4C' }}>
                         <td colSpan={5} style={{ padding: '0 2rem 1.5rem 3rem' }}>
                           <div style={{ backgroundColor: '#F7F9FC', borderRadius: '8px', border: '1px solid #1A2B4C', overflow: 'hidden' }}>
                             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
@@ -258,7 +258,7 @@ function PurchasesContent() {
                               </thead>
                               <tbody>
                                 {purchase.items?.map((item, idx) => (
-                                  <tr key={item.id || idx} style={{ borderBottom: idx === purchase.items.length - 1 ? 'none' : '1px solid #D6E3E2' }}>
+                                  <tr key={item.id || idx} style={{ borderBottom: idx === purchase.items.length - 1 ? 'none' : '1px solid #1A2B4C' }}>
                                     <td style={{ padding: '0.75rem 1rem', color: '#1A2B4C' }}>{item.product?.name || 'Unknown Product'}</td>
                                     <td style={{ padding: '0.75rem 1rem', color: 'rgba(26, 43, 76, 0.6)' }}>{item.product?.barcode || '-'}</td>
                                     <td style={{ padding: '0.75rem 1rem', textAlign: 'right', color: '#1A2B4C', fontWeight: 500 }}>{Number(item.quantity).toLocaleString('id-ID')}</td>

@@ -130,7 +130,7 @@ function StockContent() {
 
   const tdStyle: React.CSSProperties = {
     padding: '1rem',
-    borderBottom: '1px solid #D6E3E2',
+    borderBottom: '1px solid #1A2B4C',
     whiteSpace: 'nowrap' as const,
     color: '#1A2B4C',
     fontSize: '0.9rem',
@@ -340,9 +340,9 @@ function StockContent() {
                             padding: '0.25rem 0.75rem',
                             borderRadius: '6px',
                             fontSize: '0.8rem',
-                            fontWeight: '500',
-                            backgroundColor: movement.movementType === 'IN' ? '#dcfce7' : '#fee2e2',
-                            color: movement.movementType === 'IN' ? '#16a34a' : '#FF4D5A'
+                            fontWeight: '700',
+                            backgroundColor: movement.movementType === 'IN' ? 'rgba(26, 43, 76, 0.1)' : 'rgba(255, 77, 90, 0.1)',
+                            color: movement.movementType === 'IN' ? '#1A2B4C' : '#FF4D5A'
                           }}>
                             {movement.movementType === 'IN' ? t('stockIn') : t('stockOut')}
                           </span>

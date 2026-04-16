@@ -315,11 +315,11 @@ export default function NewSalePage() {
               style={{
                 width: '100%',
                 padding: '0.75rem 1rem',
-                border: '1px solid #D6E3E2',
+                border: '1px solid #1A2B4C',
                 borderRadius: '10px',
                 fontSize: '0.95rem',
                 outline: 'none',
-                backgroundColor: '#F2F2F2',
+                backgroundColor: '#F7F9FC',
               }}
             />
           </div>
@@ -338,8 +338,8 @@ export default function NewSalePage() {
                 key={product.id}
                 onClick={() => addToCart(product)}
                 style={{
-                  backgroundColor: '#F2F2F2',
-                  border: '1px solid #D6E3E2',
+                  backgroundColor: '#F7F9FC',
+                  border: '1px solid #1A2B4C',
                   borderRadius: '12px',
                   padding: '0.75rem',
                   cursor: 'pointer',
@@ -353,7 +353,7 @@ export default function NewSalePage() {
                   e.currentTarget.style.boxShadow = '0 4px 12px rgba(26,43,76,0.15)'
                 }}
                 onMouseOut={(e) => {
-                  e.currentTarget.style.borderColor = '#D6E3E2'
+                  e.currentTarget.style.borderColor = '#1A2B4C'
                   e.currentTarget.style.transform = 'translateY(0)'
                   e.currentTarget.style.boxShadow = '0 1px 2px rgba(0,0,0,0.05)'
                 }}
@@ -361,7 +361,7 @@ export default function NewSalePage() {
                 <div style={{ 
                   width: '100%', 
                   aspectRatio: '1', 
-                  backgroundColor: '#D6E3E2', 
+                  backgroundColor: 'rgba(26, 43, 76, 0.05)', 
                   borderRadius: '8px',
                   marginBottom: '0.5rem',
                   display: 'flex',
@@ -396,15 +396,15 @@ export default function NewSalePage() {
         {/* Cart Panel */}
         <div style={{ 
           width: '380px', 
-          backgroundColor: '#F2F2F2', 
+          backgroundColor: '#F7F9FC', 
           borderRadius: '16px', 
-          border: '1px solid #D6E3E2',
+          border: '1px solid #1A2B4C',
           display: 'flex', 
           flexDirection: 'column',
           overflow: 'hidden',
         }}>
           {/* Cart Header */}
-          <div style={{ padding: '1rem', borderBottom: '1px solid #D6E3E2', flexShrink: 0 }}>
+          <div style={{ padding: '1rem', borderBottom: '1px solid #1A2B4C', flexShrink: 0 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: '600', color: '#1A2B4C' }}>Cart</h3>
               <span style={{ fontSize: '0.875rem', color: 'rgba(26, 43, 76, 0.6)' }}>{cart.length} items</span>
@@ -441,14 +441,14 @@ export default function NewSalePage() {
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
                     <button
                       onClick={() => updateQuantity(item.productId, item.quantity - 1)}
-                      style={{ width: '28px', height: '28px', borderRadius: '6px', border: '1px solid #D6E3E2', backgroundColor: '#F2F2F2', cursor: 'pointer', fontSize: '1rem' }}
+                      style={{ width: '28px', height: '28px', borderRadius: '6px', border: '1px solid #1A2B4C', backgroundColor: 'rgba(26, 43, 76, 0.05)', cursor: 'pointer', fontSize: '1rem', color: '#1A2B4C', fontWeight: '700' }}
                     >
                       -
                     </button>
                     <span style={{ minWidth: '24px', textAlign: 'center', fontSize: '0.875rem', fontWeight: '600' }}>{item.quantity}</span>
                     <button
                       onClick={() => updateQuantity(item.productId, item.quantity + 1)}
-                      style={{ width: '28px', height: '28px', borderRadius: '6px', border: '1px solid #D6E3E2', backgroundColor: '#F2F2F2', cursor: 'pointer', fontSize: '1rem' }}
+                      style={{ width: '28px', height: '28px', borderRadius: '6px', border: '1px solid #1A2B4C', backgroundColor: 'rgba(26, 43, 76, 0.05)', cursor: 'pointer', fontSize: '1rem', color: '#1A2B4C', fontWeight: '700' }}
                     >
                       +
                     </button>
@@ -470,7 +470,7 @@ export default function NewSalePage() {
           </div>
 
           {/* Cart Footer */}
-          <div style={{ padding: '1rem', borderTop: '1px solid #D6E3E2', backgroundColor: '#FFFFFF', flexShrink: 0 }}>
+          <div style={{ padding: '1rem', borderTop: '1px solid #1A2B4C', backgroundColor: '#FFFFFF', flexShrink: 0 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
               <span style={{ color: 'rgba(26, 43, 76, 0.6)', fontSize: '0.9rem' }}>Subtotal</span>
               <span style={{ fontWeight: '600', fontSize: '1rem' }}>Rp {subtotal.toLocaleString('id-ID')}</span>
@@ -526,10 +526,10 @@ export default function NewSalePage() {
 
             <h3 style={{ margin: '0 0 1rem', fontSize: '1.25rem', fontWeight: '600' }}>Payment</h3>
             
-            <div style={{ backgroundColor: '#D6E3E2', borderRadius: '12px', padding: '1rem', marginBottom: '1rem' }}>
+            <div style={{ backgroundColor: 'rgba(26, 43, 76, 0.05)', borderRadius: '12px', padding: '1rem', marginBottom: '1rem', border: '1px solid #1A2B4C' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                <span style={{ color: '#475569' }}>Total</span>
-                <span style={{ fontSize: '1.5rem', fontWeight: '700', color: '#1A2B4C' }}>Rp {subtotal.toLocaleString('id-ID')}</span>
+                <span style={{ color: '#1A2B4C', fontWeight: '600' }}>Total</span>
+                <span style={{ fontSize: '1.5rem', fontWeight: '800', color: '#FF4D5A' }}>Rp {subtotal.toLocaleString('id-ID')}</span>
               </div>
             </div>
 

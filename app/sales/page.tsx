@@ -148,7 +148,7 @@ function SalesContent() {
 
   const tdStyle: React.CSSProperties = {
     padding: '1rem',
-    borderBottom: '1px solid #D6E3E2',
+    borderBottom: '1px solid #1A2B4C',
     whiteSpace: 'nowrap' as const,
     color: '#1A2B4C',
     fontSize: '0.9rem',
@@ -227,7 +227,7 @@ function SalesContent() {
         </div>
       </div>
 
-      <div style={{ backgroundColor: '#F2F2F2', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03)', border: '1px solid #D6E3E2' }}>
+      <div style={{ backgroundColor: '#F7F9FC', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03)', border: '1px solid #1A2B4C' }}>
         <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
           <table className="responsive-table" style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
@@ -270,7 +270,7 @@ function SalesContent() {
               ) : (
                 sales.map((sale) => (
                   <React.Fragment key={sale.id}>
-                    <tr style={{ borderBottom: '1px solid #D6E3E2', backgroundColor: expandedSaleId === sale.id ? '#FFFFFF' : 'transparent', transition: 'background-color 0.2s' }}>
+                    <tr style={{ borderBottom: '1px solid #1A2B4C', backgroundColor: expandedSaleId === sale.id ? '#FFFFFF' : 'transparent', transition: 'background-color 0.2s' }}>
                       <td data-label="Invoice" style={{...tdStyle, fontWeight: 500, cursor: 'pointer', color: '#1A2B4C'}} onClick={() => toggleExpand(sale.id)}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                           <span className="material-symbols-outlined" style={{ fontSize: '1.25rem', transition: 'transform 0.2s', transform: expandedSaleId === sale.id ? 'rotate(90deg)' : 'rotate(0deg)' }}>chevron_right</span>
@@ -288,12 +288,12 @@ function SalesContent() {
                       <td data-label="Date" style={tdStyle}>{new Date(sale.createdAt).toLocaleDateString('id-ID')}</td>
                     </tr>
                     {expandedSaleId === sale.id && (
-                      <tr style={{ backgroundColor: '#FFFFFF', borderBottom: '1px solid #D6E3E2' }}>
+                      <tr style={{ backgroundColor: '#FFFFFF', borderBottom: '1px solid #1A2B4C' }}>
                         <td colSpan={6} style={{ padding: '0 2rem 1.5rem 3rem' }}>
-                          <div style={{ backgroundColor: '#F2F2F2', borderRadius: '8px', border: '1px solid #D6E3E2', overflow: 'hidden' }}>
+                          <div style={{ backgroundColor: 'rgba(26, 43, 76, 0.05)', borderRadius: '8px', border: '1px solid #1A2B4C', overflow: 'hidden' }}>
                             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
                               <thead>
-                                <tr style={{ backgroundColor: '#D6E3E2', borderBottom: '1px solid #D6E3E2' }}>
+                                <tr style={{ backgroundColor: 'rgba(26, 43, 76, 0.1)', borderBottom: '1px solid #1A2B4C' }}>
                                   <th style={{ padding: '0.75rem 1rem', textAlign: 'left', color: '#475569', fontWeight: 600 }}>{t('name')}</th>
                                   <th style={{ padding: '0.75rem 1rem', textAlign: 'left', color: '#475569', fontWeight: 600 }}>{t('barcode')}</th>
                                   <th style={{ padding: '0.75rem 1rem', textAlign: 'right', color: '#475569', fontWeight: 600 }}>{t('qty')}</th>
@@ -303,7 +303,7 @@ function SalesContent() {
                               </thead>
                               <tbody>
                                 {sale.items?.map((item, idx) => (
-                                  <tr key={item.id || idx} style={{ borderBottom: idx === sale.items.length - 1 ? 'none' : '1px solid #D6E3E2' }}>
+                                  <tr key={item.id || idx} style={{ borderBottom: idx === sale.items.length - 1 ? 'none' : '1px solid #1A2B4C' }}>
                                     <td style={{ padding: '0.75rem 1rem', color: '#1A2B4C' }}>{item.product?.name || 'Unknown Product'}</td>
                                     <td style={{ padding: '0.75rem 1rem', color: 'rgba(26, 43, 76, 0.6)' }}>{item.product?.barcode || '-'}</td>
                                     <td style={{ padding: '0.75rem 1rem', textAlign: 'right', color: '#1A2B4C', fontWeight: 500 }}>{Number(item.quantity).toLocaleString('id-ID')}</td>

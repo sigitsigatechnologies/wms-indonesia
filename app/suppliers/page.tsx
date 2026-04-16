@@ -100,12 +100,12 @@ function SuppliersContent() {
   const searchInputStyle: React.CSSProperties = {
     width: '100%',
     padding: '0.75rem 1rem',
-    border: '1px solid #D6E3E2',
+    border: '1px solid #1A2B4C',
     borderRadius: '8px',
     fontSize: '0.9rem',
     outline: 'none',
     marginBottom: '1.5rem',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#F7F9FC',
   }
 
   const thStyle: React.CSSProperties = {
@@ -120,7 +120,7 @@ function SuppliersContent() {
 
   const tdStyle: React.CSSProperties = {
     padding: '1rem',
-    borderBottom: '1px solid #D6E3E2',
+    borderBottom: '1px solid #1A2B4C',
     whiteSpace: 'nowrap' as const,
     color: '#1A2B4C',
     fontSize: '0.9rem',
@@ -161,7 +161,7 @@ function SuppliersContent() {
         style={searchInputStyle}
       />
 
-      <div style={{ backgroundColor: '#F2F2F2', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.08)', border: '1px solid #D6E3E2' }}>
+      <div style={{ backgroundColor: '#F7F9FC', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.08)', border: '1px solid #1A2B4C' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
             <tr style={{ backgroundColor: '#1A2B4C' }}>
@@ -181,7 +181,7 @@ function SuppliersContent() {
               </tr>
             ) : (
               suppliers.map((supplier) => (
-                <tr key={supplier.id} style={{ borderBottom: '1px solid #D6E3E2' }}>
+                <tr key={supplier.id} style={{ borderBottom: '1px solid #1A2B4C' }}>
                   <td style={{...tdStyle, fontWeight: 500}}>{supplier.name}</td>
                   <td style={tdStyle}>{supplier.phone}</td>
                   <td style={tdStyle}>{supplier.address}</td>

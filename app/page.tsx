@@ -106,9 +106,9 @@ export default function Home() {
 
   const cardStyle: React.CSSProperties = {
     padding: '1.5rem',
-    backgroundColor: '#F2F2F2',
+    backgroundColor: '#F7F9FC',
     borderRadius: '12px',
-    border: '1px solid #D6E3E2',
+    border: '1px solid #1A2B4C',
   }
 
   const gradientCardStyle: React.CSSProperties = {
@@ -287,9 +287,9 @@ export default function Home() {
 
       {/* Low Stock Alert */}
       {data && data.lowStockCount > 0 && (
-        <div className="interactive-alert" style={{ padding: '1rem', backgroundColor: '#FFF3CD', borderRadius: '8px', marginBottom: '1.5rem', borderLeft: '4px solid #F4B400', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <span className="material-symbols-outlined" style={{ color: '#92400e' }}>warning</span>
-          <p style={{ margin: 0, fontWeight: '600', color: '#92400e' }}>
+        <div className="interactive-alert" style={{ padding: '1rem', backgroundColor: 'rgba(255, 77, 90, 0.1)', borderRadius: '8px', marginBottom: '1.5rem', borderLeft: '4px solid #FF4D5A', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <span className="material-symbols-outlined" style={{ color: '#FF4D5A' }}>warning</span>
+          <p style={{ margin: 0, fontWeight: '700', color: '#FF4D5A' }}>
             {t('lowStockAlert')} {data.lowStockCount} {t('productsLowStock')}
           </p>
         </div>
@@ -326,7 +326,7 @@ export default function Home() {
                   {data.lowStockProducts.map((product) => {
                     const isOutOfStock = Number(product.currentStock) <= 0;
                     return (
-                      <tr key={product.id} style={{ borderBottom: '1px solid #D6E3E2' }}>
+                      <tr key={product.id} style={{ borderBottom: '1px solid #1A2B4C' }}>
                         <td style={{ padding: '0.75rem', color: '#1A2B4C' }}>
                           <div style={{ fontWeight: 500 }}>{product.name}</div>
                           <div style={{ fontSize: '0.75rem', color: 'rgba(26, 43, 76, 0.4)' }}>{product.barcode || '-'}</div>
