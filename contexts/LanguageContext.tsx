@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 
 type Language = 'en' | 'id'
+type LayoutType = 'sidebar' | 'topbar'
 
 interface Translations {
   [key: string]: string | Translations
@@ -20,6 +21,9 @@ const dictionaries: Record<Language, Translations> = {
     stock: 'Stock',
     checkPrice: 'Check Price',
     reports: 'Reports',
+    layoutTheme: 'Layout Theme',
+    sidebar: 'Sidebar',
+    topbar: 'Topbar',
 
     // Dashboard
     totalProducts: 'Total Products',
@@ -151,6 +155,9 @@ const dictionaries: Record<Language, Translations> = {
     stock: 'Stok Barang',
     checkPrice: 'Cek Harga',
     reports: 'Laporan',
+    layoutTheme: 'Tema Tata Letak',
+    sidebar: 'Samping',
+    topbar: 'Atas',
 
     // Dashboard
     totalProducts: 'Total Produk',
@@ -277,6 +284,8 @@ const dictionaries: Record<Language, Translations> = {
 interface LanguageContextProps {
   language: Language;
   setLanguage: (lang: Language) => void;
+  layoutType: LayoutType;
+  setLayoutType: (layout: LayoutType) => void;
   t: (key: string) => string;
 }
 
@@ -289,20 +298,30 @@ const defaultT = (key: string): string => {
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [language, setLanguageState] = useState<Language>('id') // Default to Bahasa Indonesia
+  const [layoutType, setLayoutTypeState] = useState<LayoutType>('sidebar')
   const [mounted, setMounted] = useState(false)
 
   // Initialize from localStorage on mount
   useEffect(() => {
     setMounted(true)
-    const saved = localStorage.getItem('app-language') as Language
-    if (saved === 'en' || saved === 'id') {
-      setLanguageState(saved)
+    const savedLang = localStorage.getItem('app-language') as Language
+    if (savedLang === 'en' || savedLang === 'id') {
+      setLanguageState(savedLang)
+    }
+    const savedLayout = localStorage.getItem('app-layout-type') as LayoutType
+    if (savedLayout === 'sidebar' || savedLayout === 'topbar') {
+      setLayoutTypeState(savedLayout)
     }
   }, [])
 
   const setLanguage = (lang: Language) => {
     setLanguageState(lang)
     localStorage.setItem('app-language', lang)
+  }
+
+  const setLayoutType = (layout: LayoutType) => {
+    setLayoutTypeState(layout)
+    localStorage.setItem('app-layout-type', layout)
   }
 
   const t = (key: string): string => {
@@ -317,7 +336,13 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   // Always wrap in Provider so useLanguage() works even before mount.
   // When not yet mounted, use defaultT to avoid potential mismatches.
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, t: mounted ? t : defaultT }}>
+    <LanguageContext.Provider value={{ 
+      language, 
+      setLanguage, 
+      layoutType, 
+      setLayoutType, 
+      t: mounted ? t : defaultT 
+    }}>
       {children}
     </LanguageContext.Provider>
   )

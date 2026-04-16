@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import { Noto_Sans } from "next/font/google";
 import "./globals.css";
-import Sidebar from "@/components/Sidebar";
-import MobileNav from "@/components/MobileNav";
 import { LanguageProvider } from "@/contexts/LanguageContext";
+import LayoutWrapper from "@/components/LayoutWrapper";
 
 const notoSans = Noto_Sans({
   variable: "--font-noto-sans",
@@ -24,57 +23,21 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" />
       </head>
       <body
         className={`${notoSans.variable} antialiased`}
         style={{ margin: 0, padding: 0 }}
       >
         <LanguageProvider>
-          <div style={{ display: 'flex', minHeight: '100vh', width: '100%' }}>
-            {/* Desktop Sidebar */}
-            <div className="desktop-sidebar">
-              <Sidebar />
-            </div>
-            
-            {/* Mobile Navigation */}
-            <MobileNav />
-            
-            {/* Main Content */}
-            <main className="main-content">
-              {children}
-            </main>
-          </div>
+          <LayoutWrapper>
+            {children}
+          </LayoutWrapper>
         </LanguageProvider>
 
-        <style>{`
-          .desktop-sidebar {
-            display: block;
-          }
-          .main-content {
-            flex: 1;
-            margin-left: 260px;
-            background-color: #f8f7fc;
-            min-height: 100vh;
-          }
-          
-          @media (max-width: 768px) {
-            .desktop-sidebar {
-              display: none !important;
-            }
-            .main-content {
-              margin-left: 0;
-              margin-top: 60px;
-              padding: 1rem;
-            }
-          }
-          
-          @media (min-width: 769px) {
-            .main-content {
-              padding: 2rem;
-            }
-          }
-        `}</style>
+
       </body>
     </html>
   );

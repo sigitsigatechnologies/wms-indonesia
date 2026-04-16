@@ -125,7 +125,7 @@ function PurchasesContent() {
   }
 
   const buttonStyle: React.CSSProperties = {
-    backgroundColor: '#8b5cf6', // Purple
+    backgroundColor: '#FF4D5A',
     color: 'white',
     padding: '0.6rem 1.2rem',
     borderRadius: '10px',
@@ -137,16 +137,16 @@ function PurchasesContent() {
     alignItems: 'center',
     fontWeight: '600',
     transition: 'all 0.2s ease',
-    boxShadow: '0 4px 6px -1px rgba(139, 92, 246, 0.2)',
+    boxShadow: '0 4px 6px -1px rgba(255, 77, 90, 0.2)',
   }
 
   const thStyle: React.CSSProperties = {
     padding: '1rem',
     textAlign: 'left' as const,
-    fontWeight: '600',
-    borderBottom: '2px solid #f1f5f9',
+    fontWeight: '700',
+    borderBottom: '2px solid rgba(255,255,255,0.1)',
     whiteSpace: 'nowrap' as const,
-    color: '#475569',
+    color: '#FFFFFF',
     fontSize: '0.8rem',
     cursor: 'pointer',
     userSelect: 'none',
@@ -155,9 +155,9 @@ function PurchasesContent() {
 
   const tdStyle: React.CSSProperties = {
     padding: '1rem',
-    borderBottom: '1px solid #f1f5f9',
+    borderBottom: '1px solid #D6E3E2',
     whiteSpace: 'nowrap' as const,
-    color: '#1e293b',
+    color: '#1A2B4C',
     fontSize: '0.9rem',
   }
 
@@ -167,8 +167,8 @@ function PurchasesContent() {
         <div className="col-6">
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
             <div style={{ 
-              backgroundColor: 'rgba(139, 92, 246, 0.1)', 
-              color: '#8b5cf6', 
+              backgroundColor: 'rgba(26, 43, 76, 0.1)', 
+              color: '#1A2B4C', 
               padding: '0.5rem', 
               borderRadius: '10px',
               display: 'flex',
@@ -177,7 +177,7 @@ function PurchasesContent() {
             }}>
               <span className="material-symbols-outlined" style={{ fontSize: '1.75rem' }}>shopping_cart</span>
             </div>
-            <h2 style={{ margin: 0, color: '#1e293b', fontSize: '1.75rem', fontWeight: '700', letterSpacing: '-0.02em' }}>{t('purchases')}</h2>
+            <h2 style={{ margin: 0, color: '#1A2B4C', fontSize: '1.75rem', fontWeight: '700', letterSpacing: '-0.02em' }}>{t('purchases')}</h2>
           </div>
         </div>
         <div className="col-6" style={{ textAlign: 'right' }}>
@@ -188,12 +188,12 @@ function PurchasesContent() {
         </div>
       </div>
 
-      <div style={{ backgroundColor: 'white', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03)', border: '1px solid #f1f5f9' }}>
+      <div style={{ backgroundColor: '#F2F2F2', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03)', border: '1px solid #D6E3E2' }}>
         <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
           <table className="responsive-table" style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
-              <tr style={{ backgroundColor: '#f8fafc' }}>
-                <th style={thStyle} onClick={() => handleSort('invoiceNumber')}>
+              <tr style={{ backgroundColor: '#1A2B4C' }}>
+                 <th style={thStyle} onClick={() => handleSort('invoiceNumber')}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
                     {t('invoice').toUpperCase()} {getSortIcon('invoiceNumber')}
                   </div>
@@ -217,13 +217,13 @@ function PurchasesContent() {
                 <TableShimmer rows={5} />
               ) : purchases.length === 0 ? (
                 <tr>
-                  <td colSpan={5} style={{...tdStyle, textAlign: 'center', color: '#94a3b8'}}>{t('noPurchasesFound')}</td>
+                  <td colSpan={5} style={{...tdStyle, textAlign: 'center', color: 'rgba(26, 43, 76, 0.4)'}}>{t('noPurchasesFound')}</td>
                 </tr>
               ) : (
                 purchases.map((purchase) => (
                   <React.Fragment key={purchase.id}>
-                    <tr style={{ borderBottom: expandedPurchaseId === purchase.id ? 'none' : '1px solid #f1f5f9', backgroundColor: expandedPurchaseId === purchase.id ? '#f8fafc' : 'transparent', transition: 'background-color 0.2s' }}>
-                      <td data-label="Invoice" style={{...tdStyle, fontWeight: 500, cursor: 'pointer', color: '#3b82f6'}} onClick={() => toggleExpand(purchase.id)}>
+                    <tr style={{ borderBottom: expandedPurchaseId === purchase.id ? 'none' : '1px solid #D6E3E2', backgroundColor: expandedPurchaseId === purchase.id ? '#FFFFFF' : 'transparent', transition: 'background-color 0.2s' }}>
+                      <td data-label="Invoice" style={{...tdStyle, fontWeight: 700, cursor: 'pointer', color: '#1A2B4C'}} onClick={() => toggleExpand(purchase.id)}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                           <span className="material-symbols-outlined" style={{ fontSize: '1.25rem', transition: 'transform 0.2s', transform: expandedPurchaseId === purchase.id ? 'rotate(90deg)' : 'rotate(0deg)' }}>chevron_right</span>
                           {purchase.invoiceNumber}
@@ -232,23 +232,23 @@ function PurchasesContent() {
                       <td data-label="Date" style={tdStyle}>{new Date(purchase.purchaseDate).toLocaleDateString('id-ID')}</td>
                       <td data-label="Total" style={{...tdStyle, fontWeight: 600}}>Rp {Number(purchase.totalAmount).toLocaleString('id-ID')}</td>
                       <td data-label="Items" style={tdStyle}>
-                        <span style={{ padding: '0.25rem 0.75rem', borderRadius: '6px', fontSize: '0.8rem', fontWeight: '500', backgroundColor: '#eff6ff', color: '#1d4ed8' }}>
+                        <span style={{ padding: '0.25rem 0.75rem', borderRadius: '6px', fontSize: '0.8rem', fontWeight: '700', backgroundColor: 'rgba(26, 43, 76, 0.1)', color: '#1A2B4C' }}>
                           {purchase.items?.length || 0} items
                         </span>
                       </td>
                       <td data-label="Actions" style={{...tdStyle, textAlign: 'right'}}>
-                        <button onClick={() => deletePurchase(purchase.id)} style={{ color: '#ef4444', backgroundColor: 'transparent', border: 'none', cursor: 'pointer', padding: '0.5rem', borderRadius: '50%', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }} title="Delete Purchase">
+                        <button onClick={() => deletePurchase(purchase.id)} style={{ color: '#FF4D5A', backgroundColor: 'transparent', border: 'none', cursor: 'pointer', padding: '0.5rem', borderRadius: '50%', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }} title="Delete Purchase">
                           <span className="material-symbols-outlined" style={{ fontSize: '1.1rem' }}>delete</span>
                         </button>
                       </td>
                     </tr>
                     {expandedPurchaseId === purchase.id && (
-                      <tr style={{ backgroundColor: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
+                      <tr style={{ backgroundColor: '#FFFFFF', borderBottom: '1px solid #D6E3E2' }}>
                         <td colSpan={5} style={{ padding: '0 2rem 1.5rem 3rem' }}>
-                          <div style={{ backgroundColor: 'white', borderRadius: '8px', border: '1px solid #e2e8f0', overflow: 'hidden' }}>
+                          <div style={{ backgroundColor: '#F7F9FC', borderRadius: '8px', border: '1px solid #1A2B4C', overflow: 'hidden' }}>
                             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
                               <thead>
-                                <tr style={{ backgroundColor: '#f1f5f9', borderBottom: '1px solid #e2e8f0' }}>
+                                <tr style={{ backgroundColor: 'rgba(26, 43, 76, 0.1)', borderBottom: '1px solid #1A2B4C' }}>
                                   <th style={{ padding: '0.75rem 1rem', textAlign: 'left', color: '#475569', fontWeight: 600 }}>{t('name')}</th>
                                   <th style={{ padding: '0.75rem 1rem', textAlign: 'left', color: '#475569', fontWeight: 600 }}>{t('barcode')}</th>
                                   <th style={{ padding: '0.75rem 1rem', textAlign: 'right', color: '#475569', fontWeight: 600 }}>{t('qty')}</th>
@@ -258,17 +258,17 @@ function PurchasesContent() {
                               </thead>
                               <tbody>
                                 {purchase.items?.map((item, idx) => (
-                                  <tr key={item.id || idx} style={{ borderBottom: idx === purchase.items.length - 1 ? 'none' : '1px solid #f1f5f9' }}>
-                                    <td style={{ padding: '0.75rem 1rem', color: '#1e293b' }}>{item.product?.name || 'Unknown Product'}</td>
-                                    <td style={{ padding: '0.75rem 1rem', color: '#64748b' }}>{item.product?.barcode || '-'}</td>
-                                    <td style={{ padding: '0.75rem 1rem', textAlign: 'right', color: '#1e293b', fontWeight: 500 }}>{Number(item.quantity).toLocaleString('id-ID')}</td>
-                                    <td style={{ padding: '0.75rem 1rem', textAlign: 'right', color: '#64748b' }}>Rp {Number(item.costPrice).toLocaleString('id-ID')}</td>
-                                    <td style={{ padding: '0.75rem 1rem', textAlign: 'right', color: '#1e293b', fontWeight: 500 }}>Rp {Number(item.subtotal).toLocaleString('id-ID')}</td>
+                                  <tr key={item.id || idx} style={{ borderBottom: idx === purchase.items.length - 1 ? 'none' : '1px solid #D6E3E2' }}>
+                                    <td style={{ padding: '0.75rem 1rem', color: '#1A2B4C' }}>{item.product?.name || 'Unknown Product'}</td>
+                                    <td style={{ padding: '0.75rem 1rem', color: 'rgba(26, 43, 76, 0.6)' }}>{item.product?.barcode || '-'}</td>
+                                    <td style={{ padding: '0.75rem 1rem', textAlign: 'right', color: '#1A2B4C', fontWeight: 500 }}>{Number(item.quantity).toLocaleString('id-ID')}</td>
+                                    <td style={{ padding: '0.75rem 1rem', textAlign: 'right', color: 'rgba(26, 43, 76, 0.6)' }}>Rp {Number(item.costPrice).toLocaleString('id-ID')}</td>
+                                    <td style={{ padding: '0.75rem 1rem', textAlign: 'right', color: '#1A2B4C', fontWeight: 500 }}>Rp {Number(item.subtotal).toLocaleString('id-ID')}</td>
                                   </tr>
                                 ))}
                                 {(!purchase.items || purchase.items.length === 0) && (
                                   <tr>
-                                    <td colSpan={5} style={{ padding: '1rem', textAlign: 'center', color: '#94a3b8' }}>No items found for this purchase</td>
+                                    <td colSpan={5} style={{ padding: '1rem', textAlign: 'center', color: 'rgba(26, 43, 76, 0.4)' }}>No items found for this purchase</td>
                                   </tr>
                                 )}
                               </tbody>
@@ -293,7 +293,7 @@ function PurchasesContent() {
       />
 
       {purchases.length === 0 && !loading && (
-        <div style={{ textAlign: 'center', padding: '3rem', color: '#94a3b8' }}>
+        <div style={{ textAlign: 'center', padding: '3rem', color: 'rgba(26, 43, 76, 0.4)' }}>
           <span className="material-symbols-outlined" style={{ fontSize: '3rem', display: 'block', marginBottom: '0.5rem' }}>shopping_cart</span>
           <p>No purchases found</p>
         </div>

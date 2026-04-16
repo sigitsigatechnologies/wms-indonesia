@@ -92,21 +92,21 @@ export default function EditProductPage() {
   }
 
   const cardStyle: React.CSSProperties = {
-    backgroundColor: 'white',
+    backgroundColor: '#F7F9FC',
     borderRadius: '12px',
     boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
-    border: '1px solid #f1f5f9',
+    border: '1px solid #1A2B4C',
     padding: '1.5rem',
   }
 
   const inputStyle: React.CSSProperties = {
     width: '100%',
     padding: '0.625rem 0.875rem',
-    border: '1px solid #e2e8f0',
+    border: '1px solid #1A2B4C',
     borderRadius: '8px',
     fontSize: '0.9rem',
     outline: 'none',
-    backgroundColor: '#f8fafc',
+    backgroundColor: '#FFFFFF',
   }
 
   const labelStyle: React.CSSProperties = {
@@ -120,7 +120,7 @@ export default function EditProductPage() {
   if (fetching) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '50vh' }}>
-        <p style={{ color: '#64748b' }}>{t('loading')}</p>
+        <p style={{ color: 'rgba(26, 43, 76, 0.6)' }}>{t('loading')}</p>
       </div>
     )
   }
@@ -128,14 +128,14 @@ export default function EditProductPage() {
   return (
     <div style={{ maxWidth: '600px', margin: '0 auto' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-        <h2 style={{ margin: 0, color: '#1e293b', fontSize: '1.5rem', fontWeight: '600' }}>{t('editProduct')}</h2>
-        <Link href="/products" style={{ color: '#64748b', textDecoration: 'none', fontSize: '0.9rem' }}>
+        <h2 style={{ margin: 0, color: '#1A2B4C', fontSize: '1.5rem', fontWeight: '600' }}>{t('editProduct')}</h2>
+        <Link href="/products" style={{ color: 'rgba(26, 43, 76, 0.6)', textDecoration: 'none', fontSize: '0.9rem' }}>
           {t('back')}
         </Link>
       </div>
 
       {error && (
-        <div style={{ padding: '0.75rem 1rem', backgroundColor: '#fef2f2', borderRadius: '8px', marginBottom: '1.5rem', color: '#dc2626', fontSize: '0.875rem' }}>
+        <div style={{ padding: '0.75rem 1rem', backgroundColor: 'rgba(255, 77, 90, 0.1)', border: '1px solid #FF4D5A', borderRadius: '8px', marginBottom: '1.5rem', color: '#FF4D5A', fontSize: '0.875rem' }}>
           {error}
         </div>
       )}
@@ -224,14 +224,14 @@ export default function EditProductPage() {
             disabled={loading}
             style={{
               flex: 1,
-              backgroundColor: '#3b82f6',
+              backgroundColor: '#FF4D5A',
               color: 'white',
               padding: '0.625rem 1rem',
               borderRadius: '8px',
               border: 'none',
               cursor: 'pointer',
               fontSize: '0.9rem',
-              fontWeight: '500',
+              fontWeight: '700',
               opacity: loading ? 0.5 : 1,
             }}
           >
@@ -241,14 +241,14 @@ export default function EditProductPage() {
             href="/products"
             style={{
               flex: 1,
-              backgroundColor: '#f1f5f9',
-              color: '#475569',
+              backgroundColor: 'rgba(26, 43, 76, 0.1)',
+              color: '#1A2B4C',
               padding: '0.625rem 1rem',
               borderRadius: '8px',
               textDecoration: 'none',
               textAlign: 'center',
               fontSize: '0.9rem',
-              fontWeight: '500',
+              fontWeight: '600',
             }}
           >
             {t('cancel')}

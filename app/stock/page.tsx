@@ -119,10 +119,10 @@ function StockContent() {
   const thStyle: React.CSSProperties = {
     padding: '1rem',
     textAlign: 'left' as const,
-    fontWeight: '600',
-    borderBottom: '2px solid #f1f5f9',
+    fontWeight: '700',
+    borderBottom: '2px solid rgba(255,255,255,0.1)',
     whiteSpace: 'nowrap' as const,
-    color: '#64748b',
+    color: '#FFFFFF',
     fontSize: '0.8rem',
     cursor: 'pointer',
     userSelect: 'none',
@@ -130,9 +130,9 @@ function StockContent() {
 
   const tdStyle: React.CSSProperties = {
     padding: '1rem',
-    borderBottom: '1px solid #f1f5f9',
+    borderBottom: '1px solid #D6E3E2',
     whiteSpace: 'nowrap' as const,
-    color: '#1e293b',
+    color: '#1A2B4C',
     fontSize: '0.9rem',
   }
 
@@ -140,8 +140,8 @@ function StockContent() {
     <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 1rem' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '2rem' }}>
         <div style={{ 
-          backgroundColor: 'rgba(245, 158, 11, 0.1)', 
-          color: '#f59e0b', 
+          backgroundColor: 'rgba(26, 43, 76, 0.1)', 
+          color: '#1A2B4C', 
           padding: '0.5rem', 
           borderRadius: '10px',
           display: 'flex',
@@ -150,11 +150,11 @@ function StockContent() {
         }}>
           <span className="material-symbols-outlined" style={{ fontSize: '1.75rem' }}>inventory</span>
         </div>
-        <h2 style={{ margin: 0, color: '#1e293b', fontSize: '1.75rem', fontWeight: '700', letterSpacing: '-0.02em' }}>{t('stockManagement')}</h2>
+        <h2 style={{ margin: 0, color: '#1A2B4C', fontSize: '1.75rem', fontWeight: '700', letterSpacing: '-0.02em' }}>{t('stockManagement')}</h2>
       </div>
 
       {/* Tabs */}
-      <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem', flexWrap: 'wrap', backgroundColor: '#f1f5f9', padding: '0.4rem', borderRadius: '12px', width: 'fit-content' }}>
+      <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem', flexWrap: 'wrap', backgroundColor: 'rgba(26, 43, 76, 0.05)', padding: '0.4rem', borderRadius: '12px', width: 'fit-content', border: '1px solid #1A2B4C' }}>
         <button 
           onClick={() => handleTabChange(0)}
           style={{
@@ -164,12 +164,12 @@ function StockContent() {
             fontSize: '0.875rem',
             display: 'inline-flex',
             alignItems: 'center',
-            fontWeight: '600',
-            background: activeTab === 0 ? '#f59e0b' : 'transparent',
-            color: activeTab === 0 ? 'white' : '#64748b',
+            fontWeight: '700',
+            background: activeTab === 0 ? '#1A2B4C' : 'transparent',
+            color: activeTab === 0 ? 'white' : '#1A2B4C',
             border: 'none',
             transition: 'all 0.2s ease',
-            boxShadow: activeTab === 0 ? '0 4px 6px -1px rgba(245, 158, 11, 0.2)' : 'none',
+            boxShadow: activeTab === 0 ? '0 4px 6px -1px rgba(26, 43, 76, 0.2)' : 'none',
           }}
         >
           <span className="material-symbols-outlined" style={{ fontSize: '1.25rem', marginRight: '0.4rem' }}>inventory_2</span>
@@ -184,12 +184,12 @@ function StockContent() {
             fontSize: '0.875rem',
             display: 'inline-flex',
             alignItems: 'center',
-            fontWeight: '600',
-            background: activeTab === 1 ? '#f59e0b' : 'transparent',
-            color: activeTab === 1 ? 'white' : '#64748b',
+            fontWeight: '700',
+            background: activeTab === 1 ? '#1A2B4C' : 'transparent',
+            color: activeTab === 1 ? 'white' : '#1A2B4C',
             border: 'none',
             transition: 'all 0.2s ease',
-            boxShadow: activeTab === 1 ? '0 4px 6px -1px rgba(245, 158, 11, 0.2)' : 'none',
+            boxShadow: activeTab === 1 ? '0 4px 6px -1px rgba(26, 43, 76, 0.2)' : 'none',
           }}
         >
           <span className="material-symbols-outlined" style={{ fontSize: '1.25rem', marginRight: '0.4rem' }}>swap_horiz</span>
@@ -199,11 +199,11 @@ function StockContent() {
 
       {activeTab === 0 && (
         <>
-          <div style={{ backgroundColor: 'white', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.08)', border: '1px solid #f1f5f9' }}>
+          <div style={{ backgroundColor: '#F7F9FC', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.08)', border: '1px solid #1A2B4C' }}>
             <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
               <table className="responsive-table" style={{ width: '100%', borderCollapse: 'collapse' }}>
                 <thead>
-                  <tr style={{ backgroundColor: '#f8fafc' }}>
+                  <tr style={{ backgroundColor: '#1A2B4C' }}>
                     <th style={thStyle} onClick={() => handleSort('barcode')}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
                         {t('barcode').toUpperCase()} {getSortIcon('barcode')}
@@ -238,7 +238,7 @@ function StockContent() {
                     <TableShimmer rows={5} />
                   ) : products.length === 0 ? (
                     <tr>
-                      <td colSpan={7} style={{...tdStyle, textAlign: 'center', color: '#94a3b8'}}>{t('noProductsFound')}</td>
+                      <td colSpan={7} style={{...tdStyle, textAlign: 'center', color: 'rgba(26, 43, 76, 0.4)'}}>{t('noProductsFound')}</td>
                     </tr>
                   ) : (
                     products.map((product) => {
@@ -248,8 +248,8 @@ function StockContent() {
                       const isEmpty = currentStock === 0
 
                       return (
-                        <tr key={product.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
-                          <td data-label="Barcode" style={{...tdStyle, fontFamily: 'monospace', color: '#64748b'}}>{product.barcode}</td>
+                        <tr key={product.id} style={{ borderBottom: '1px solid #1A2B4C' }}>
+                          <td data-label="Barcode" style={{...tdStyle, fontFamily: 'monospace', color: '#475569'}}>{product.barcode}</td>
                           <td data-label="Product" style={{...tdStyle, fontWeight: 500}}>{product.name}</td>
                           <td data-label="Cost" style={tdStyle}>Rp {Number(product.averageCost).toLocaleString('id-ID')}</td>
                           <td data-label="Price" style={tdStyle}>Rp {Number(product.sellingPrice).toLocaleString('id-ID')}</td>
@@ -258,9 +258,9 @@ function StockContent() {
                               padding: '0.25rem 0.75rem',
                               borderRadius: '6px',
                               fontSize: '0.8rem',
-                              fontWeight: '500',
-                              backgroundColor: isEmpty ? '#f1f5f9' : isLow ? '#fef3c7' : '#eff6ff',
-                              color: isEmpty ? '#64748b' : isLow ? '#b45309' : '#1d4ed8'
+                              fontWeight: '700',
+                              backgroundColor: isEmpty ? 'rgba(26, 43, 76, 0.1)' : isLow ? 'rgba(255, 77, 90, 0.1)' : 'rgba(26, 43, 76, 0.05)',
+                              color: isEmpty ? '#1A2B4C' : isLow ? '#FF4D5A' : '#1A2B4C'
                             }}>
                               {product.currentStock} {product.unit}
                             </span>
@@ -268,7 +268,7 @@ function StockContent() {
                           <td data-label="Min Stock" style={tdStyle}>{product.minStock}</td>
                           <td data-label="Status" style={tdStyle}>
                             <span style={{ 
-                              color: isEmpty ? '#64748b' : isLow ? '#dc2626' : '#10b981',
+                              color: isEmpty ? '#475569' : isLow ? '#b91c1c' : '#1a2b4c',
                               fontWeight: 500,
                               fontSize: '0.8rem'
                             }}>
@@ -295,11 +295,11 @@ function StockContent() {
 
       {activeTab === 1 && (
         <>
-          <div style={{ backgroundColor: 'white', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.08)', border: '1px solid #f1f5f9' }}>
+          <div style={{ backgroundColor: '#F7F9FC', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.08)', border: '1px solid #1A2B4C' }}>
             <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
               <table className="responsive-table" style={{ width: '100%', borderCollapse: 'collapse' }}>
                 <thead>
-                  <tr style={{ backgroundColor: '#f8fafc' }}>
+                  <tr style={{ backgroundColor: '#1A2B4C' }}>
                     <th style={thStyle} onClick={() => handleSort('createdAt')}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
                         {t('date').toUpperCase()} {getSortIcon('createdAt')}
@@ -329,11 +329,11 @@ function StockContent() {
                     <TableShimmer rows={5} />
                   ) : movements.length === 0 ? (
                     <tr>
-                      <td colSpan={6} style={{...tdStyle, textAlign: 'center', color: '#94a3b8'}}>{t('noMovementsFound')}</td>
+                      <td colSpan={6} style={{...tdStyle, textAlign: 'center', color: 'rgba(26, 43, 76, 0.4)'}}>{t('noMovementsFound')}</td>
                     </tr>
                   ) : (
                     movements.map((movement) => (
-                      <tr key={movement.id} style={{ borderBottom: '1px solid #f1f5f9' }}>
+                      <tr key={movement.id} style={{ borderBottom: '1px solid #1A2B4C' }}>
                         <td data-label="Date" style={tdStyle}>{new Date(movement.createdAt).toLocaleString('id-ID')}</td>
                         <td data-label="Type" style={tdStyle}>
                           <span style={{
@@ -342,7 +342,7 @@ function StockContent() {
                             fontSize: '0.8rem',
                             fontWeight: '500',
                             backgroundColor: movement.movementType === 'IN' ? '#dcfce7' : '#fee2e2',
-                            color: movement.movementType === 'IN' ? '#16a34a' : '#dc2626'
+                            color: movement.movementType === 'IN' ? '#16a34a' : '#FF4D5A'
                           }}>
                             {movement.movementType === 'IN' ? t('stockIn') : t('stockOut')}
                           </span>

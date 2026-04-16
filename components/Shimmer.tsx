@@ -11,7 +11,7 @@ export default function Shimmer({ style }: ShimmerProps) {
       className="shimmer"
       style={{
         ...style,
-        backgroundColor: '#f1f5f9',
+        backgroundColor: '#D6E3E2',
         borderRadius: '4px',
       }}
     />
@@ -21,10 +21,10 @@ export default function Shimmer({ style }: ShimmerProps) {
 export function DashboardShimmer() {
   const cardStyle: React.CSSProperties = {
     padding: '1.5rem',
-    backgroundColor: 'white',
+    backgroundColor: '#F2F2F2',
     borderRadius: '12px',
     boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
-    border: '1px solid #f1f5f9',
+    border: '1px solid #D6E3E2',
   }
 
   const gradientCardStyle: React.CSSProperties = {
@@ -36,6 +36,8 @@ export function DashboardShimmer() {
   return (
     <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
       <Shimmer style={{ width: '150px', height: '32px', marginBottom: '1.5rem' }} />
+      {/* Banner Placeholder */}
+      <Shimmer style={{ width: '100%', height: '140px', borderRadius: '16px', marginBottom: '1.5rem' }} />
 
       {/* Stats Grid */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
@@ -72,19 +74,19 @@ export function TableShimmer({ rows = 5 }: { rows?: number }) {
     <>
       {shimmerRows.map((_, index) => (
         <tr key={index}>
-          <td style={{ padding: '1rem', borderBottom: '1px solid #f1f5f9', whiteSpace: 'nowrap' }}>
+          <td style={{ padding: '1rem', borderBottom: '1px solid #D6E3E2', whiteSpace: 'nowrap' }}>
             <Shimmer style={{ width: '100px', height: '16px' }} />
           </td>
-          <td style={{ padding: '1rem', borderBottom: '1px solid #f1f5f9', whiteSpace: 'nowrap' }}>
+          <td style={{ padding: '1rem', borderBottom: '1px solid #D6E3E2', whiteSpace: 'nowrap' }}>
             <Shimmer style={{ width: '150px', height: '16px' }} />
           </td>
-          <td style={{ padding: '1rem', borderBottom: '1px solid #f1f5f9', whiteSpace: 'nowrap' }}>
+          <td style={{ padding: '1rem', borderBottom: '1px solid #D6E3E2', whiteSpace: 'nowrap' }}>
             <Shimmer style={{ width: '80px', height: '16px' }} />
           </td>
-          <td style={{ padding: '1rem', borderBottom: '1px solid #f1f5f9', whiteSpace: 'nowrap' }}>
+          <td style={{ padding: '1rem', borderBottom: '1px solid #D6E3E2', whiteSpace: 'nowrap' }}>
             <Shimmer style={{ width: '80px', height: '16px' }} />
           </td>
-          <td style={{ padding: '1rem', borderBottom: '1px solid #f1f5f9', whiteSpace: 'nowrap' }}>
+          <td style={{ padding: '1rem', borderBottom: '1px solid #D6E3E2', whiteSpace: 'nowrap' }}>
             <Shimmer style={{ width: '60px', height: '16px' }} />
           </td>
         </tr>

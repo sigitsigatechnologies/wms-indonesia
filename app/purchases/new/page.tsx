@@ -109,21 +109,21 @@ export default function NewPurchasePage() {
   }
 
   const cardStyle: React.CSSProperties = {
-    backgroundColor: 'white',
+    backgroundColor: '#F7F9FC',
     borderRadius: '12px',
     boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
-    border: '1px solid #f1f5f9',
+    border: '1px solid #1A2B4C',
     padding: '1.5rem',
   }
 
   const inputStyle: React.CSSProperties = {
     width: '100%',
     padding: '0.625rem 0.875rem',
-    border: '1px solid #e2e8f0',
+    border: '1px solid #1A2B4C',
     borderRadius: '8px',
     fontSize: '0.9rem',
     outline: 'none',
-    backgroundColor: '#f8fafc',
+    backgroundColor: '#FFFFFF',
   }
 
   const labelStyle: React.CSSProperties = {
@@ -139,14 +139,14 @@ export default function NewPurchasePage() {
   return (
     <div style={{ maxWidth: '800px', margin: '0 auto' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-        <h2 style={{ margin: 0, color: '#1e293b', fontSize: '1.5rem', fontWeight: '600' }}>New Purchase</h2>
-        <Link href="/purchases" style={{ color: '#64748b', textDecoration: 'none', fontSize: '0.9rem' }}>
+        <h2 style={{ margin: 0, color: '#1A2B4C', fontSize: '1.5rem', fontWeight: '600' }}>New Purchase</h2>
+        <Link href="/purchases" style={{ color: '#475569', textDecoration: 'none', fontSize: '0.9rem' }}>
           ← Back to Purchases
         </Link>
       </div>
 
       {error && (
-        <div style={{ padding: '0.75rem 1rem', backgroundColor: '#fef2f2', borderRadius: '8px', marginBottom: '1.5rem', color: '#dc2626', fontSize: '0.875rem' }}>
+        <div style={{ padding: '0.75rem 1rem', backgroundColor: 'rgba(255, 77, 90, 0.1)', border: '1px solid #FF4D5A', borderRadius: '8px', marginBottom: '1.5rem', color: '#FF4D5A', fontSize: '0.875rem' }}>
           {error}
         </div>
       )}
@@ -165,8 +165,9 @@ export default function NewPurchasePage() {
               />
             </div>
             <div>
-              <label style={labelStyle}>Supplier</label>
+              <label htmlFor="supplier-select" style={labelStyle}>Supplier</label>
               <select
+                id="supplier-select"
                 required
                 value={formData.supplierId}
                 onChange={(e) => setFormData({ ...formData, supplierId: e.target.value })}
@@ -191,24 +192,25 @@ export default function NewPurchasePage() {
 
         <div style={{ ...cardStyle, marginBottom: '1rem' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-            <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: '600', color: '#1e293b' }}>Items</h3>
+            <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: '600', color: '#1A2B4C' }}>Items</h3>
             <button
               type="button"
               onClick={addItem}
-              style={{ backgroundColor: '#3b82f6', color: 'white', padding: '0.375rem 0.75rem', borderRadius: '6px', border: 'none', cursor: 'pointer', fontSize: '0.8rem' }}
+              style={{ backgroundColor: '#1A2B4C', color: 'white', padding: '0.375rem 0.75rem', borderRadius: '6px', border: 'none', cursor: 'pointer', fontSize: '0.8rem', fontWeight: '600' }}
             >
               + Add Item
             </button>
           </div>
 
           {items.length === 0 ? (
-            <p style={{ color: '#94a3b8', textAlign: 'center', padding: '1rem' }}>No items added yet</p>
+            <p style={{ color: 'rgba(26, 43, 76, 0.4)', textAlign: 'center', padding: '1rem' }}>No items added yet</p>
           ) : (
             items.map((item, index) => (
               <div key={index} style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr auto', gap: '0.5rem', marginBottom: '0.5rem', alignItems: 'end' }}>
                 <div>
-                  <label style={{...labelStyle, fontSize: '0.75rem'}}>Product</label>
+                  <label htmlFor={`product-select-${index}`} style={{...labelStyle, fontSize: '0.75rem'}}>Product</label>
                   <select
+                    id={`product-select-${index}`}
                     value={item.productId}
                     onChange={(e) => updateItem(index, 'productId', e.target.value)}
                     style={inputStyle}
@@ -239,7 +241,7 @@ export default function NewPurchasePage() {
                 <button
                   type="button"
                   onClick={() => removeItem(index)}
-                  style={{ backgroundColor: '#fee2e2', color: '#dc2626', padding: '0.5rem', borderRadius: '6px', border: 'none', cursor: 'pointer' }}
+                  style={{ backgroundColor: '#fee2e2', color: '#FF4D5A', padding: '0.5rem', borderRadius: '6px', border: 'none', cursor: 'pointer' }}
                 >
                   ✕
                 </button>
@@ -250,8 +252,8 @@ export default function NewPurchasePage() {
 
         <div style={{ ...cardStyle, marginBottom: '1.5rem' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ fontSize: '0.9rem', color: '#64748b' }}>Total</span>
-            <span style={{ fontSize: '1.25rem', fontWeight: '700', color: '#1e293b' }}>Rp {total.toLocaleString('id-ID')}</span>
+            <span style={{ fontSize: '0.9rem', color: '#475569' }}>Total</span>
+            <span style={{ fontSize: '1.25rem', fontWeight: '700', color: '#1A2B4C' }}>Rp {total.toLocaleString('id-ID')}</span>
           </div>
         </div>
 
@@ -261,14 +263,14 @@ export default function NewPurchasePage() {
             disabled={loading || items.length === 0}
             style={{
               flex: 1,
-              backgroundColor: '#3b82f6',
+              backgroundColor: '#FF4D5A',
               color: 'white',
               padding: '0.625rem 1rem',
               borderRadius: '8px',
               border: 'none',
               cursor: 'pointer',
               fontSize: '0.9rem',
-              fontWeight: '500',
+              fontWeight: '700',
               opacity: (loading || items.length === 0) ? 0.5 : 1,
             }}
           >
@@ -278,14 +280,14 @@ export default function NewPurchasePage() {
             href="/purchases"
             style={{
               flex: 1,
-              backgroundColor: '#f1f5f9',
-              color: '#475569',
+              backgroundColor: 'rgba(26, 43, 76, 0.1)',
+              color: '#1A2B4C',
               padding: '0.625rem 1rem',
               borderRadius: '8px',
               textDecoration: 'none',
               textAlign: 'center',
               fontSize: '0.9rem',
-              fontWeight: '500',
+              fontWeight: '600',
             }}
           >
             Cancel

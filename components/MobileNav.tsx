@@ -14,14 +14,14 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { key: 'dashboard', label: 'Dashboard', href: '/', icon: 'dashboard', color: '#3b82f6' },
-  { key: 'products', label: 'Products', href: '/products', icon: 'inventory_2', color: '#6366f1' },
-  { key: 'suppliers', label: 'Suppliers', href: '/suppliers', icon: 'local_shipping', color: '#ec4899' },
-  { key: 'purchases', label: 'Purchases', href: '/purchases', icon: 'shopping_cart', color: '#8b5cf6' },
-  { key: 'sales', label: 'Sales', href: '/sales', icon: 'payments', color: '#10b981' },
-  { key: 'stock', label: 'Stock', href: '/stock', icon: 'assessment', color: '#f59e0b' },
-  { key: 'checkPrice', label: 'Check Price', href: '/products/check-price', icon: 'price_check', color: '#6366f1' },
-  { key: 'reports', label: 'Reports', href: '/reports', icon: 'analytics', color: '#06b6d4' },
+  { key: 'dashboard', label: 'Dashboard', href: '/', icon: 'dashboard', color: '#FF4D5A' },
+  { key: 'products', label: 'Products', href: '/products', icon: 'inventory_2', color: '#FF4D5A' },
+  { key: 'suppliers', label: 'Suppliers', href: '/suppliers', icon: 'local_shipping', color: '#FF4D5A' },
+  { key: 'purchases', label: 'Purchases', href: '/purchases', icon: 'shopping_cart', color: '#FF4D5A' },
+  { key: 'sales', label: 'Sales', href: '/sales', icon: 'payments', color: '#FF4D5A' },
+  { key: 'stock', label: 'Stock', href: '/stock', icon: 'assessment', color: '#FF4D5A' },
+  { key: 'checkPrice', label: 'Check Price', href: '/products/check-price', icon: 'price_check', color: '#FF4D5A' },
+  { key: 'reports', label: 'Reports', href: '/reports', icon: 'analytics', color: '#FF4D5A' },
 ]
 
 export default function MobileNav() {
@@ -42,11 +42,11 @@ export default function MobileNav() {
             cursor: 'pointer',
           }}
         >
-          <span className="material-symbols-outlined" style={{ fontSize: '1.5rem', color: '#1f2937' }}>
+          <span className="material-symbols-outlined" style={{ fontSize: '1.5rem', color: '#1A2B4C' }}>
             {isOpen ? 'close' : 'menu'}
           </span>
         </button>
-        <h1 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 'bold', background: 'linear-gradient(135deg, #7c3aed, #a855f7)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+        <h1 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 'bold', color: '#FF4D5A' }}>
           WMS
         </h1>
       </div>
@@ -58,40 +58,40 @@ export default function MobileNav() {
             {navItems.map((item) => {
               const isActive = pathname === item.href
               return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={() => setIsOpen(false)}
-                  style={{
-                    ...mobileLinkStyle,
-                    backgroundColor: isActive ? item.color : 'transparent',
-                    color: isActive ? 'white' : '#9ca3af',
-                  }}
-                >
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setIsOpen(false)}
+                    style={{
+                      ...mobileLinkStyle,
+                      backgroundColor: isActive ? item.color : 'transparent',
+                      color: isActive ? 'white' : '#1A2B4C',
+                    }}
+                  >
                   <span className="material-symbols-outlined" style={{ fontSize: '1.25rem' }}>{item.icon}</span>
                   {t(item.key) || item.label}
                 </Link>
               )
             })}
             
-            <div style={{ display: 'flex', borderRadius: '8px', overflow: 'hidden', border: '1px solid #374151', marginTop: '1rem', width: '100%' }}>
+            <div style={{ display: 'flex', borderRadius: '8px', overflow: 'hidden', border: '1px solid #1A2B4C', marginTop: '1rem', width: '100%', backgroundColor: 'rgba(26, 43, 76, 0.05)' }}>
               <button
                 onClick={() => { setLanguage('en'); setIsOpen(false); }}
                 style={{
                   flex: 1, padding: '0.6rem', border: 'none', cursor: 'pointer', fontSize: '0.9rem', fontWeight: 600,
-                  backgroundColor: language === 'en' ? '#374151' : 'transparent',
-                  color: language === 'en' ? '#60a5fa' : '#9ca3af'
+                  backgroundColor: language === 'en' ? '#1A2B4C' : 'transparent',
+                  color: language === 'en' ? 'white' : '#1A2B4C'
                 }}
               >
                 EN
               </button>
-              <div style={{ width: '1px', backgroundColor: '#374151' }} />
+              <div style={{ width: '1px', backgroundColor: '#1A2B4C' }} />
               <button
                 onClick={() => { setLanguage('id'); setIsOpen(false); }}
                 style={{
                   flex: 1, padding: '0.6rem', border: 'none', cursor: 'pointer', fontSize: '0.9rem', fontWeight: 600,
-                  backgroundColor: language === 'id' ? '#374151' : 'transparent',
-                  color: language === 'id' ? '#60a5fa' : '#9ca3af'
+                  backgroundColor: language === 'id' ? '#1A2B4C' : 'transparent',
+                  color: language === 'id' ? 'white' : '#1A2B4C'
                 }}
               >
                 ID

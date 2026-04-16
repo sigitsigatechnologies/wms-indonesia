@@ -100,7 +100,7 @@ function BarcodeScanner({ onScan, onClose }: { onScan: (barcode: string) => void
   return (
     <div ref={containerRef} style={{
       padding: '1rem',
-      backgroundColor: '#1e293b',
+      backgroundColor: '#1A2B4C',
       borderRadius: '12px',
       marginBottom: '1rem',
     }}>
@@ -110,7 +110,7 @@ function BarcodeScanner({ onScan, onClose }: { onScan: (barcode: string) => void
           onClick={onClose}
           style={{
             padding: '0.25rem 0.5rem',
-            backgroundColor: '#ef4444',
+            backgroundColor: '#FF4D5A',
             color: 'white',
             border: 'none',
             borderRadius: '4px',
@@ -122,7 +122,7 @@ function BarcodeScanner({ onScan, onClose }: { onScan: (barcode: string) => void
         </button>
       </div>
       {error ? (
-        <p style={{ color: '#ef4444', margin: 0 }}>{error}</p>
+        <p style={{ color: '#FF4D5A', margin: 0 }}>{error}</p>
       ) : (
         <div 
           id="inline-barcode-scanner" 
@@ -224,21 +224,21 @@ function NewProductForm() {
   }
 
   const cardStyle: React.CSSProperties = {
-    backgroundColor: 'white',
+    backgroundColor: '#F7F9FC',
     borderRadius: '12px',
     boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
-    border: '1px solid #f1f5f9',
+    border: '1px solid #1A2B4C',
     padding: '1.5rem',
   }
 
   const inputStyle: React.CSSProperties = {
     width: '100%',
     padding: '0.625rem 0.875rem',
-    border: '1px solid #e2e8f0',
+    border: '1px solid #1A2B4C',
     borderRadius: '8px',
     fontSize: '0.9rem',
     outline: 'none',
-    backgroundColor: '#f8fafc',
+    backgroundColor: '#FFFFFF',
   }
 
   const labelStyle: React.CSSProperties = {
@@ -252,7 +252,7 @@ function NewProductForm() {
   return (
     <>
       {error && (
-        <div style={{ padding: '0.75rem 1rem', backgroundColor: '#fef2f2', borderRadius: '8px', marginBottom: '1.5rem', color: '#dc2626', fontSize: '0.875rem' }}>
+        <div style={{ padding: '0.75rem 1rem', backgroundColor: 'rgba(255, 77, 90, 0.1)', border: '1px solid #FF4D5A', borderRadius: '8px', marginBottom: '1.5rem', color: '#FF4D5A', fontSize: '0.875rem' }}>
           {error}
         </div>
       )}
@@ -281,7 +281,7 @@ function NewProductForm() {
               onClick={() => setShowScanner(true)}
               style={{
                 padding: '0.625rem 1rem',
-                backgroundColor: '#10b981',
+                backgroundColor: '#1A2B4C',
                 color: 'white',
                 border: 'none',
                 borderRadius: '8px',
@@ -290,6 +290,7 @@ function NewProductForm() {
                 alignItems: 'center',
                 gap: '0.25rem',
                 fontSize: '0.875rem',
+                fontWeight: '600'
               }}
             >
               📷 Scan
@@ -370,14 +371,14 @@ function NewProductForm() {
             disabled={loading}
             style={{
               flex: 1,
-              backgroundColor: '#3b82f6',
+              backgroundColor: '#FF4D5A',
               color: 'white',
               padding: '0.625rem 1rem',
               borderRadius: '8px',
               border: 'none',
               cursor: 'pointer',
               fontSize: '0.9rem',
-              fontWeight: '500',
+              fontWeight: '700',
               opacity: loading ? 0.5 : 1,
             }}
           >
@@ -387,14 +388,14 @@ function NewProductForm() {
             href="/products"
             style={{
               flex: 1,
-              backgroundColor: '#f1f5f9',
-              color: '#475569',
+              backgroundColor: 'rgba(26, 43, 76, 0.1)',
+              color: '#1A2B4C',
               padding: '0.625rem 1rem',
               borderRadius: '8px',
               textDecoration: 'none',
               textAlign: 'center',
               fontSize: '0.9rem',
-              fontWeight: '500',
+              fontWeight: '600',
             }}
           >
             Cancel
@@ -414,7 +415,7 @@ function FormLoading() {
       alignItems: 'center', 
       padding: '4rem' 
     }}>
-      <p style={{ color: '#64748b' }}>Loading...</p>
+      <p style={{ color: 'rgba(26, 43, 76, 0.6)' }}>Loading...</p>
     </div>
   )
 }
@@ -424,8 +425,8 @@ export default function NewProductPage() {
   return (
     <div style={{ maxWidth: '600px', margin: '0 auto' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-        <h2 style={{ margin: 0, color: '#1e293b', fontSize: '1.5rem', fontWeight: '600' }}>New Product</h2>
-        <Link href="/products" style={{ color: '#64748b', textDecoration: 'none', fontSize: '0.9rem' }}>
+        <h2 style={{ margin: 0, color: '#1A2B4C', fontSize: '1.5rem', fontWeight: '600' }}>New Product</h2>
+        <Link href="/products" style={{ color: 'rgba(26, 43, 76, 0.6)', textDecoration: 'none', fontSize: '0.9rem' }}>
           ← Back to Products
         </Link>
       </div>

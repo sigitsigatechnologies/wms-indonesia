@@ -252,24 +252,24 @@ export default function NewSalePage() {
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <Link href="/sales" style={{ color: '#64748b', textDecoration: 'none', fontSize: '1.5rem' }}>
+          <Link href="/sales" style={{ color: '#475569', textDecoration: 'none', fontSize: '1.5rem' }}>
             ←
           </Link>
-          <h2 style={{ margin: 0, color: '#1e293b', fontSize: '1.25rem', fontWeight: '600' }}>Point of Sale</h2>
+          <h2 style={{ margin: 0, color: '#1A2B4C', fontSize: '1.25rem', fontWeight: '600' }}>Point of Sale</h2>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <span style={{ fontSize: '0.875rem', color: '#64748b' }}>{invoiceNumber}</span>
+          <span style={{ fontSize: '0.875rem', color: '#475569' }}>{invoiceNumber}</span>
           <button
             onClick={startScanner}
             style={{
-              backgroundColor: '#10b981',
+              backgroundColor: '#1A2B4C',
               color: 'white',
               border: 'none',
               borderRadius: '8px',
               padding: '0.5rem 1rem',
               cursor: 'pointer',
               fontSize: '0.875rem',
-              fontWeight: '500',
+              fontWeight: '600',
             }}
           >
             📷 Scan
@@ -291,7 +291,7 @@ export default function NewSalePage() {
           justifyContent: 'center',
           zIndex: 100,
         }}>
-          <div style={{ backgroundColor: 'white', borderRadius: '12px', padding: '1rem', maxWidth: '400px', width: '90%' }}>
+          <div style={{ backgroundColor: '#F2F2F2', borderRadius: '12px', padding: '1rem', maxWidth: '400px', width: '90%' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
               <h3 style={{ margin: 0 }}>Scan Barcode</h3>
               <button onClick={stopScanner} style={{ border: 'none', background: 'none', cursor: 'pointer', fontSize: '1.25rem' }}>✕</button>
@@ -315,11 +315,11 @@ export default function NewSalePage() {
               style={{
                 width: '100%',
                 padding: '0.75rem 1rem',
-                border: '1px solid #e2e8f0',
+                border: '1px solid #D6E3E2',
                 borderRadius: '10px',
                 fontSize: '0.95rem',
                 outline: 'none',
-                backgroundColor: 'white',
+                backgroundColor: '#F2F2F2',
               }}
             />
           </div>
@@ -338,8 +338,8 @@ export default function NewSalePage() {
                 key={product.id}
                 onClick={() => addToCart(product)}
                 style={{
-                  backgroundColor: 'white',
-                  border: '1px solid #e2e8f0',
+                  backgroundColor: '#F2F2F2',
+                  border: '1px solid #D6E3E2',
                   borderRadius: '12px',
                   padding: '0.75rem',
                   cursor: 'pointer',
@@ -348,12 +348,12 @@ export default function NewSalePage() {
                   boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
                 }}
                 onMouseOver={(e) => {
-                  e.currentTarget.style.borderColor = '#3b82f6'
+                  e.currentTarget.style.borderColor = '#1A2B4C'
                   e.currentTarget.style.transform = 'translateY(-2px)'
-                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(59,130,246,0.15)'
+                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(26,43,76,0.15)'
                 }}
                 onMouseOut={(e) => {
-                  e.currentTarget.style.borderColor = '#e2e8f0'
+                  e.currentTarget.style.borderColor = '#D6E3E2'
                   e.currentTarget.style.transform = 'translateY(0)'
                   e.currentTarget.style.boxShadow = '0 1px 2px rgba(0,0,0,0.05)'
                 }}
@@ -361,7 +361,7 @@ export default function NewSalePage() {
                 <div style={{ 
                   width: '100%', 
                   aspectRatio: '1', 
-                  backgroundColor: '#f1f5f9', 
+                  backgroundColor: '#D6E3E2', 
                   borderRadius: '8px',
                   marginBottom: '0.5rem',
                   display: 'flex',
@@ -371,14 +371,14 @@ export default function NewSalePage() {
                 }}>
                   📦
                 </div>
-                <p style={{ margin: '0 0 0.25rem', fontSize: '0.85rem', fontWeight: '600', color: '#1e293b', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                <p style={{ margin: '0 0 0.25rem', fontSize: '0.85rem', fontWeight: '600', color: '#1A2B4C', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {product.name}
                 </p>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ fontSize: '0.9rem', fontWeight: '700', color: '#10b981' }}>
+                  <span style={{ fontSize: '1rem', fontWeight: '800', color: '#FF4D5A' }}>
                     Rp {product.sellingPrice.toLocaleString('id-ID')}
                   </span>
-                  <span style={{ fontSize: '0.75rem', color: '#64748b' }}>
+                  <span style={{ fontSize: '0.75rem', color: '#475569' }}>
                     {product.currentStock} {product.unit}
                   </span>
                 </div>
@@ -387,7 +387,7 @@ export default function NewSalePage() {
           </div>
 
           {filteredProducts.length === 0 && (
-            <div style={{ textAlign: 'center', padding: '2rem', color: '#94a3b8' }}>
+            <div style={{ textAlign: 'center', padding: '2rem', color: 'rgba(26, 43, 76, 0.4)' }}>
               <p>No products found</p>
             </div>
           )}
@@ -396,25 +396,25 @@ export default function NewSalePage() {
         {/* Cart Panel */}
         <div style={{ 
           width: '380px', 
-          backgroundColor: 'white', 
+          backgroundColor: '#F2F2F2', 
           borderRadius: '16px', 
-          border: '1px solid #e2e8f0',
+          border: '1px solid #D6E3E2',
           display: 'flex', 
           flexDirection: 'column',
           overflow: 'hidden',
         }}>
           {/* Cart Header */}
-          <div style={{ padding: '1rem', borderBottom: '1px solid #e2e8f0', flexShrink: 0 }}>
+          <div style={{ padding: '1rem', borderBottom: '1px solid #D6E3E2', flexShrink: 0 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: '600', color: '#1e293b' }}>Cart</h3>
-              <span style={{ fontSize: '0.875rem', color: '#64748b' }}>{cart.length} items</span>
+              <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: '600', color: '#1A2B4C' }}>Cart</h3>
+              <span style={{ fontSize: '0.875rem', color: 'rgba(26, 43, 76, 0.6)' }}>{cart.length} items</span>
             </div>
           </div>
 
           {/* Cart Items */}
           <div style={{ flex: 1, overflowY: 'auto', padding: '0.5rem' }}>
             {cart.length === 0 ? (
-              <div style={{ textAlign: 'center', padding: '2rem', color: '#94a3b8' }}>
+              <div style={{ textAlign: 'center', padding: '2rem', color: 'rgba(26, 43, 76, 0.4)' }}>
                 <div style={{ fontSize: '3rem', marginBottom: '0.5rem' }}>🛒</div>
                 <p>Cart is empty</p>
                 <p style={{ fontSize: '0.8rem' }}>Click products to add</p>
@@ -426,41 +426,41 @@ export default function NewSalePage() {
                   alignItems: 'center', 
                   gap: '0.75rem',
                   padding: '0.75rem',
-                  backgroundColor: '#f8fafc',
+                  backgroundColor: '#FFFFFF',
                   borderRadius: '10px',
                   marginBottom: '0.5rem',
                 }}>
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <p style={{ margin: '0 0 0.25rem', fontSize: '0.875rem', fontWeight: '500', color: '#1e293b', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    <p style={{ margin: '0 0 0.25rem', fontSize: '0.875rem', fontWeight: '500', color: '#1A2B4C', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                       {item.productName}
                     </p>
-                    <p style={{ margin: 0, fontSize: '0.8rem', color: '#64748b' }}>
+                    <p style={{ margin: 0, fontSize: '0.8rem', color: '#475569' }}>
                       Rp {item.price.toLocaleString('id-ID')} each
                     </p>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
                     <button
                       onClick={() => updateQuantity(item.productId, item.quantity - 1)}
-                      style={{ width: '28px', height: '28px', borderRadius: '6px', border: '1px solid #e2e8f0', backgroundColor: 'white', cursor: 'pointer', fontSize: '1rem' }}
+                      style={{ width: '28px', height: '28px', borderRadius: '6px', border: '1px solid #D6E3E2', backgroundColor: '#F2F2F2', cursor: 'pointer', fontSize: '1rem' }}
                     >
                       -
                     </button>
                     <span style={{ minWidth: '24px', textAlign: 'center', fontSize: '0.875rem', fontWeight: '600' }}>{item.quantity}</span>
                     <button
                       onClick={() => updateQuantity(item.productId, item.quantity + 1)}
-                      style={{ width: '28px', height: '28px', borderRadius: '6px', border: '1px solid #e2e8f0', backgroundColor: 'white', cursor: 'pointer', fontSize: '1rem' }}
+                      style={{ width: '28px', height: '28px', borderRadius: '6px', border: '1px solid #D6E3E2', backgroundColor: '#F2F2F2', cursor: 'pointer', fontSize: '1rem' }}
                     >
                       +
                     </button>
                   </div>
                   <div style={{ minWidth: '70px', textAlign: 'right' }}>
-                    <p style={{ margin: 0, fontSize: '0.875rem', fontWeight: '600', color: '#1e293b' }}>
+                    <p style={{ margin: 0, fontSize: '0.875rem', fontWeight: '600', color: '#1A2B4C' }}>
                       Rp {(item.quantity * item.price).toLocaleString('id-ID')}
                     </p>
                   </div>
                   <button
                     onClick={() => removeFromCart(item.productId)}
-                    style={{ width: '24px', height: '24px', borderRadius: '6px', border: 'none', backgroundColor: '#fee2e2', color: '#dc2626', cursor: 'pointer', fontSize: '0.75rem' }}
+                    style={{ width: '24px', height: '24px', borderRadius: '6px', border: 'none', backgroundColor: '#fee2e2', color: '#FF4D5A', cursor: 'pointer', fontSize: '0.75rem' }}
                   >
                     ✕
                   </button>
@@ -470,9 +470,9 @@ export default function NewSalePage() {
           </div>
 
           {/* Cart Footer */}
-          <div style={{ padding: '1rem', borderTop: '1px solid #e2e8f0', backgroundColor: '#f8fafc', flexShrink: 0 }}>
+          <div style={{ padding: '1rem', borderTop: '1px solid #D6E3E2', backgroundColor: '#FFFFFF', flexShrink: 0 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-              <span style={{ color: '#64748b', fontSize: '0.9rem' }}>Subtotal</span>
+              <span style={{ color: 'rgba(26, 43, 76, 0.6)', fontSize: '0.9rem' }}>Subtotal</span>
               <span style={{ fontWeight: '600', fontSize: '1rem' }}>Rp {subtotal.toLocaleString('id-ID')}</span>
             </div>
             <button
@@ -481,13 +481,13 @@ export default function NewSalePage() {
               style={{
                 width: '100%',
                 padding: '0.875rem',
-                backgroundColor: cart.length === 0 ? '#cbd5e1' : '#3b82f6',
+                backgroundColor: cart.length === 0 ? '#cbd5e1' : '#FF4D5A',
                 color: 'white',
                 border: 'none',
                 borderRadius: '10px',
                 cursor: cart.length === 0 ? 'not-allowed' : 'pointer',
                 fontSize: '1rem',
-                fontWeight: '600',
+                fontWeight: '700',
                 marginTop: '0.5rem',
               }}
             >
@@ -512,33 +512,34 @@ export default function NewSalePage() {
           zIndex: 100,
         }}>
           <div style={{ 
-            backgroundColor: 'white', 
+            backgroundColor: '#F2F2F2', 
             borderRadius: '16px', 
             padding: '1.5rem', 
             width: '90%', 
             maxWidth: '400px',
           }}>
             {error && (
-              <div style={{ padding: '0.75rem', backgroundColor: '#fef2f2', borderRadius: '8px', marginBottom: '1rem', color: '#dc2626', fontSize: '0.875rem' }}>
+              <div style={{ padding: '0.75rem', backgroundColor: 'rgba(255, 77, 90, 0.1)', border: '1px solid #FF4D5A', borderRadius: '8px', marginBottom: '1rem', color: '#FF4D5A', fontSize: '0.875rem' }}>
                 {error}
               </div>
             )}
 
             <h3 style={{ margin: '0 0 1rem', fontSize: '1.25rem', fontWeight: '600' }}>Payment</h3>
             
-            <div style={{ backgroundColor: '#f1f5f9', borderRadius: '12px', padding: '1rem', marginBottom: '1rem' }}>
+            <div style={{ backgroundColor: '#D6E3E2', borderRadius: '12px', padding: '1rem', marginBottom: '1rem' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-                <span style={{ color: '#64748b' }}>Total</span>
-                <span style={{ fontSize: '1.5rem', fontWeight: '700', color: '#1e293b' }}>Rp {subtotal.toLocaleString('id-ID')}</span>
+                <span style={{ color: '#475569' }}>Total</span>
+                <span style={{ fontSize: '1.5rem', fontWeight: '700', color: '#1A2B4C' }}>Rp {subtotal.toLocaleString('id-ID')}</span>
               </div>
             </div>
 
             <div style={{ marginBottom: '1rem' }}>
-              <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#475569', marginBottom: '0.375rem' }}>Payment Method</label>
+              <label htmlFor="payment-method" style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#475569', marginBottom: '0.375rem' }}>Payment Method</label>
               <select
+                id="payment-method"
                 value={formData.paymentMethod}
                 onChange={(e) => setFormData({ ...formData, paymentMethod: e.target.value })}
-                style={{ width: '100%', padding: '0.625rem', border: '1px solid #e2e8f0', borderRadius: '8px', fontSize: '0.9rem' }}
+                style={{ width: '100%', padding: '0.625rem', border: '1px solid #1A2B4C', borderRadius: '8px', fontSize: '0.9rem', backgroundColor: 'white' }}
               >
                 <option value="Cash">Cash</option>
                 <option value="Debit">Debit Card</option>
@@ -547,12 +548,13 @@ export default function NewSalePage() {
             </div>
 
             <div style={{ marginBottom: '1.5rem' }}>
-              <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#475569', marginBottom: '0.375rem' }}>Amount Paid</label>
+              <label htmlFor="amount-paid" style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#475569', marginBottom: '0.375rem' }}>Amount Paid</label>
               <input
+                id="amount-paid"
                 type="number"
                 value={formData.amountPaid}
                 onChange={(e) => setFormData({ ...formData, amountPaid: Number(e.target.value) })}
-                style={{ width: '100%', padding: '0.625rem', border: '1px solid #e2e8f0', borderRadius: '8px', fontSize: '1rem', fontWeight: '600' }}
+                style={{ width: '100%', padding: '0.625rem', border: '1px solid #1A2B4C', borderRadius: '8px', fontSize: '1rem', fontWeight: '700' }}
                 placeholder="0"
               />
               {formData.amountPaid > 0 && (
@@ -561,7 +563,7 @@ export default function NewSalePage() {
                     <button
                       key={amount}
                       onClick={() => setFormData({ ...formData, amountPaid: amount })}
-                      style={{ flex: 1, padding: '0.375rem', border: '1px solid #e2e8f0', borderRadius: '6px', backgroundColor: 'white', cursor: 'pointer', fontSize: '0.8rem' }}
+                      style={{ flex: 1, padding: '0.375rem', border: '1px solid #1A2B4C', borderRadius: '6px', backgroundColor: 'rgba(26, 43, 76, 0.05)', cursor: 'pointer', fontSize: '0.8rem', fontWeight: '600' }}
                     >
                       {amount >= 1000 ? `${(amount/1000)}k` : amount}
                     </button>
@@ -571,16 +573,16 @@ export default function NewSalePage() {
             </div>
 
             {formData.amountPaid >= subtotal && (
-              <div style={{ backgroundColor: '#ecfdf5', borderRadius: '8px', padding: '0.75rem', marginBottom: '1rem', display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: '#059669', fontWeight: '500' }}>Change</span>
-                <span style={{ color: '#059669', fontWeight: '700', fontSize: '1.1rem' }}>Rp {change.toLocaleString('id-ID')}</span>
+              <div style={{ backgroundColor: 'rgba(26, 43, 76, 0.05)', borderRadius: '8px', padding: '0.75rem', marginBottom: '1rem', display: 'flex', justifyContent: 'space-between', border: '1px solid #1A2B4C' }}>
+                <span style={{ color: '#1A2B4C', fontWeight: '500' }}>Change</span>
+                <span style={{ color: '#FF4D5A', fontWeight: '800', fontSize: '1.25rem' }}>Rp {change.toLocaleString('id-ID')}</span>
               </div>
             )}
 
             <div style={{ display: 'flex', gap: '0.75rem' }}>
               <button
                 onClick={() => setShowPaymentModal(false)}
-                style={{ flex: 1, padding: '0.75rem', backgroundColor: '#f1f5f9', color: '#475569', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: '500' }}
+                style={{ flex: 1, padding: '0.75rem', backgroundColor: 'rgba(26, 43, 76, 0.1)', color: '#1A2B4C', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: '600' }}
               >
                 Cancel
               </button>
@@ -590,12 +592,12 @@ export default function NewSalePage() {
                 style={{ 
                   flex: 1, 
                   padding: '0.75rem', 
-                  backgroundColor: (loading || formData.amountPaid < subtotal) ? '#cbd5e1' : '#10b981', 
+                  backgroundColor: (loading || formData.amountPaid < subtotal) ? '#cbd5e1' : '#FF4D5A', 
                   color: 'white', 
                   border: 'none', 
                   borderRadius: '8px', 
                   cursor: (loading || formData.amountPaid < subtotal) ? 'not-allowed' : 'pointer', 
-                  fontWeight: '600' 
+                  fontWeight: '700' 
                 }}
               >
                 {loading ? 'Processing...' : 'Complete Sale'}

@@ -118,7 +118,7 @@ function SalesContent() {
   const totalProfit = sales.reduce((sum, s) => sum + Number(s.totalProfit || 0), 0)
 
   const buttonStyle: React.CSSProperties = {
-    backgroundColor: '#10b981', // Emerald
+    backgroundColor: '#FF4D5A',
     color: 'white',
     padding: '0.6rem 1.2rem',
     borderRadius: '10px',
@@ -130,16 +130,16 @@ function SalesContent() {
     alignItems: 'center',
     fontWeight: '600',
     transition: 'all 0.2s ease',
-    boxShadow: '0 4px 6px -1px rgba(16, 185, 129, 0.2)',
+    boxShadow: '0 4px 6px -1px rgba(255, 77, 90, 0.2)',
   }
 
   const thStyle: React.CSSProperties = {
     padding: '1rem',
     textAlign: 'left' as const,
-    fontWeight: '600',
-    borderBottom: '2px solid #f1f5f9',
+    fontWeight: '700',
+    borderBottom: '2px solid rgba(255,255,255,0.1)',
     whiteSpace: 'nowrap' as const,
-    color: '#475569',
+    color: '#FFFFFF',
     fontSize: '0.8rem',
     cursor: 'pointer',
     userSelect: 'none',
@@ -148,9 +148,9 @@ function SalesContent() {
 
   const tdStyle: React.CSSProperties = {
     padding: '1rem',
-    borderBottom: '1px solid #f1f5f9',
+    borderBottom: '1px solid #D6E3E2',
     whiteSpace: 'nowrap' as const,
-    color: '#1e293b',
+    color: '#1A2B4C',
     fontSize: '0.9rem',
   }
 
@@ -160,8 +160,8 @@ function SalesContent() {
         <div className="col-6">
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
             <div style={{ 
-              backgroundColor: 'rgba(16, 185, 129, 0.1)', 
-              color: '#10b981', 
+              backgroundColor: 'rgba(26, 43, 76, 0.1)', 
+              color: '#1A2B4C', 
               padding: '0.5rem', 
               borderRadius: '10px',
               display: 'flex',
@@ -170,7 +170,7 @@ function SalesContent() {
             }}>
               <span className="material-symbols-outlined" style={{ fontSize: '1.75rem' }}>payments</span>
             </div>
-            <h2 style={{ margin: 0, color: '#1e293b', fontSize: '1.75rem', fontWeight: '700', letterSpacing: '-0.02em' }}>{t('sales')}</h2>
+            <h2 style={{ margin: 0, color: '#1A2B4C', fontSize: '1.75rem', fontWeight: '700', letterSpacing: '-0.02em' }}>{t('sales')}</h2>
           </div>
         </div>
         <div className="col-6" style={{ textAlign: 'right' }}>
@@ -186,11 +186,11 @@ function SalesContent() {
         <div className="col-6">
           <div style={{ 
             padding: '1.5rem', 
-            background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)', 
+            background: 'linear-gradient(135deg, #1A2B4C 0%, #253358 100%)', 
             borderRadius: '16px', 
             color: 'white', 
             height: '100%',
-            boxShadow: '0 10px 15px -3px rgba(16, 185, 129, 0.2)',
+            boxShadow: '0 10px 15px -3px rgba(26, 43, 76, 0.2)',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center'
@@ -207,11 +207,11 @@ function SalesContent() {
         <div className="col-6">
           <div style={{ 
             padding: '1.5rem', 
-            background: 'linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)', 
+            background: 'linear-gradient(135deg, #FF4D5A 0%, #FF6B75 100%)', 
             borderRadius: '16px', 
             color: 'white', 
             height: '100%',
-            boxShadow: '0 10px 15px -3px rgba(99, 102, 241, 0.2)',
+            boxShadow: '0 10px 15px -3px rgba(255, 77, 90, 0.2)',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center'
@@ -227,11 +227,11 @@ function SalesContent() {
         </div>
       </div>
 
-      <div style={{ backgroundColor: 'white', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03)', border: '1px solid #f1f5f9' }}>
+      <div style={{ backgroundColor: '#F2F2F2', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03)', border: '1px solid #D6E3E2' }}>
         <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
           <table className="responsive-table" style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
-              <tr style={{ backgroundColor: '#f8fafc' }}>
+              <tr style={{ backgroundColor: '#1A2B4C' }}>
                 <th style={thStyle} onClick={() => handleSort('invoiceNumber')}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
                     {t('invoice').toUpperCase()} {getSortIcon('invoiceNumber')}
@@ -265,22 +265,22 @@ function SalesContent() {
                 <TableShimmer rows={5} />
               ) : sales.length === 0 ? (
                 <tr>
-                  <td colSpan={6} style={{...tdStyle, textAlign: 'center', color: '#94a3b8'}}>{t('noSalesFound')}</td>
+                  <td colSpan={6} style={{...tdStyle, textAlign: 'center', color: 'rgba(26, 43, 76, 0.4)'}}>{t('noSalesFound')}</td>
                 </tr>
               ) : (
                 sales.map((sale) => (
                   <React.Fragment key={sale.id}>
-                    <tr style={{ borderBottom: '1px solid #f1f5f9', backgroundColor: expandedSaleId === sale.id ? '#f8fafc' : 'transparent', transition: 'background-color 0.2s' }}>
-                      <td data-label="Invoice" style={{...tdStyle, fontWeight: 500, cursor: 'pointer', color: '#10b981'}} onClick={() => toggleExpand(sale.id)}>
+                    <tr style={{ borderBottom: '1px solid #D6E3E2', backgroundColor: expandedSaleId === sale.id ? '#FFFFFF' : 'transparent', transition: 'background-color 0.2s' }}>
+                      <td data-label="Invoice" style={{...tdStyle, fontWeight: 500, cursor: 'pointer', color: '#1A2B4C'}} onClick={() => toggleExpand(sale.id)}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                           <span className="material-symbols-outlined" style={{ fontSize: '1.25rem', transition: 'transform 0.2s', transform: expandedSaleId === sale.id ? 'rotate(90deg)' : 'rotate(0deg)' }}>chevron_right</span>
                           {sale.invoiceNumber}
                         </div>
                       </td>
                       <td data-label="Total" style={tdStyle}>Rp {Number(sale.totalAmount).toLocaleString('id-ID')}</td>
-                      <td data-label="Profit" style={{...tdStyle, color: '#10b981', fontWeight: 500}}>Rp {Number(sale.totalProfit).toLocaleString('id-ID')}</td>
+                      <td data-label="Profit" style={{...tdStyle, color: '#1A2B4C', fontWeight: 500}}>Rp {Number(sale.totalProfit).toLocaleString('id-ID')}</td>
                       <td data-label="Payment" style={tdStyle}>
-                        <span style={{ padding: '0.25rem 0.75rem', borderRadius: '6px', fontSize: '0.8rem', fontWeight: '500', backgroundColor: '#eff6ff', color: '#1d4ed8' }}>
+                        <span style={{ padding: '0.25rem 0.75rem', borderRadius: '6px', fontSize: '0.8rem', fontWeight: '700', backgroundColor: 'rgba(26, 43, 76, 0.1)', color: '#1A2B4C' }}>
                           {sale.paymentMethod}
                         </span>
                       </td>
@@ -288,12 +288,12 @@ function SalesContent() {
                       <td data-label="Date" style={tdStyle}>{new Date(sale.createdAt).toLocaleDateString('id-ID')}</td>
                     </tr>
                     {expandedSaleId === sale.id && (
-                      <tr style={{ backgroundColor: '#f8fafc', borderBottom: '1px solid #e2e8f0' }}>
+                      <tr style={{ backgroundColor: '#FFFFFF', borderBottom: '1px solid #D6E3E2' }}>
                         <td colSpan={6} style={{ padding: '0 2rem 1.5rem 3rem' }}>
-                          <div style={{ backgroundColor: 'white', borderRadius: '8px', border: '1px solid #e2e8f0', overflow: 'hidden' }}>
+                          <div style={{ backgroundColor: '#F2F2F2', borderRadius: '8px', border: '1px solid #D6E3E2', overflow: 'hidden' }}>
                             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
                               <thead>
-                                <tr style={{ backgroundColor: '#f1f5f9', borderBottom: '1px solid #e2e8f0' }}>
+                                <tr style={{ backgroundColor: '#D6E3E2', borderBottom: '1px solid #D6E3E2' }}>
                                   <th style={{ padding: '0.75rem 1rem', textAlign: 'left', color: '#475569', fontWeight: 600 }}>{t('name')}</th>
                                   <th style={{ padding: '0.75rem 1rem', textAlign: 'left', color: '#475569', fontWeight: 600 }}>{t('barcode')}</th>
                                   <th style={{ padding: '0.75rem 1rem', textAlign: 'right', color: '#475569', fontWeight: 600 }}>{t('qty')}</th>
@@ -303,17 +303,17 @@ function SalesContent() {
                               </thead>
                               <tbody>
                                 {sale.items?.map((item, idx) => (
-                                  <tr key={item.id || idx} style={{ borderBottom: idx === sale.items.length - 1 ? 'none' : '1px solid #f1f5f9' }}>
-                                    <td style={{ padding: '0.75rem 1rem', color: '#1e293b' }}>{item.product?.name || 'Unknown Product'}</td>
-                                    <td style={{ padding: '0.75rem 1rem', color: '#64748b' }}>{item.product?.barcode || '-'}</td>
-                                    <td style={{ padding: '0.75rem 1rem', textAlign: 'right', color: '#1e293b', fontWeight: 500 }}>{Number(item.quantity).toLocaleString('id-ID')}</td>
-                                    <td style={{ padding: '0.75rem 1rem', textAlign: 'right', color: '#64748b' }}>Rp {Number(item.sellingPrice).toLocaleString('id-ID')}</td>
-                                    <td style={{ padding: '0.75rem 1rem', textAlign: 'right', color: '#1e293b', fontWeight: 500 }}>Rp {Number(item.subtotal).toLocaleString('id-ID')}</td>
+                                  <tr key={item.id || idx} style={{ borderBottom: idx === sale.items.length - 1 ? 'none' : '1px solid #D6E3E2' }}>
+                                    <td style={{ padding: '0.75rem 1rem', color: '#1A2B4C' }}>{item.product?.name || 'Unknown Product'}</td>
+                                    <td style={{ padding: '0.75rem 1rem', color: 'rgba(26, 43, 76, 0.6)' }}>{item.product?.barcode || '-'}</td>
+                                    <td style={{ padding: '0.75rem 1rem', textAlign: 'right', color: '#1A2B4C', fontWeight: 500 }}>{Number(item.quantity).toLocaleString('id-ID')}</td>
+                                    <td style={{ padding: '0.75rem 1rem', textAlign: 'right', color: 'rgba(26, 43, 76, 0.6)' }}>Rp {Number(item.sellingPrice).toLocaleString('id-ID')}</td>
+                                    <td style={{ padding: '0.75rem 1rem', textAlign: 'right', color: '#1A2B4C', fontWeight: 500 }}>Rp {Number(item.subtotal).toLocaleString('id-ID')}</td>
                                   </tr>
                                 ))}
                                 {(!sale.items || sale.items.length === 0) && (
                                   <tr>
-                                    <td colSpan={5} style={{ padding: '1rem', textAlign: 'center', color: '#94a3b8' }}>No items found for this sale</td>
+                                    <td colSpan={5} style={{ padding: '1rem', textAlign: 'center', color: 'rgba(26, 43, 76, 0.4)' }}>No items found for this sale</td>
                                   </tr>
                                 )}
                               </tbody>
@@ -338,7 +338,7 @@ function SalesContent() {
       />
 
       {sales.length === 0 && !loading && (
-        <div style={{ textAlign: 'center', padding: '3rem', color: '#94a3b8' }}>
+        <div style={{ textAlign: 'center', padding: '3rem', color: 'rgba(26, 43, 76, 0.4)' }}>
           <span className="material-symbols-outlined" style={{ fontSize: '3rem', display: 'block', marginBottom: '0.5rem' }}>payments</span>
           <p>No sales found</p>
         </div>

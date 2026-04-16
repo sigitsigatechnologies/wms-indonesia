@@ -73,25 +73,26 @@ export default function Pagination({
       gap: '1rem',
       marginTop: '1.5rem',
       padding: '1rem',
-      backgroundColor: 'white',
+      backgroundColor: '#F2F2F2',
       borderRadius: '12px',
       boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
-      border: '1px solid #f1f5f9',
+      border: '1px solid #D6E3E2',
     }}>
       {/* Items per page selector */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <span style={{ color: '#64748b', fontSize: '0.875rem' }}>Show:</span>
+          <span style={{ color: '#475569', fontSize: '0.875rem' }}>Show:</span>
           <select
+            aria-label="Items per page"
             value={itemsPerPage}
             onChange={handleItemsPerPageChange}
             style={{
               padding: '0.375rem 0.75rem',
-              border: '1px solid #e2e8f0',
+              border: '1px solid #D6E3E2',
               borderRadius: '6px',
               fontSize: '0.875rem',
-              color: '#1e293b',
-              backgroundColor: 'white',
+              color: '#1A2B4C',
+              backgroundColor: '#F2F2F2',
               cursor: 'pointer',
               outline: 'none',
             }}
@@ -102,10 +103,10 @@ export default function Pagination({
             <option value="50">50</option>
             <option value="100">100</option>
           </select>
-          <span style={{ color: '#64748b', fontSize: '0.875rem' }}>entries</span>
+          <span style={{ color: '#475569', fontSize: '0.875rem' }}>entries</span>
         </div>
         
-        <span style={{ color: '#64748b', fontSize: '0.875rem' }}>
+        <span style={{ color: '#475569', fontSize: '0.875rem' }}>
           Showing {totalItems > 0 ? startItem : 0} to {endItem} of {totalItems} entries
         </span>
       </div>
@@ -119,10 +120,10 @@ export default function Pagination({
             disabled={currentPage === 1}
             style={{
               padding: '0.5rem 0.75rem',
-              border: '1px solid #e2e8f0',
+              border: '1px solid #D6E3E2',
               borderRadius: '6px',
-              backgroundColor: currentPage === 1 ? '#f1f5f9' : 'white',
-              color: currentPage === 1 ? '#94a3b8' : '#1e293b',
+              backgroundColor: currentPage === 1 ? '#D6E3E2' : 'white',
+              color: currentPage === 1 ? 'rgba(26, 43, 76, 0.4)' : '#1A2B4C',
               cursor: currentPage === 1 ? 'not-allowed' : 'pointer',
               fontSize: '0.875rem',
               display: 'flex',
@@ -142,10 +143,10 @@ export default function Pagination({
                 onClick={() => handlePageChange(page)}
                 style={{
                   padding: '0.5rem 0.75rem',
-                  border: '1px solid #e2e8f0',
+                  border: '1px solid #D6E3E2',
                   borderRadius: '6px',
-                  backgroundColor: page === currentPage ? '#3b82f6' : 'white',
-                  color: page === currentPage ? 'white' : '#1e293b',
+                  backgroundColor: page === currentPage ? '#1E4FCF' : 'white',
+                  color: page === currentPage ? 'white' : '#1A2B4C',
                   cursor: 'pointer',
                   fontSize: '0.875rem',
                   fontWeight: page === currentPage ? '600' : '400',
@@ -154,7 +155,7 @@ export default function Pagination({
                 {page}
               </button>
             ) : (
-              <span key={index} style={{ padding: '0.5rem', color: '#94a3b8' }}>...</span>
+              <span key={index} style={{ padding: '0.5rem', color: 'rgba(26, 43, 76, 0.4)' }}>...</span>
             )
           ))}
 
@@ -164,10 +165,10 @@ export default function Pagination({
             disabled={currentPage === totalPages}
             style={{
               padding: '0.5rem 0.75rem',
-              border: '1px solid #e2e8f0',
+              border: '1px solid #D6E3E2',
               borderRadius: '6px',
-              backgroundColor: currentPage === totalPages ? '#f1f5f9' : 'white',
-              color: currentPage === totalPages ? '#94a3b8' : '#1e293b',
+              backgroundColor: currentPage === totalPages ? '#D6E3E2' : 'white',
+              color: currentPage === totalPages ? 'rgba(26, 43, 76, 0.4)' : '#1A2B4C',
               cursor: currentPage === totalPages ? 'not-allowed' : 'pointer',
               fontSize: '0.875rem',
               display: 'flex',
