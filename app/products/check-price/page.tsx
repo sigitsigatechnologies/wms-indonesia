@@ -180,8 +180,8 @@ export default function CheckPricePage() {
   return (
     <div style={{ maxWidth: '500px', margin: '0 auto', padding: '1rem' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-        <h2 style={{ margin: 0, color: '#1A2B4C', fontSize: '1.5rem', fontWeight: '600' }}>{t('checkPrice')}</h2>
-        <Link href="/" style={{ color: 'rgba(26, 43, 76, 0.6)', textDecoration: 'none', fontSize: '0.9rem' }}>
+        <h2 style={{ margin: 0, color: '#202124', fontSize: '1.5rem', fontWeight: '600' }}>{t('checkPrice')}</h2>
+        <Link href="/" style={{ color: 'rgba(32, 33, 36, 0.6)', textDecoration: 'none', fontSize: '0.9rem' }}>
           {t('back')}
         </Link>
       </div>
@@ -189,7 +189,7 @@ export default function CheckPricePage() {
       {/* Scanner Area */}
       {scanning ? (
         <div style={{
-          backgroundColor: '#1A2B4C',
+          backgroundColor: '#1A73E8',
           borderRadius: '12px',
           padding: '1rem',
           marginBottom: '1rem',
@@ -200,7 +200,7 @@ export default function CheckPricePage() {
               onClick={stopScanner}
               style={{
                 padding: '0.25rem 0.5rem',
-                backgroundColor: '#FF4D5A',
+                backgroundColor: '#1A73E8',
                 color: 'white',
                 border: 'none',
                 borderRadius: '4px',
@@ -219,7 +219,7 @@ export default function CheckPricePage() {
           style={{
             width: '100%',
             padding: '1rem',
-            backgroundColor: '#1A2B4C',
+            backgroundColor: '#1A73E8',
             color: 'white',
             border: 'none',
             borderRadius: '12px',
@@ -239,11 +239,11 @@ export default function CheckPricePage() {
 
       {/* Manual Input */}
       <div style={{
-        backgroundColor: '#F7F9FC',
+        backgroundColor: '#FFFFFF',
         borderRadius: '12px',
         padding: '1.5rem',
         boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
-        border: '1px solid #1A2B4C',
+        border: '1px solid #E8EAED',
       }}>
         <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#475569', marginBottom: '0.5rem' }}>
           {t('enterBarcodeManually')}
@@ -258,7 +258,7 @@ export default function CheckPricePage() {
             style={{
               flex: 1,
               padding: '0.75rem',
-              border: '1px solid #1A2B4C',
+              border: '1px solid #E8EAED',
               borderRadius: '8px',
               fontSize: '1rem',
               outline: 'none',
@@ -269,7 +269,7 @@ export default function CheckPricePage() {
             disabled={loading || !barcode.trim()}
             style={{
               padding: '0.75rem 1.5rem',
-              backgroundColor: loading || !barcode.trim() ? '#cbd5e1' : '#1A2B4C',
+              backgroundColor: loading || !barcode.trim() ? '#cbd5e1' : '#202124',
               color: 'white',
               border: 'none',
               borderRadius: '8px',
@@ -285,14 +285,14 @@ export default function CheckPricePage() {
 
       {/* Loading */}
       {loading && (
-        <div style={{ marginTop: '1rem', padding: '1rem', backgroundColor: 'rgba(26, 43, 76, 0.1)', borderRadius: '8px', textAlign: 'center', color: '#1A2B4C', fontWeight: '600' }}>
+        <div style={{ marginTop: '1rem', padding: '1rem', backgroundColor: 'rgba(32, 33, 36, 0.1)', borderRadius: '8px', textAlign: 'center', color: '#202124', fontWeight: '600' }}>
           {t('searching')}
         </div>
       )}
 
       {/* Error */}
       {error && (
-        <div style={{ marginTop: '1rem', padding: '1rem', backgroundColor: 'rgba(255, 77, 90, 0.1)', border: '1px solid #FF4D5A', borderRadius: '8px', color: '#FF4D5A', textAlign: 'center' }}>
+        <div style={{ marginTop: '1rem', padding: '1rem', backgroundColor: 'rgba(239, 68, 68, 0.1)', border: '1px solid #EF4444', borderRadius: '8px', color: '#1A73E8', textAlign: 'center' }}>
           {error}
         </div>
       )}
@@ -301,35 +301,35 @@ export default function CheckPricePage() {
       {product && (
         <div style={{
           marginTop: '1.5rem',
-          backgroundColor: '#F7F9FC',
+          backgroundColor: '#FFFFFF',
           borderRadius: '16px',
           overflow: 'hidden',
           boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-          border: '1px solid #1A2B4C'
+          border: '1px solid #E8EAED'
         }}>
-          <div style={{ backgroundColor: '#1A2B4C', padding: '1.5rem', textAlign: 'center' }}>
+          <div style={{ backgroundColor: '#1A73E8', padding: '1.5rem', textAlign: 'center' }}>
             <p style={{ margin: 0, color: 'rgba(255,255,255,0.8)', fontSize: '0.875rem' }}>{t('productName_label')}</p>
             <h3 style={{ margin: '0.5rem 0 0', color: 'white', fontSize: '1.5rem', fontWeight: '700' }}>{product.name}</h3>
           </div>
           
           <div style={{ padding: '1.5rem' }}>
             <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
-              <p style={{ margin: 0, color: 'rgba(26, 43, 76, 0.6)', fontSize: '0.875rem' }}>{t('sellingPrice_label')}</p>
-              <p style={{ margin: '0.5rem 0 0', color: '#FF4D5A', fontSize: '2.5rem', fontWeight: '800' }}>
+              <p style={{ margin: 0, color: 'rgba(32, 33, 36, 0.6)', fontSize: '0.875rem' }}>{t('sellingPrice_label')}</p>
+              <p style={{ margin: '0.5rem 0 0', color: '#1A73E8', fontSize: '2.5rem', fontWeight: '800' }}>
                 Rp {Number(product.sellingPrice).toLocaleString('id-ID')}
               </p>
             </div>
             
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', borderTop: '1px solid #1A2B4C', paddingTop: '1rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', borderTop: '1px solid #202124', paddingTop: '1rem' }}>
               <div>
-                <p style={{ margin: 0, color: 'rgba(26, 43, 76, 0.6)', fontSize: '0.75rem' }}>{t('stockLevel').toUpperCase()}</p>
-                <p style={{ margin: '0.25rem 0 0', color: '#1A2B4C', fontSize: '1.1rem', fontWeight: '700' }}>
+                <p style={{ margin: 0, color: 'rgba(32, 33, 36, 0.6)', fontSize: '0.75rem' }}>{t('stockLevel').toUpperCase()}</p>
+                <p style={{ margin: '0.25rem 0 0', color: '#202124', fontSize: '1.1rem', fontWeight: '700' }}>
                   {product.currentStock} {product.unit}
                 </p>
               </div>
               <div>
-                <p style={{ margin: 0, color: 'rgba(26, 43, 76, 0.6)', fontSize: '0.75rem' }}>{t('barcode').toUpperCase()}</p>
-                <p style={{ margin: '0.25rem 0 0', color: '#1A2B4C', fontSize: '1rem', fontFamily: 'monospace', fontWeight: '600' }}>
+                <p style={{ margin: 0, color: 'rgba(32, 33, 36, 0.6)', fontSize: '0.75rem' }}>{t('barcode').toUpperCase()}</p>
+                <p style={{ margin: '0.25rem 0 0', color: '#202124', fontSize: '1rem', fontFamily: 'monospace', fontWeight: '600' }}>
                   {product.barcode}
                 </p>
               </div>

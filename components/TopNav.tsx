@@ -13,14 +13,14 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { key: 'dashboard', label: 'Dashboard', href: '/', icon: 'dashboard', color: '#FF4D5A' },
-  { key: 'products', label: 'Products', href: '/products', icon: 'inventory_2', color: '#FF4D5A' },
-  { key: 'suppliers', label: 'Suppliers', href: '/suppliers', icon: 'local_shipping', color: '#FF4D5A' },
-  { key: 'purchases', label: 'Purchases', href: '/purchases', icon: 'shopping_cart', color: '#FF4D5A' },
-  { key: 'sales', label: 'Sales', href: '/sales', icon: 'payments', color: '#FF4D5A' },
-  { key: 'stock', label: 'Stock', href: '/stock', icon: 'assessment', color: '#FF4D5A' },
-  { key: 'checkPrice', label: 'Check Price', href: '/products/check-price', icon: 'price_check', color: '#FF4D5A' },
-  { key: 'reports', label: 'Reports', href: '/reports', icon: 'analytics', color: '#FF4D5A' },
+  { key: 'dashboard', label: 'Dashboard', href: '/', icon: 'dashboard', color: '#1A73E8' },
+  { key: 'products', label: 'Products', href: '/products', icon: 'inventory_2', color: '#1A73E8' },
+  { key: 'suppliers', label: 'Suppliers', href: '/suppliers', icon: 'local_shipping', color: '#1A73E8' },
+  { key: 'purchases', label: 'Purchases', href: '/purchases', icon: 'shopping_cart', color: '#1A73E8' },
+  { key: 'sales', label: 'Sales', href: '/sales', icon: 'payments', color: '#1A73E8' },
+  { key: 'stock', label: 'Stock', href: '/stock', icon: 'assessment', color: '#1A73E8' },
+  { key: 'checkPrice', label: 'Check Price', href: '/products/check-price', icon: 'price_check', color: '#1A73E8' },
+  { key: 'reports', label: 'Reports', href: '/reports', icon: 'analytics', color: '#1A73E8' },
 ]
 
 const topNavStyle: React.CSSProperties = {
@@ -34,7 +34,7 @@ const topNavStyle: React.CSSProperties = {
   left: 0,
   zIndex: 100,
   boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
-  borderBottom: '1px solid #1A2B4C',
+  borderBottom: '1px solid #E8EAED',
 }
 
 const containerStyle: React.CSSProperties = {
@@ -60,7 +60,7 @@ const logoBoxStyle: React.CSSProperties = {
   width: '32px',
   height: '32px',
   borderRadius: '8px',
-  background: '#FF4D5A', /* Brand Red Logo Box */
+  background: '#1A73E8', /* Brand Red Logo Box */
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -76,7 +76,7 @@ const logoTextStyle: React.CSSProperties = {
 const logoTitleStyle: React.CSSProperties = {
   fontSize: '1rem',
   fontWeight: 'bold',
-  color: '#1A2B4C',
+  color: '#202124',
   margin: 0,
   whiteSpace: 'nowrap',
 }
@@ -122,10 +122,10 @@ const settingsStyle: React.CSSProperties = {
 
 const switcherGroupStyle: React.CSSProperties = {
   display: 'flex',
-  backgroundColor: 'rgba(26, 43, 76, 0.05)',
+  backgroundColor: 'rgba(32, 33, 36, 0.05)',
   borderRadius: '8px',
   padding: '4px',
-  border: '1px solid #1A2B4C',
+  border: '1px solid #E8EAED',
   gap: '4px',
 }
 
@@ -183,11 +183,11 @@ export default function TopNav() {
                 href={item.href}
                 style={{
                   ...navLinkStyle,
-                  backgroundColor: isActive ? item.color : 'transparent',
-                  color: isActive ? 'white' : '#1A2B4C',
+                  backgroundColor: isActive ? '#E8F0FE' : 'transparent',
+                  color: isActive ? '#1A73E8' : '#5F6368',
                 }}
               >
-                <span className="material-symbols-outlined" style={{ ...iconStyle, color: isActive ? 'white' : 'rgba(26, 43, 76, 0.6)' }}>
+                <span className="material-symbols-outlined" style={{ ...iconStyle, color: isActive ? '#1A73E8' : '#5F6368' }}>
                   {item.icon}
                 </span>
                 <span style={navTextStyle}>{t(item.key) || item.label}</span>
@@ -205,8 +205,8 @@ export default function TopNav() {
               title={t('sidebar')}
               style={{
                 ...switcherButtonStyle,
-                backgroundColor: layoutType === 'sidebar' ? '#1A2B4C' : 'transparent',
-                color: layoutType === 'sidebar' ? 'white' : '#1A2B4C'
+                backgroundColor: layoutType === 'sidebar' ? '#E8F0FE' : 'transparent',
+                color: layoutType === 'sidebar' ? '#1A73E8' : '#5F6368'
               }}
             >
               <span className="material-symbols-outlined" style={{ fontSize: '1.25rem' }}>view_sidebar</span>
@@ -216,8 +216,8 @@ export default function TopNav() {
               title={t('topbar')}
               style={{
                 ...switcherButtonStyle,
-                backgroundColor: layoutType === 'topbar' ? '#1A2B4C' : 'transparent',
-                color: layoutType === 'topbar' ? 'white' : '#1A2B4C'
+                backgroundColor: layoutType === 'topbar' ? '#E8F0FE' : 'transparent',
+                color: layoutType === 'topbar' ? '#1A73E8' : '#5F6368'
               }}
             >
               <span className="material-symbols-outlined" style={{ fontSize: '1.25rem' }}>tab</span>
@@ -232,8 +232,8 @@ export default function TopNav() {
               onClick={() => setLanguage('en')}
               style={{
                 ...langButtonStyle,
-                backgroundColor: language === 'en' ? '#1A2B4C' : 'transparent',
-                color: language === 'en' ? 'white' : '#1A2B4C'
+                backgroundColor: language === 'en' ? '#E8F0FE' : 'transparent',
+                color: language === 'en' ? '#1A73E8' : '#5F6368'
               }}
             >
               EN
@@ -242,8 +242,8 @@ export default function TopNav() {
               onClick={() => setLanguage('id')}
               style={{
                 ...langButtonStyle,
-                backgroundColor: language === 'id' ? '#1A2B4C' : 'transparent',
-                color: language === 'id' ? 'white' : '#1A2B4C'
+                backgroundColor: language === 'id' ? '#E8F0FE' : 'transparent',
+                color: language === 'id' ? '#1A73E8' : '#5F6368'
               }}
             >
               ID

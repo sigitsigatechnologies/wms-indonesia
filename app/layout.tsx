@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { Noto_Sans } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import LayoutWrapper from "@/components/LayoutWrapper";
 
-const notoSans = Noto_Sans({
-  variable: "--font-noto-sans",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
 });
@@ -28,7 +28,7 @@ export default function RootLayout({
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" />
       </head>
       <body
-        className={`${notoSans.variable} antialiased`}
+        className={`${inter.variable} antialiased`}
         style={{ margin: 0, padding: 0 }}
       >
         <LanguageProvider>

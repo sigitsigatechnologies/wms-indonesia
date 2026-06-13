@@ -36,7 +36,7 @@ function TableBody({ className, ...props }: React.ComponentProps<"tbody">) {
 function TableFooter({ className, ...props }: React.ComponentProps<"tfoot">) {
   return (
     <tfoot
-      className={cn("bg-[#F7F9FC] border-t border-[#1A2B4C] font-bold text-[#1A2B4C]", className)}
+      className={cn("bg-[#F7F9FC] border-t border-[#202124] font-bold text-[#202124]", className)}
       {...props}
     />
   )
@@ -54,7 +54,7 @@ function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
 function TableHead({ className, ...props }: React.ComponentProps<"th">) {
   return (
     <th
-      className={cn("h-10 px-2 text-left align-middle font-bold text-[#1A2B4C] whitespace-nowrap uppercase tracking-wider", className)}
+      className={cn("h-10 px-2 text-left align-middle font-bold text-[#202124] whitespace-nowrap uppercase tracking-wider", className)}
       {...props}
     />
   )

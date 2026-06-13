@@ -100,7 +100,7 @@ function BarcodeScanner({ onScan, onClose }: { onScan: (barcode: string) => void
   return (
     <div ref={containerRef} style={{
       padding: '1rem',
-      backgroundColor: '#1A2B4C',
+      backgroundColor: '#1A73E8',
       borderRadius: '12px',
       marginBottom: '1rem',
     }}>
@@ -110,7 +110,7 @@ function BarcodeScanner({ onScan, onClose }: { onScan: (barcode: string) => void
           onClick={onClose}
           style={{
             padding: '0.25rem 0.5rem',
-            backgroundColor: '#FF4D5A',
+            backgroundColor: '#1A73E8',
             color: 'white',
             border: 'none',
             borderRadius: '4px',
@@ -122,7 +122,7 @@ function BarcodeScanner({ onScan, onClose }: { onScan: (barcode: string) => void
         </button>
       </div>
       {error ? (
-        <p style={{ color: '#FF4D5A', margin: 0 }}>{error}</p>
+        <p style={{ color: '#1A73E8', margin: 0 }}>{error}</p>
       ) : (
         <div 
           id="inline-barcode-scanner" 
@@ -224,17 +224,17 @@ function NewProductForm() {
   }
 
   const cardStyle: React.CSSProperties = {
-    backgroundColor: '#F7F9FC',
+    backgroundColor: '#FFFFFF',
     borderRadius: '12px',
     boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
-    border: '1px solid #1A2B4C',
+    border: '1px solid #E8EAED',
     padding: '1.5rem',
   }
 
   const inputStyle: React.CSSProperties = {
     width: '100%',
     padding: '0.625rem 0.875rem',
-    border: '1px solid #1A2B4C',
+    border: '1px solid #E8EAED',
     borderRadius: '8px',
     fontSize: '0.9rem',
     outline: 'none',
@@ -252,7 +252,7 @@ function NewProductForm() {
   return (
     <>
       {error && (
-        <div style={{ padding: '0.75rem 1rem', backgroundColor: 'rgba(255, 77, 90, 0.1)', border: '1px solid #FF4D5A', borderRadius: '8px', marginBottom: '1.5rem', color: '#FF4D5A', fontSize: '0.875rem' }}>
+        <div style={{ padding: '0.75rem 1rem', backgroundColor: 'rgba(239, 68, 68, 0.1)', border: '1px solid #EF4444', borderRadius: '8px', marginBottom: '1.5rem', color: '#EF4444', fontSize: '0.875rem' }}>
           {error}
         </div>
       )}
@@ -281,7 +281,7 @@ function NewProductForm() {
               onClick={() => setShowScanner(true)}
               style={{
                 padding: '0.625rem 1rem',
-                backgroundColor: '#1A2B4C',
+                backgroundColor: '#1A73E8',
                 color: 'white',
                 border: 'none',
                 borderRadius: '8px',
@@ -371,7 +371,7 @@ function NewProductForm() {
             disabled={loading}
             style={{
               flex: 1,
-              backgroundColor: '#FF4D5A',
+              backgroundColor: '#1A73E8',
               color: 'white',
               padding: '0.625rem 1rem',
               borderRadius: '8px',
@@ -388,8 +388,8 @@ function NewProductForm() {
             href="/products"
             style={{
               flex: 1,
-              backgroundColor: 'rgba(26, 43, 76, 0.1)',
-              color: '#1A2B4C',
+              backgroundColor: 'rgba(32, 33, 36, 0.1)',
+              color: '#202124',
               padding: '0.625rem 1rem',
               borderRadius: '8px',
               textDecoration: 'none',
@@ -415,7 +415,7 @@ function FormLoading() {
       alignItems: 'center', 
       padding: '4rem' 
     }}>
-      <p style={{ color: 'rgba(26, 43, 76, 0.6)' }}>Loading...</p>
+      <p style={{ color: 'rgba(32, 33, 36, 0.6)' }}>Loading...</p>
     </div>
   )
 }
@@ -425,8 +425,8 @@ export default function NewProductPage() {
   return (
     <div style={{ maxWidth: '600px', margin: '0 auto' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-        <h2 style={{ margin: 0, color: '#1A2B4C', fontSize: '1.5rem', fontWeight: '600' }}>New Product</h2>
-        <Link href="/products" style={{ color: 'rgba(26, 43, 76, 0.6)', textDecoration: 'none', fontSize: '0.9rem' }}>
+        <h2 style={{ margin: 0, color: '#202124', fontSize: '1.5rem', fontWeight: '600' }}>New Product</h2>
+        <Link href="/products" style={{ color: 'rgba(32, 33, 36, 0.6)', textDecoration: 'none', fontSize: '0.9rem' }}>
           ← Back to Products
         </Link>
       </div>

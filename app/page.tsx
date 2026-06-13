@@ -49,9 +49,9 @@ export default function Home() {
   const { t } = useLanguage()
 
   const promoBanners = [
-    { id: 1, title: '🚀 Promo Spesial WMS!', subtitle: 'Dapatkan diskon 20% untuk modul tambahan.', gradient: 'linear-gradient(135deg, #1A2B4C, #253358)', color: 'white', indicatorColor: 'white' },
-    { id: 2, title: '📦 Optimalkan Stok Anda', subtitle: 'Fitur prediktif AI kini tersedia untuk member pro.', gradient: 'linear-gradient(135deg, #FF4D5A, #FF6B75)', color: 'white', indicatorColor: 'white' },
-    { id: 3, title: '🔔 Pemberitahuan Sistem', subtitle: 'Jadwal maintenance rutin minggu depan. Cek selengkapnya.', gradient: 'linear-gradient(135deg, #1A2B4C, #FF4D5A)', color: 'white', indicatorColor: 'white' },
+    { id: 1, title: '🚀 Promo Spesial WMS!', subtitle: 'Dapatkan diskon 20% untuk modul tambahan.', gradient: 'linear-gradient(135deg, #1A73E8, #1557B0)', color: 'white', indicatorColor: 'white' },
+    { id: 2, title: '📦 Optimalkan Stok Anda', subtitle: 'Fitur prediktif AI kini tersedia untuk member pro.', gradient: 'linear-gradient(135deg, #1A73E8, #1557B0)', color: 'white', indicatorColor: 'white' },
+    { id: 3, title: '🔔 Pemberitahuan Sistem', subtitle: 'Jadwal maintenance rutin minggu depan. Cek selengkapnya.', gradient: 'linear-gradient(135deg, #1A73E8, #1557B0)', color: 'white', indicatorColor: 'white' },
   ]
 
   useEffect(() => {
@@ -95,10 +95,10 @@ export default function Home() {
   if (error || !data) {
     return (
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '2rem' }}>
-        <div style={{ padding: '2rem', backgroundColor: '#F7A1A8', borderRadius: '12px', textAlign: 'center' }}>
-          <span className="material-symbols-outlined" style={{ fontSize: '3rem', color: '#FF4D5A', display: 'block', marginBottom: '1rem' }}>error</span>
-          <p style={{ color: '#FF4D5A', fontSize: '1.1rem', fontWeight: '500' }}>{error || 'Unable to load dashboard data'}</p>
-          <p style={{ color: 'rgba(26, 43, 76, 0.6)', marginTop: '0.5rem' }}>Please check your database connection and try again.</p>
+        <div style={{ padding: '2rem', backgroundColor: '#FEE2E2', borderRadius: '12px', textAlign: 'center' }}>
+          <span className="material-symbols-outlined" style={{ fontSize: '3rem', color: '#EF4444', display: 'block', marginBottom: '1rem' }}>error</span>
+          <p style={{ color: '#B91C1C', fontSize: '1.1rem', fontWeight: '500' }}>{error || 'Unable to load dashboard data'}</p>
+          <p style={{ color: '#7F1D1D', marginTop: '0.5rem' }}>Please check your database connection and try again.</p>
         </div>
       </div>
     )
@@ -106,9 +106,10 @@ export default function Home() {
 
   const cardStyle: React.CSSProperties = {
     padding: '1.5rem',
-    backgroundColor: '#F7F9FC',
-    borderRadius: '12px',
-    border: '1px solid #1A2B4C',
+    backgroundColor: '#FFFFFF',
+    borderRadius: '8px',
+    boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
+    border: '1px solid #E2E8F0',
   }
 
   const gradientCardStyle: React.CSSProperties = {
@@ -132,7 +133,7 @@ export default function Home() {
 
   return (
     <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-      <h2 style={{ margin: '0 0 1.5rem 0', color: '#1A2B4C', fontSize: '1.5rem', fontWeight: '600' }}>{t('dashboard')}</h2>
+      <h2 style={{ margin: '0 0 1.5rem 0', color: '#202124', fontSize: '1.5rem', fontWeight: '600' }}>{t('dashboard')}</h2>
 
       {/* Promo Banner Slider */}
       <div className="interactive-card" style={{ position: 'relative', width: '100%', height: '140px', borderRadius: '16px', overflow: 'hidden', marginBottom: '1.5rem', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}>
@@ -172,7 +173,7 @@ export default function Home() {
                 borderRadius: '4px',
                 backgroundColor: currentBanner === idx 
                   ? (banner.indicatorColor || 'white') 
-                  : (banner.indicatorColor ? 'rgba(26, 43, 76, 0.3)' : 'rgba(255,255,255,0.4)'),
+                  : (banner.indicatorColor ? 'rgba(32, 33, 36, 0.3)' : 'rgba(255,255,255,0.4)'),
                 border: 'none',
                 cursor: 'pointer',
                 transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
@@ -186,41 +187,41 @@ export default function Home() {
 
       {/* Stats Grid */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
-        <div className="interactive-card general-card" style={cardStyle}>
+        <div className="interactive-card general-card" style={{ ...cardStyle, backgroundColor: '#E8F0FE', borderColor: '#D2E3FC' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
-            <div style={{ padding: '0.5rem', borderRadius: '8px', backgroundColor: 'rgba(26, 43, 76, 0.05)' }}>
-              <span className="material-symbols-outlined" style={{ color: '#1A2B4C', fontSize: '1.25rem' }}>inventory_2</span>
+            <div style={{ padding: '0.5rem', borderRadius: '8px', backgroundColor: 'rgba(26, 115, 232, 0.1)' }}>
+              <span className="material-symbols-outlined" style={{ color: '#1A73E8', fontSize: '1.25rem' }}>inventory_2</span>
             </div>
-            <p style={{ margin: 0, color: 'rgba(26, 43, 76, 0.8)', fontSize: '0.8rem', fontWeight: '600' }}>{t('totalProducts')}</p>
+            <p style={{ margin: 0, color: '#1967D2', fontSize: '0.8rem', fontWeight: '600' }}>{t('totalProducts')}</p>
           </div>
-          <p style={{ margin: 0, fontSize: '1.75rem', fontWeight: '700', color: '#1A2B4C' }}>{data?.totalProducts || 0}</p>
+          <p style={{ margin: 0, fontSize: '1.75rem', fontWeight: '700', color: '#1967D2' }}>{data?.totalProducts || 0}</p>
         </div>
-        <div className="interactive-card general-card" style={cardStyle}>
+        <div className="interactive-card general-card" style={{ ...cardStyle, backgroundColor: '#CEEAD6', borderColor: '#A8DAB5' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
-            <div style={{ padding: '0.5rem', borderRadius: '8px', backgroundColor: 'rgba(26, 43, 76, 0.05)' }}>
-              <span className="material-symbols-outlined" style={{ color: '#1A2B4C', fontSize: '1.25rem' }}>local_shipping</span>
+            <div style={{ padding: '0.5rem', borderRadius: '8px', backgroundColor: 'rgba(13, 101, 45, 0.1)' }}>
+              <span className="material-symbols-outlined" style={{ color: '#0D652D', fontSize: '1.25rem' }}>local_shipping</span>
             </div>
-            <p style={{ margin: 0, color: 'rgba(26, 43, 76, 0.8)', fontSize: '0.8rem', fontWeight: '600' }}>{t('totalSuppliers')}</p>
+            <p style={{ margin: 0, color: '#0D652D', fontSize: '0.8rem', fontWeight: '600' }}>{t('totalSuppliers')}</p>
           </div>
-          <p style={{ margin: 0, fontSize: '1.75rem', fontWeight: '700', color: '#1A2B4C' }}>{data?.totalSuppliers || 0}</p>
+          <p style={{ margin: 0, fontSize: '1.75rem', fontWeight: '700', color: '#0D652D' }}>{data?.totalSuppliers || 0}</p>
         </div>
-        <div className="interactive-card general-card" style={cardStyle}>
+        <div className="interactive-card general-card" style={{ ...cardStyle, backgroundColor: '#FEF7E0', borderColor: '#FCE8B2' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
-            <div style={{ padding: '0.5rem', borderRadius: '8px', backgroundColor: 'rgba(255, 77, 90, 0.1)' }}>
-              <span className="material-symbols-outlined" style={{ color: '#FF4D5A', fontSize: '1.25rem' }}>shopping_cart</span>
+            <div style={{ padding: '0.5rem', borderRadius: '8px', backgroundColor: 'rgba(176, 96, 0, 0.1)' }}>
+              <span className="material-symbols-outlined" style={{ color: '#B06000', fontSize: '1.25rem' }}>shopping_cart</span>
             </div>
-            <p style={{ margin: 0, color: 'rgba(26, 43, 76, 0.8)', fontSize: '0.8rem', fontWeight: '600' }}>{t('totalPurchases')}</p>
+            <p style={{ margin: 0, color: '#B06000', fontSize: '0.8rem', fontWeight: '600' }}>{t('totalPurchases')}</p>
           </div>
-          <p style={{ margin: 0, fontSize: '1.75rem', fontWeight: '700', color: '#1A2B4C' }}>{data?.totalPurchases || 0}</p>
+          <p style={{ margin: 0, fontSize: '1.75rem', fontWeight: '700', color: '#B06000' }}>{data?.totalPurchases || 0}</p>
         </div>
-        <div className="interactive-card general-card" style={cardStyle}>
+        <div className="interactive-card general-card" style={{ ...cardStyle, backgroundColor: '#FCE8E6', borderColor: '#FAD2CF' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
-            <div style={{ padding: '0.5rem', borderRadius: '8px', backgroundColor: 'rgba(26, 43, 76, 0.05)' }}>
-              <span className="material-symbols-outlined" style={{ color: '#1A2B4C', fontSize: '1.25rem' }}>payments</span>
+            <div style={{ padding: '0.5rem', borderRadius: '8px', backgroundColor: 'rgba(197, 34, 31, 0.1)' }}>
+              <span className="material-symbols-outlined" style={{ color: '#C5221F', fontSize: '1.25rem' }}>payments</span>
             </div>
-            <p style={{ margin: 0, color: 'rgba(26, 43, 76, 0.8)', fontSize: '0.8rem', fontWeight: '600' }}>{t('totalSales')}</p>
+            <p style={{ margin: 0, color: '#C5221F', fontSize: '0.8rem', fontWeight: '600' }}>{t('totalSales')}</p>
           </div>
-          <p style={{ margin: 0, fontSize: '1.75rem', fontWeight: '700', color: '#1A2B4C' }}>{data?.totalSales || 0}</p>
+          <p style={{ margin: 0, fontSize: '1.75rem', fontWeight: '700', color: '#C5221F' }}>{data?.totalSales || 0}</p>
         </div>
       </div>
 
@@ -234,11 +235,11 @@ export default function Home() {
           cursor: pointer;
         }
         .general-card {
-          box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+          box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
         }
         .general-card:hover {
-          transform: translateY(-2px) translate3d(0, 0, 0); /* Reduced from -4px */
-          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+          transform: translateY(-2px) translate3d(0, 0, 0); 
+          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
         .interactive-alert {
           transition: transform 0.2s ease-out;
@@ -248,14 +249,14 @@ export default function Home() {
           transform: translateX(2px) translate3d(0, 0, 0);
         }
         .revenue-card {
-          background: #1A2B4C;
-          background: linear-gradient(135deg, #1A2B4C, #253358);
-          box-shadow: 0 2px 4px rgba(26, 43, 76, 0.3);
+          background: #1A73E8;
+          background: linear-gradient(135deg, #1A73E8, #4F46E5);
+          box-shadow: 0 2px 4px rgba(26, 115, 232, 0.3);
         }
         .profit-card {
-          background: #FF4D5A;
-          background: linear-gradient(135deg, #FF4D5A, #FF6B75);
-          box-shadow: 0 2px 4px rgba(255, 77, 90, 0.3);
+          background: #10B981;
+          background: linear-gradient(135deg, #34D399, #059669);
+          box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3);
         }
       `}</style>
       
@@ -287,9 +288,9 @@ export default function Home() {
 
       {/* Low Stock Alert */}
       {data && data.lowStockCount > 0 && (
-        <div className="interactive-alert" style={{ padding: '1rem', backgroundColor: 'rgba(255, 77, 90, 0.1)', borderRadius: '8px', marginBottom: '1.5rem', borderLeft: '4px solid #FF4D5A', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <span className="material-symbols-outlined" style={{ color: '#FF4D5A' }}>warning</span>
-          <p style={{ margin: 0, fontWeight: '700', color: '#FF4D5A' }}>
+        <div className="interactive-alert" style={{ padding: '1rem', backgroundColor: '#FEF2F2', borderRadius: '8px', marginBottom: '1.5rem', borderLeft: '4px solid #EF4444', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <span className="material-symbols-outlined" style={{ color: '#EF4444' }}>warning</span>
+          <p style={{ margin: 0, fontWeight: '700', color: '#B91C1C' }}>
             {t('lowStockAlert')} {data.lowStockCount} {t('productsLowStock')}
           </p>
         </div>
@@ -307,41 +308,42 @@ export default function Home() {
         {data && data.lowStockProducts && data.lowStockProducts.length > 0 && (
           <div className="interactive-card general-card" style={{ ...cardStyle }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-              <h3 style={{ margin: 0, color: '#1A2B4C', fontSize: '1.1rem', fontWeight: '600' }}>{t('itemsAttention')}</h3>
-              <Link href="/products" style={{ color: '#1A2B4C', textDecoration: 'none', fontSize: '0.85rem', fontWeight: 600 }}>
+              <h3 style={{ margin: 0, color: '#202124', fontSize: '1.1rem', fontWeight: '600' }}>{t('itemsAttention')}</h3>
+              <Link href="/products" style={{ color: '#202124', textDecoration: 'none', fontSize: '0.85rem', fontWeight: 600 }}>
                 {t('viewAllProducts')}
               </Link>
             </div>
             
-            <div style={{ overflowX: 'auto' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
+            <div style={{ overflowX: 'auto', borderRadius: '8px', border: '1px solid #E2E8F0' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.875rem' }}>
                 <thead>
-                  <tr style={{ backgroundColor: '#1A2B4C', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
-                    <th style={{ padding: '0.75rem', textAlign: 'left', color: '#FFFFFF', fontWeight: 700 }}>{t('product')}</th>
-                    <th style={{ padding: '0.75rem', textAlign: 'center', color: '#FFFFFF', fontWeight: 700 }}>{t('stockLevel')}</th>
-                    <th style={{ padding: '0.75rem', textAlign: 'center', color: '#FFFFFF', fontWeight: 700 }}>{t('status')}</th>
+                  <tr style={{ backgroundColor: '#F8F9FA', borderBottom: '1px solid #E2E8F0' }}>
+                    <th style={{ padding: '1rem', textAlign: 'left', color: '#5F6368', fontWeight: 600 }}>{t('product')}</th>
+                    <th style={{ padding: '1rem', textAlign: 'center', color: '#5F6368', fontWeight: 600 }}>{t('stockLevel')}</th>
+                    <th style={{ padding: '1rem', textAlign: 'center', color: '#5F6368', fontWeight: 600 }}>{t('status')}</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {data.lowStockProducts.map((product) => {
+                  {data.lowStockProducts.map((product, idx) => {
                     const isOutOfStock = Number(product.currentStock) <= 0;
+                    const isLast = idx === data.lowStockProducts.length - 1;
                     return (
-                      <tr key={product.id} style={{ borderBottom: '1px solid #1A2B4C' }}>
-                        <td style={{ padding: '0.75rem', color: '#1A2B4C' }}>
+                      <tr key={product.id} style={{ borderBottom: isLast ? 'none' : '1px solid #E2E8F0', backgroundColor: '#FFFFFF' }}>
+                        <td style={{ padding: '1rem', color: '#202124' }}>
                           <div style={{ fontWeight: 500 }}>{product.name}</div>
-                          <div style={{ fontSize: '0.75rem', color: 'rgba(26, 43, 76, 0.4)' }}>{product.barcode || '-'}</div>
+                          <div style={{ fontSize: '0.75rem', color: '#5F6368', marginTop: '0.25rem' }}>{product.barcode || '-'}</div>
                         </td>
-                        <td style={{ padding: '0.75rem', textAlign: 'center', fontWeight: 600, color: isOutOfStock ? '#FF4D5A' : '#F4B400' }}>
+                        <td style={{ padding: '1rem', textAlign: 'center', fontWeight: 500, color: isOutOfStock ? '#D93025' : '#F29900' }}>
                           {Number(product.currentStock).toLocaleString('id-ID')}
                         </td>
-                        <td style={{ padding: '0.75rem', textAlign: 'center' }}>
+                        <td style={{ padding: '1rem', textAlign: 'center' }}>
                           <span style={{
                             padding: '0.25rem 0.5rem',
                             borderRadius: '4px',
                             fontSize: '0.75rem',
-                            fontWeight: 700,
-                            backgroundColor: isOutOfStock ? 'rgba(255, 77, 90, 0.1)' : 'rgba(26, 43, 76, 0.1)',
-                            color: isOutOfStock ? '#FF4D5A' : '#1A2B4C'
+                            fontWeight: 600,
+                            backgroundColor: isOutOfStock ? '#FCE8E6' : '#FEF7E0',
+                            color: isOutOfStock ? '#C5221F' : '#B06000'
                           }}>
                             {isOutOfStock ? t('outOfStock') : t('lowStock')}
                           </span>
@@ -352,7 +354,7 @@ export default function Home() {
                 </tbody>
               </table>
               {data.lowStockCount > 15 && (
-                <div style={{ textAlign: 'center', padding: '1rem', color: 'rgba(26, 43, 76, 0.6)', fontSize: '0.85rem' }}>
+                <div style={{ textAlign: 'center', padding: '1rem', color: 'rgba(32, 33, 36, 0.6)', fontSize: '0.85rem' }}>
                   + {data.lowStockCount - 15} {t('moreLowStock')}
                 </div>
               )}

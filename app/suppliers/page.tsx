@@ -84,7 +84,7 @@ function SuppliersContent() {
   }
 
   const buttonStyle: React.CSSProperties = {
-    backgroundColor: '#FF4D5A',
+    backgroundColor: '#1A73E8',
     color: 'white',
     padding: '0.5rem 1rem',
     borderRadius: '8px',
@@ -100,29 +100,29 @@ function SuppliersContent() {
   const searchInputStyle: React.CSSProperties = {
     width: '100%',
     padding: '0.75rem 1rem',
-    border: '1px solid #1A2B4C',
+    border: '1px solid #E8EAED',
     borderRadius: '8px',
     fontSize: '0.9rem',
     outline: 'none',
     marginBottom: '1.5rem',
-    backgroundColor: '#F7F9FC',
+    backgroundColor: '#FFFFFF',
   }
 
   const thStyle: React.CSSProperties = {
     padding: '1rem',
     textAlign: 'left' as const,
     fontWeight: '700',
-    borderBottom: '2px solid rgba(255,255,255,0.1)',
+    borderBottom: '2px solid #E8EAED',
     whiteSpace: 'nowrap' as const,
-    color: '#FFFFFF',
+    color: '#3C4043',
     fontSize: '0.8rem',
   }
 
   const tdStyle: React.CSSProperties = {
     padding: '1rem',
-    borderBottom: '1px solid #1A2B4C',
+    borderBottom: '1px solid #E8EAED',
     whiteSpace: 'nowrap' as const,
-    color: '#1A2B4C',
+    color: '#202124',
     fontSize: '0.9rem',
   }
 
@@ -132,8 +132,8 @@ function SuppliersContent() {
         <div className="col-6">
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
             <div style={{ 
-              backgroundColor: 'rgba(26, 43, 76, 0.1)', 
-              color: '#1A2B4C', 
+              backgroundColor: 'rgba(32, 33, 36, 0.1)', 
+              color: '#202124', 
               padding: '0.5rem', 
               borderRadius: '10px',
               display: 'flex',
@@ -142,7 +142,7 @@ function SuppliersContent() {
             }}>
               <span className="material-symbols-outlined" style={{ fontSize: '1.75rem' }}>local_shipping</span>
             </div>
-            <h2 style={{ margin: 0, color: '#1A2B4C', fontSize: '1.75rem', fontWeight: '700', letterSpacing: '-0.02em' }}>{t('suppliers')}</h2>
+            <h2 style={{ margin: 0, color: '#202124', fontSize: '1.75rem', fontWeight: '700', letterSpacing: '-0.02em' }}>{t('suppliers')}</h2>
           </div>
         </div>
         <div className="col-6" style={{ textAlign: 'right' }}>
@@ -161,10 +161,10 @@ function SuppliersContent() {
         style={searchInputStyle}
       />
 
-      <div style={{ backgroundColor: '#F7F9FC', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 1px 3px rgba(0,0,0,0.08)', border: '1px solid #1A2B4C' }}>
+      <div className="table-container">
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
-            <tr style={{ backgroundColor: '#1A2B4C' }}>
+            <tr style={{ backgroundColor: '#F8F9FA' }}>
               <th style={thStyle}>{t('name').toUpperCase()}</th>
               <th style={thStyle}>{t('phone').toUpperCase()}</th>
               <th style={thStyle}>{t('address').toUpperCase()}</th>
@@ -177,20 +177,20 @@ function SuppliersContent() {
               <TableShimmer rows={5} />
             ) : suppliers.length === 0 ? (
               <tr>
-                <td colSpan={5} style={{...tdStyle, textAlign: 'center', color: 'rgba(26, 43, 76, 0.4)'}}>{t('noSuppliersFound')}</td>
+                <td colSpan={5} style={{...tdStyle, textAlign: 'center', color: 'rgba(32, 33, 36, 0.4)'}}>{t('noSuppliersFound')}</td>
               </tr>
             ) : (
               suppliers.map((supplier) => (
-                <tr key={supplier.id} style={{ borderBottom: '1px solid #1A2B4C' }}>
+                <tr key={supplier.id} style={{ borderBottom: '1px solid #E8EAED' }}>
                   <td style={{...tdStyle, fontWeight: 500}}>{supplier.name}</td>
                   <td style={tdStyle}>{supplier.phone}</td>
                   <td style={tdStyle}>{supplier.address}</td>
                   <td style={tdStyle}>{new Date(supplier.createdAt).toLocaleDateString('id-ID')}</td>
                   <td style={{...tdStyle, textAlign: 'right'}}>
-                    <Link href={`/suppliers/${supplier.id}`} style={{ color: '#1A2B4C', textDecoration: 'none', marginRight: '0.75rem' }}>
+                    <Link href={`/suppliers/${supplier.id}`} style={{ color: '#202124', textDecoration: 'none', marginRight: '0.75rem' }}>
                       <span className="material-symbols-outlined" style={{ fontSize: '1.1rem' }}>edit</span>
                     </Link>
-                    <button onClick={() => deleteSupplier(supplier.id)} style={{ color: '#FF4D5A', backgroundColor: 'transparent', border: 'none', cursor: 'pointer' }}>
+                    <button onClick={() => deleteSupplier(supplier.id)} style={{ color: '#1A73E8', backgroundColor: 'transparent', border: 'none', cursor: 'pointer' }}>
                       <span className="material-symbols-outlined" style={{ fontSize: '1.1rem' }}>delete</span>
                     </button>
                   </td>
@@ -209,7 +209,7 @@ function SuppliersContent() {
       />
 
       {suppliers.length === 0 && !loading && (
-        <div style={{ textAlign: 'center', padding: '3rem', color: 'rgba(26, 43, 76, 0.4)' }}>
+        <div style={{ textAlign: 'center', padding: '3rem', color: 'rgba(32, 33, 36, 0.4)' }}>
           <span className="material-symbols-outlined" style={{ fontSize: '3rem', display: 'block', marginBottom: '0.5rem' }}>local_shipping</span>
           <p>{t('noSuppliersFound')}</p>
         </div>
